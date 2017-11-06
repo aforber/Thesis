@@ -9,6 +9,7 @@ output: beamer_presentation
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
+
 ## Background/Problem
 
 (Check out most recent manuscript from paper an citations)
@@ -92,11 +93,13 @@ Table of--
 
 -non-sample with youden cutoff
 
--up sample 0.5
+-up sample with youden cutoff 
 
--down sample 0.5
+-down sample with youden cutoff
 
--smote sample 0.5
+-smote sample with youden cutoff
+
+- down sample with bagging
 
 ## Discussion of Results
 
@@ -118,6 +121,17 @@ With this you may get 12 var with one stepwise and 13 with another
 - look up bagging and stepwise selection
 - haven't seen much on bagging and down sampling-- look that up, if not that'll be interesting
 
+- maybe try lasso with cross validation (cv.lasso)
+- lasso has been shown to be better at selecting a model than stepwise
+- easy to save all the coefficients and bootstrap
+- check to see if there's a package to do bagging with lasso
+- feed final average model with test set
+- package SparseLearner? or Predict.bagging
+- because when we down sample we only get one subset
+
+- she'll send surgical infections code
+- use model.matrix or something instead of as.matrix for glmnet
+
 ## Questions
 
 Should I show code in this?
@@ -134,12 +148,21 @@ Should I go into detail about what logistic regression and predicting is doing b
 Have one slide showing the equation, don't spend too much time on it
 Show what is the predicted probability from logistic regression
 
-Do our prediction percents need to be back transformed?? Because it's a logit model? (relates to project for adv data, some people saying we do, doesn't make sense)
-
 Is it ok to show all that I've done or will they think I've already done too much?
 show some of the results
 
 Other ideas of things to be done moving forward?
 
-Work on Github?
+
+-------------------------------------
+NOTES FROM 10/31
+
+SCHEDULE!!!
+schedule between dec 4 and 15
+send susan a note (she'll be hardest) ask what days and times are best
+could send out a doodle poll
+then send out her availablity 
+
+
+accumulate other papers in endnote
 
