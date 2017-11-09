@@ -3,6 +3,8 @@ title: "Proposal Outline"
 author: "Alyssa Forber"
 date: "October 16, 2017"
 output: beamer_presentation
+theme: Boadilla
+colortheme: seahorse
 ---
 
 ```{r setup, include=FALSE}
@@ -23,6 +25,14 @@ Opioid information
 
 -whether or not to prescribe to patients if likely to become addicted
 
+## Intro
+
+The United States is facing an unprecedented opioid epidemic. According to data from the 2015 National Survey of Drug Use and Health, over 2 million people had a prescription opioid use disorder.[1]
+
+This is particularly important in the hospital where opioids are commonly prescribed for pain.[10]  Opioid receipt at hospital discharge has been shown to be associated with an increased risk of chronic opioid use.[11]
+
+Predictive tools to identify hospitalized patients at risk for future COT may have clinical utility to improve hospital-based pain management with a focus on limiting opioid prescribing when non-opioid analgesics, or other non-pharmaceutical options, may be effective for pain control.  
+
 ## Data
 
 Describe dataset (comes from Denver health, more info in paper)
@@ -35,9 +45,23 @@ Describe dataset (comes from Denver health, more info in paper)
 
 -variables in dataset
 
+## The Data
+
+Design: Denver Health retrospective analysis electronic health record (EHR) data from 2008 to 2014.
+Patients: Hospitalized patients at an urban, safety-net hospital.
+
+The study had a binary outcome of chronic opioid therapy (COT) one year following the index discharge. We defined COT as receipt of >= 90-day supply of opioids with < 30-day gap in supply over a 180-day period or receipt of >= 10 opioid prescriptions over one year. 
+This is a rare outcome.
+27705 in dataset, 1457 with outcome, about 5%
+
+There are 50 variables, which do I mention? And then we narrowed to start with 35
+Demographics and potential predictors
+Data dictionary I could look at?
+
+
+
 ## Aims?
 
-Describe the aim of the thesis
 
 -accurate predicting, better sens and spec for unbalanced outcome
 -using and comparing methods of cutpoints and sampling
@@ -48,13 +72,10 @@ describe analysis approach
 
 ## Model 
 
--temporal split of data to get train set
+-roughly 2/3 temporal split of data to get training and test set
 
--using logistic regression for the easier interpretation
+-using cross validated lasso regression
 
--clinical colleagues understand this
-
--stepwise selection to reduce variables in data
 
 ## First approach
 
