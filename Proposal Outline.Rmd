@@ -12,18 +12,18 @@ knitr::opts_chunk$set(echo = FALSE)
 ```
 
 
-## Background/Problem
+## Motivation
 
 (Check out most recent manuscript from paper an citations)
 call it progression to opioid therapy
 
 Opioid information
 
--explain issue of opioid addiction
+- explain issue of opioid addiction
 
--rare outcome
+- rare outcome
 
--whether or not to prescribe to patients if likely to become addicted
+- whether or not to prescribe to patients if likely to become addicted
 
 ## Intro
 
@@ -37,13 +37,13 @@ Predictive tools to identify hospitalized patients at risk for future COT may ha
 
 Describe dataset (comes from Denver health, more info in paper)
 
--show a table1 of the data
+- show a table1 of the data
 
--number of subjects
+- number of subjects
 
--outcome
+- outcome
 
--variables in dataset
+- variables in dataset
 
 ## The Data
 
@@ -63,8 +63,8 @@ Data dictionary I could look at?
 ## Aims?
 
 
--accurate predicting, better sens and spec for unbalanced outcome
--using and comparing methods of cutpoints and sampling
+- accurate predicting, better sens and spec for unbalanced outcome
+- using and comparing methods of cutpoints and sampling
 
 ## Methods
 
@@ -72,72 +72,112 @@ describe analysis approach
 
 ## Model 
 
--roughly 2/3 temporal split of data to get training and test set
+- Roughly 2/3 temporal split of data to get train and test set
 
--using cross validated lasso regression
+- Cross validated lasso regression
+
+- Lasso:
+
+- Cross validattion: 
+    - Fet the best "tuning measure" for model selection 
+    - Split data into k parts and then train on each of those except one you validate against
+    - Then pick the tuning measure that minimizes error?
+
+## Advantages and Disadvantages?
 
 
 ## First approach
 
-Approach 1:
+Cut-off Probabilities:
 
--predict and change cutoff with train set- no sampling
+- Use original unsampled data and get predictions off the lasso model
+    - Predictions return probability between 0 and 1 for each observation
 
--explore cutoff probability to get the "best"
+- Use 0.5 standard probability cutoff
 
-## ROC methods
+- Find "best" probability cutoff
+      - Youden Index
 
-ROC:
+## ROC & Cutoff Probablities
 
--explain ROC curves and youden 
+ROC (with pROC package):
 
--show an example ROC curve
+- explain ROC curves and youden 
+- show an example ROC curve
 
--could also be chosen if a certain sens or spec in mind instead of youden
+- Top left is ideal
 
-## Second approach (sampling)
+- Or choose based off certain sensitivity or specificity
 
-Approach 2:
+## Confusion Matrix
 
--predict and use 0.5 cutoff with sampled train set that is balanced
+Give example of confusion matrix and equations for calculating sens, spec, etc??
 
--explain up, down, and smote (explain smote)
+## ROC Plot
+
+![ROC for Original Data: Younden and 0.5 cutoffs](/Users/alyssaforber/Box Sync/AlyssaKatieResearch/Opioids/Results/LassROCplot.png){ width=70% }
+
+
+## Second Approach
+
+Sampling:
+
+- Create sampled data sets that are balanced 
+    - Down sample
+    - Up sample
+    - SMOTE
+        - Synthetic Minority Over-sampling Technique
+
+- Predict with Youden cutoff
+
 
 
 ## Preliminary Results
 
 Explain prelim results (sens, spec, accuracy, AUC, npv, ppv):
 
+Explain meaning of sens, spec, npv, and ppv???
+
 Table of--
 
--non-sampled with 0.5 cutoff
+- non-sampled with 0.5 cutoff
 
--non-sample with youden cutoff
+- non-sample with youden cutoff
 
--up sample with youden cutoff 
+- up sample with youden cutoff 
 
--down sample with youden cutoff
+- down sample with youden cutoff
 
--smote sample with youden cutoff
+- smote sample with youden cutoff
 
-- down sample with bagging
+- down sample with bagging (DONT HAVE THIS)
+
+## Results Table
+
+![Results by Model](/Users/alyssaforber/Box Sync/AlyssaKatieResearch/Opioids/Results/LassRocTable2.png){ width=100% }
+
 
 ## Discussion of Results
 
-Depening on situation the clinician may like different sens/spec
+- Depening on situation the clinician may like different sensitivity/specificity
 
-Some may want to be more conservative, others may not (cancer patients in a lot of pain who need opioids)
+- Some may want to be more conservative, others may not 
+    - Example: cancer patients in a significant pain
 
 ## Moving Forward
 
--simulation of different outcome percents, see when you could run model without sampling or changing cutoffs (though sampling does allow a more parismonious model)
+- Simulation of different percentages for rare outcomes
+      - When you could run model without sampling or changing cutoffs (though sampling does allow a more parismonious model)
 
--trying different sampling other than just the defaults for each method
+- Try different sampling other than defaults for each method
 
--different ways to do stepwise selection 
+- Bagging (bootstrap aggregating)
 
--bootstrap aggregate the coefficients and get bootstrap CI (loop through getting new sample, saving coefficients, get mean and sd across 1000 boot samples)
+- bootstrap aggregate the coefficients and get bootstrap CI (loop through getting new sample, saving coefficients, get mean and sd across 1000 boot samples)
 With this you may get 12 var with one stepwise and 13 with another
+
+
+## More Moving Forward
 
 - look up bagging and stepwise selection
 - haven't seen much on bagging and down sampling-- look that up, if not that'll be interesting
@@ -151,9 +191,15 @@ With this you may get 12 var with one stepwise and 13 with another
 - because when we down sample we only get one subset
 
 - she'll send surgical infections code
-- use model.matrix or something instead of as.matrix for glmnet
 
-## Questions
+## Timeline
+
+
+## Questions?
+
+Questions?
+
+## Questions for Katie
 
 Should I show code in this?
 
@@ -162,21 +208,16 @@ Am I giving the talk as if for an audience of statisticians or clinicians or mix
 What more should be expanded on?
 
 Any figures or tables that would be helpful
+
 show smooth spline of age and probability of COT and show it has a curve to it and why we added the quadratic age
 smooth.spline with 3 degrees of freedom
 
-Should I go into detail about what logistic regression and predicting is doing behind the scenes?
-Have one slide showing the equation, don't spend too much time on it
-Show what is the predicted probability from logistic regression
-
-Is it ok to show all that I've done or will they think I've already done too much?
-show some of the results
-
-Other ideas of things to be done moving forward?
+  - Where would it make sense to include this???
 
 
--------------------------------------
-NOTES FROM 10/31
+
+
+## NOTES FROM 10/31
 
 SCHEDULE!!!
 schedule between dec 4 and 15
@@ -184,6 +225,22 @@ send susan a note (she'll be hardest) ask what days and times are best
 could send out a doodle poll
 then send out her availablity 
 
-
 accumulate other papers in endnote
+
+
+## Thoughts
+
+I think I'm confused on cv and bagging with lasso
+I need a better understanding of lasso first
+
+so cv splits my sample into k subsamples and runs the model for k-1 of them and compares to the 1 left? this isn't making sense in the scheme of already making my training and test sets with the temporal split-- it seems like it doesn't make sense to do both?
+
+and then bagging is training many models on resampled data and then take their average to get an averaged model. this makes sense, it's how I get my model with resampling my training data and then I fit it with the test data
+
+SoI don't understand cv well and I definitely don't understand doing both together
+
+## Thoughts cont.
+
+I understand cv better now maybe-- I use cv.glmnet to find my minimum lambda. I know that is the best. I'm not sure what it is, but it optimizes something. Then I use that min for glmnet and predict on that.
+
 
