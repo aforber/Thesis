@@ -1,7 +1,8 @@
 ---
 title: "Proposal Outline"
-author: "Alyssa Forber"
-date: "October 16, 2017"
+author: "Alyssa Forber" 
+subtitle: "University of Colorado, Anschutz Medical Campus"
+date: "December 2017"
 output: beamer_presentation
 theme: Boadilla
 colortheme: seahorse

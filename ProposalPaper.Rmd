@@ -1,0 +1,42 @@
+---
+title: "Thesis Proposal"
+author: "Alyssa Forber"
+subtitle: "University of Colorado, Anschutz Medical Campus"
+date: "December 2017"
+output: pdf_document
+geometry: margin=1in
+fontsize: 12pt 
+header-includes:
+    - \usepackage{setspace}\doublespacing
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+3-5 pages in length, outlining the background, significance and specific aims for the proposed research along with any preliminary findings
+
+## Introduction
+
+$\qquad$
+
+## Methods
+
+$\qquad$
+
+## Results
+
+$\qquad$
+
+## Discussion
+
+$\qquad$
+
+## Conclusion
+
+$\qquad$
+
+## References
+
+## Appendix
+
