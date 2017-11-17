@@ -1,9 +1,12 @@
 ---
-title: "Proposal Outline"
-author: "Alyssa Forber" 
-subtitle: "University of Colorado, Anschutz Medical Campus"
+title: "Thesis Proposal"
+author: "Alyssa Forber"
 date: "December 2017"
-output: beamer_presentation
+output:
+  beamer_presentation: default
+  slidy_presentation: default
+institute: University of Colorado, Anschutz Medical Campus
+subtitle: Predictive Modeling with Unbalanced Data
 theme: Boadilla
 colortheme: seahorse
 ---
@@ -12,19 +15,32 @@ colortheme: seahorse
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
+## Outline
+
+Background
+
+Problem
+
+Objectives
+
+Methods
+
+Preliminary Results
+
+Moving Forward
+
 
 ## Motivation
 
-(Check out most recent manuscript from paper an citations)
-call it progression to opioid therapy
 
 Opioid information
 
-- explain issue of opioid addiction
+- explain issue of chronic opioid therapy
 
 - rare outcome
 
-- whether or not to prescribe to patients if likely to become addicted
+- whether or not to prescribe to patients if likely to progress to opioid therapy
+
 
 ## Intro
 
@@ -34,42 +50,90 @@ This is particularly important in the hospital where opioids are commonly prescr
 
 Predictive tools to identify hospitalized patients at risk for future COT may have clinical utility to improve hospital-based pain management with a focus on limiting opioid prescribing when non-opioid analgesics, or other non-pharmaceutical options, may be effective for pain control.  
 
-## Data
+## Imbalanced Learning Problem
 
-Describe dataset (comes from Denver health, more info in paper)
 
-- show a table1 of the data
+Sampling Techniques, Bagging
 
-- number of subjects
+you might not have to get as fancy with things like bagging and just choose a better cutpoint
 
-- outcome
-
-- variables in dataset
 
 ## The Data
 
-Design: Denver Health retrospective analysis electronic health record (EHR) data from 2008 to 2014.
-Patients: Hospitalized patients at an urban, safety-net hospital.
+- Design: Denver Health retrospective analysis electronic health record (EHR) data from 2008 to 2014.
 
-The study had a binary outcome of chronic opioid therapy (COT) one year following the index discharge. We defined COT as receipt of >= 90-day supply of opioids with < 30-day gap in supply over a 180-day period or receipt of >= 10 opioid prescriptions over one year. 
-This is a rare outcome.
-27705 in dataset, 1457 with outcome, about 5%
+- Patients: Hospitalized patients at an urban, safety-net hospital.
 
-There are 50 variables, which do I mention? And then we narrowed to start with 35
-Demographics and potential predictors
-Data dictionary I could look at?
+- Definition of Chronic Opioid Therapy (COT) one year following the index hospital discharge:
+
+> Receipt of $\geq$ 90-day supply of opioids with < 30-day gap in supply over a 180-day period or receipt of $\geq$ 10 opioid prescriptions over one year. 
 
 
 
-## Aims?
+## Patient Population
+
+- 27,705 patients
+- Majority had incomes <185% of the Federal Poverty Level
+- 70% were ethnic minorities
+- 5% with COT
+
+- Excluded Patients:
+    - <15 or >85 years old
+    - Those in prison, jail, or police custody
+    - Those who died within one year following their index hospitalization
+    - Patients with <2 healthcare visits to Denver Health three years preceding their index hospitalization
+    - Undocumented persons receiving emergent hemodialysis
+    - Obstetric patients
 
 
-- accurate predicting, better sens and spec for unbalanced outcome
-- using and comparing methods of cutpoints and sampling
+## Table 1
+
+\begin{table}
+\scalebox{0.7}{
+\begin{tabular}{l c c c}
+\hline
+\textbf{Variable} & \textbf{Yes COT} & \textbf{No COT} & \textbf{p-value} \\
+ & 1,457 (5\%) & 26,248 (95\%) & \\
+\hline
+Age 15-35 & 10\% & 22\% & $<$.001\\
+Age 45-55 & 35\% & 24\% & $<$.001 \\
+Age 55-65 & 28\% & 21\% & $<$.001 \\
+Discount payment or Medicaid & 76\% & 61\% & $<$.001 \\
+History of chronic pain & 76\% &53\%& $<$.001 \\
+Discharge diagnosis chronic pain & 50\% & 29\% & $<$.001 \\
+Surgical patient & 48\% & 39\% & $<$.001 \\
+Past year: & & &\\
+Benzodiazepine & 16\% & 5\% & $<$.001 \\
+Non-opioid analgesics & 25\% & 9\% & $<$.001 \\
+Number of opioid prescriptions: & & &\\
+0 & 38\% & 80\%& \\
+1 & 17\% & 11\% & \\
+2 & 14\% & 4\%& \\
+3 & 9\% & 2\% & \\
+4-9 & 23\% & 3\% & $<$.001 \\
+Receipt of opioid at discharge & 56\% & 28\% & $<$.001 \\
+MME per hospital day $>$ 10 & 80\% & 52\% & $<$.001 \\
+\hline
+\end{tabular} 
+}
+\end{table}
+
+## Aims
+
+
+- Accurate predicting $\rightarrow$ improving sensitivity and specificity for unbalanced outcome
+- Using and comparing methods of probability cutpoints and sampling
+
 
 ## Methods
 
-describe analysis approach
+- Create sampled datasets
+
+- Run model on sampled data
+
+- Get predicted probabilites on the test data
+
+- Optimize probability cutoff for outcome
 
 ## Model 
 
@@ -78,45 +142,63 @@ describe analysis approach
 - Cross validated lasso regression
 
 - Lasso:
+    - Performs variable selection
+    - Shrinks estimates to 0
 
 - Cross validattion: 
-    - Fet the best "tuning measure" for model selection 
+    - Find the best "tuning measure" for model selection which determines amount of shrinkage of estimates
     - Split data into k parts and then train on each of those except one you validate against
     - Then pick the tuning measure that minimizes error?
-
-## Advantages and Disadvantages?
-
-
-## First approach
-
-Cut-off Probabilities:
-
-- Use original unsampled data and get predictions off the lasso model
-    - Predictions return probability between 0 and 1 for each observation
-
-- Use 0.5 standard probability cutoff
-
-- Find "best" probability cutoff
-      - Youden Index
 
 ## ROC & Cutoff Probablities
 
 ROC (with pROC package):
 
-- explain ROC curves and youden 
-- show an example ROC curve
+- ROC curve plots sensitivity vs specificity
+- Top left corner is ideal
+- Youden Index is the furthest upper left corner or "max"
 
-- Top left is ideal
 
-- Or choose based off certain sensitivity or specificity
+## ROC Curve
 
-## Confusion Matrix
 
-Give example of confusion matrix and equations for calculating sens, spec, etc??
+![ROC Curve](/Users/alyssaforber/Box Sync/AlyssaKatieResearch/Opioids/Results/ExampleROC.png){ width=60% }
 
-## ROC Plot
 
-![ROC for Original Data: Younden and 0.5 cutoffs](/Users/alyssaforber/Box Sync/AlyssaKatieResearch/Opioids/Results/LassROCplot.png){ width=70% }
+    
+    
+## Confusion Matrix?
+
+- show matrix
+- show equations to calculate sens, spec, npv, ppv
+
+
+## Advantages and Disadvantages?
+
+
+- Advantages:
+    - Lower variance of the predicted values?
+    - More accurate predictions
+    - Reduces the number of predictors
+
+- Disadvantages:
+    - No interpretation of predictor coefficients
+    - No standard errors out of the model
+    - Biased coefficients
+
+
+## First approach
+
+No Sampling, Optimze Cut-off:
+
+- Use original unsampled data and get predictions off the lasso model
+    - Predictions return probability between 0 and 1 for each observation
+
+- Use 0.5 standard probability cutoff to compare
+
+- Find "best" probability cutoff
+      - Youden Index
+
 
 
 ## Second Approach
@@ -125,40 +207,49 @@ Sampling:
 
 - Create sampled data sets that are balanced 
     - Down sample
+        - under-sample majority to equal minority
     - Up sample
+        - over-sample minority to equal majority
     - SMOTE
         - Synthetic Minority Over-sampling Technique
 
-- Predict with Youden cutoff
+- Predict and use Youden Index as cutoff
 
 
 
-## Preliminary Results
-
-Explain prelim results (sens, spec, accuracy, AUC, npv, ppv):
-
-Explain meaning of sens, spec, npv, and ppv???
-
-Table of--
-
-- non-sampled with 0.5 cutoff
-
-- non-sample with youden cutoff
-
-- up sample with youden cutoff 
-
-- down sample with youden cutoff
-
-- smote sample with youden cutoff
-
-- down sample with bagging (DONT HAVE THIS)
-
-## Results Table
-
-![Results by Model](/Users/alyssaforber/Box Sync/AlyssaKatieResearch/Opioids/Results/LassRocTable2.png){ width=100% }
+## Results
 
 
-## Discussion of Results
+
+\begin{table}
+\scalebox{0.7}{
+\begin{tabular}{l c c c c c c c}
+\hline
+\textbf{Data} & \textbf{Threshold} & \textbf{Specificity} & \textbf{Sensitivity} & \textbf{NPV} & \textbf{PPV} & \textbf{Accuracy} & \textbf{AUC} \\
+\hline
+\textbf{Unsampled 0.5} & 0.5 & 99 & 8	& 96 & 35 & 96 & 86  \\
+\textbf{Unsampled} & 0.043 & 73 &	85 & 99	& 12 & 73	& 86 \\
+\textbf{Down sampled} & 0.401	& 73 & 85	& 99 & 12 & 74 & 86  \\
+\textbf{Up sampled} & 0.399	& 74 & 85	& 99 & 12	& 74 & 87 \\
+\textbf{SMOTE} & 0.472 & 84 & 74	& 99 & 17 & 84 & 86 \\
+\hline
+\end{tabular}
+}
+\end{table}
+
+
+## ROC Plot
+
+![ROC for Original Data: Younden and 0.5 cutoffs](/Users/alyssaforber/Box Sync/AlyssaKatieResearch/Opioids/Results/LassROCplot.png){ width=60% }
+
+## ROC Plot
+
+plot with all of them on top of each other and show how similar they are
+
+
+## Conclusions Thus Far
+
+- Seeing similar results for both methods
 
 - Depening on situation the clinician may like different sensitivity/specificity
 
@@ -175,7 +266,6 @@ Table of--
 - Bagging (bootstrap aggregating)
 
 - bootstrap aggregate the coefficients and get bootstrap CI (loop through getting new sample, saving coefficients, get mean and sd across 1000 boot samples)
-With this you may get 12 var with one stepwise and 13 with another
 
 
 ## More Moving Forward
@@ -183,9 +273,7 @@ With this you may get 12 var with one stepwise and 13 with another
 - look up bagging and stepwise selection
 - haven't seen much on bagging and down sampling-- look that up, if not that'll be interesting
 
-- maybe try lasso with cross validation (cv.lasso)
-- lasso has been shown to be better at selecting a model than stepwise
-- easy to save all the coefficients and bootstrap
+
 - check to see if there's a package to do bagging with lasso
 - feed final average model with test set
 - package SparseLearner? or Predict.bagging
@@ -200,48 +288,42 @@ With this you may get 12 var with one stepwise and 13 with another
 
 Questions?
 
-## Questions for Katie
 
-Should I show code in this?
+## Notes
 
-Am I giving the talk as if for an audience of statisticians or clinicians or mixed?
-
-What more should be expanded on?
-
-Any figures or tables that would be helpful
 
 show smooth spline of age and probability of COT and show it has a curve to it and why we added the quadratic age
 smooth.spline with 3 degrees of freedom
+    - Where would it make sense to include this???
 
-  - Where would it make sense to include this???
-
-
-
-
-## NOTES FROM 10/31
-
-SCHEDULE!!!
-schedule between dec 4 and 15
-send susan a note (she'll be hardest) ask what days and times are best
-could send out a doodle poll
-then send out her availablity 
 
 accumulate other papers in endnote
 
+(Check out most recent manuscript from paper an citations)
 
-## Thoughts
 
-I think I'm confused on cv and bagging with lasso
-I need a better understanding of lasso first
+## Notes 11.14.17
 
-so cv splits my sample into k subsamples and runs the model for k-1 of them and compares to the 1 left? this isn't making sense in the scheme of already making my training and test sets with the temporal split-- it seems like it doesn't make sense to do both?
 
-and then bagging is training many models on resampled data and then take their average to get an averaged model. this makes sense, it's how I get my model with resampling my training data and then I fit it with the test data
+look at logistic and lasso results and compare (probably not necessary to include)
 
-SoI don't understand cv well and I definitely don't understand doing both together
+See if there are any other ways to choose a threshold
 
-## Thoughts cont.
+Might want to come up with another methodlogical advancement
 
-I understand cv better now maybe-- I use cv.glmnet to find my minimum lambda. I know that is the best. I'm not sure what it is, but it optimizes something. Then I use that min for glmnet and predict on that.
+DO THIS!!
+Just notes and what lit to look into
+Abstract, Background, methods, results, conclusions, acknowledgments, tables, figures,
+think about what's table 1
+Be good to bring to meeting with Elizabeth to give her an idea of what we're working on!!!
+
+under WNAR2017 talk there is a powerpoint
+
+Just showed variables for where there is a really big split between outcomes
+could use those and then maybe a couple others
+
+mention TRIPOD - mention this, about being transparent, read paper
+
+
 
 
