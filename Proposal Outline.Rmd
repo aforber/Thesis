@@ -6,7 +6,7 @@ output:
   beamer_presentation: default
   slidy_presentation: default
 institute: University of Colorado, Anschutz Medical Campus
-subtitle: Predictive Modeling with Unbalanced Data
+subtitle: Predictive Modeling with Inbalanced Data
 theme: Boadilla
 colortheme: seahorse
 ---
@@ -173,7 +173,7 @@ ROC (with pROC package):
 - show equations to calculate sens, spec, npv, ppv
 
 
-## Advantages and Disadvantages?
+## Advantages and Disadvantages
 
 
 - Advantages:
@@ -244,7 +244,7 @@ Sampling:
 
 ## ROC Plot
 
-plot with all of them on top of each other and show how similar they are
+plot with all of them on top of each other and show how similar they are?
 
 
 ## Conclusions Thus Far
@@ -279,7 +279,7 @@ plot with all of them on top of each other and show how similar they are
 - package SparseLearner? or Predict.bagging
 - because when we down sample we only get one subset
 
-- she'll send surgical infections code
+
 
 ## Timeline
 
@@ -317,7 +317,6 @@ Abstract, Background, methods, results, conclusions, acknowledgments, tables, fi
 think about what's table 1
 Be good to bring to meeting with Elizabeth to give her an idea of what we're working on!!!
 
-under WNAR2017 talk there is a powerpoint
 
 Just showed variables for where there is a really big split between outcomes
 could use those and then maybe a couple others
