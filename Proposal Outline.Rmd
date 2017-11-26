@@ -6,7 +6,7 @@ output:
   beamer_presentation: default
   slidy_presentation: default
 institute: University of Colorado, Anschutz Medical Campus
-subtitle: Predictive Modeling with Inbalanced Data
+subtitle: Predictive Modeling with Imbalanced Data
 theme: Boadilla
 colortheme: seahorse
 ---

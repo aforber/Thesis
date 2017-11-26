@@ -1,6 +1,6 @@
 ---
 title: "Thesis Proposal"
-subtitle: "Predictive Modeling with Unbalanced Data?"
+subtitle: "Predictive Modeling with Imbalanced Data?"
 author:
 - Alyssa Forber
 - University of Colorado, Anschutz Medical Campus
@@ -33,50 +33,29 @@ $\qquad$
 - Unbalanced learning problem (low sensitivity in prediction)
 - Decribe chronic opioid therapy issue and dataset
 
+- Don't go into background problem too much? (for stats paper)
+- Focus more on the imbalanced learning probelm
+- But do I open on the opioid problem or the learning problem?**
+- How much to describe the dataset?
+
 
 
 ## Methods
 
-$\qquad$
+$\qquad$ The analysis was done in RStuido version 1.1.383. 
 
-- Roughly 2/3 temporal split of data to get train and test set 
-- splitting 08-11 and 12-14 to make 64.7% train, 35.3% test
+$\qquad$ We used a roughly 2/3rd temporal split of the data to create training and testing datasets, where years 2008-2011 were used to train (65%), and 2012-2014 were used to test (35%). 
 
-- Cross validated lasso regression (and bagging?)
+$\qquad$ The model used for this analysis was cross validated lasso regression. This was chosen as it has been found to perform better predictor selection than stepwise selection (reference on this?), and as we were not interested in having interpretable coefficients. 
 
-- Lasso: 
-    - Advantages:
-        - Lower variance of the predicted values
-        - More accurate predictions
-        - Reduces the number of predictors
+$\qquad$ The predictors were first narrowed from ? to 35 (?) based on clinical relevance (Can I reference the paper that is under submission since that goes into more details? Is it even necessary). 
 
-    - Disadvantages:
-        - No interpretation of predictor coefficients
-        - No standard errors out of the model
-        - Biased coefficients
+$\qquad$ We first evaluated the prediction performance of the dataset without sampling to see the effects of the imbalanced data on the accuracy, sensitivy, and specificity. This was to serve as a baseline to compare with the techniques available to mitigate the issue of poor sensitivity. The predicted probability cutpoint used here was rounding at the standard 0.5 that would be appropriate in balanced datasets. 
 
+$\qquad$ The first approach used to improve performance was to choose a more informed probabilty cutpoint for the data. This was done using the Youden Index, which finds the maximum of the receiver operating characteristic (ROC) curve (reference here!) with the pROC package (do I need to say this?). 
 
-ROC curves and cutoff (with pROC package):
+$\qquad$ The second approach was through sampling the dataset. Three types of sampling methods were compared--down sampling, up sampling, and Synthetic Minority Over-sampling Technique (SMOTE). Down sampling takes a random sample from the majority class, in this case those who are not classfied as having chronic opioid therapy, in order to match the size of the minority class (referenc?). Up sampling does the reverse to take random samples of the minority class in order to match the majority (reference?). SMOTE combines sampling both from the majority and minority, but instead of taking identical copies of the minority it creates synthetic observations. For each of the three sampling techniques, the probability cutpoint was optmized using the Youden Index as before. 
 
-- Youden Index
-
-1. No Sampling, Optimze Cut-off:
-
-- Use 0.5 standard probability cutoff to compare
-
-- Compare to Youden Index cutoff
-
-2. Sampling:
-
-- Create sampled data sets that are balanced 
-    - Down sample
-        - under-sample majority to equal minority
-    - Up sample
-        - over-sample minority to equal majority
-    - SMOTE
-        - Synthetic Minority Over-sampling Technique
-
-- Predict and use Youden Index as cutoff
 
 
 
