@@ -28,14 +28,14 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introduction
 
-- Unbalanced learning problem (low sensitivity in prediction)
-- Describe chronic opioid therapy issue and dataset
 
 - Don't go into background problem too much? (for stats paper)
-- Focus more on the imbalanced learning problem
-- But do I open on the opioid problem or the learning problem?**
+- Do I open on the imbalanced learning problem?
 - How much to describe the dataset?
 
+$\qquad$ Predictive modeling with imbalanced data has been found to have report low sensitivity (reference?). To combat this issue of overlooking many true postitives,  
+
+$\qquad$ To illustrate this issue, we are using electronic health record data from 2008 to 2014 of patients for patients with chronic opioid therapy (COT). Five percent of the 27,705 patients were reported with the outcome, which was defined as receipt of $\geq$ 90-day supply of opioids with < 30-day gap in supply over a 180-day period or receipt of $\geq$ 10 opioid prescriptions over one year. 
 
 ## Methods
 
@@ -62,6 +62,7 @@ $\qquad$ There was no change to the negative predicted value across the approach
 
 
 - Are we really comparing sampling to cut-points if we use both in the second approach?
+- Doing both sampling and cut-points is overkill if just cut-points works, so it would maybe make sense to just compare them individually?
 - Also I'm sure we could get matching results with SMOTE if we wanted to see them compare?
 
 
@@ -69,9 +70,9 @@ $\qquad$ There was no change to the negative predicted value across the approach
 
 $\qquad$ Across the different samples, we saw similar improvements for sensitivity. 
 
-Again are we really comparing cutpoints and sampling if we do both in second approach? What do we say we're finding here
+- Again are we really comparing cut-points and sampling if we do both in second approach? What do we say we're finding here
 
-## Conclusion & Moving Forward
+## Conclusion
 
 
 
