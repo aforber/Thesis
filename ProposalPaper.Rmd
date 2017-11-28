@@ -3,7 +3,7 @@ title: "Thesis Proposal"
 subtitle: "Predictive Modeling with Imbalanced Data?"
 author:
 - Alyssa Forber
-- University of Colorado, Anschutz Medical Campus
+- Kathryn Colborn, Elizabeth Juarez-Colunga, Susan Calcaterra
 output: pdf_document
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 geometry: margin=1in
@@ -28,21 +28,18 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introduction
 
-$\qquad$
-
 - Unbalanced learning problem (low sensitivity in prediction)
-- Decribe chronic opioid therapy issue and dataset
+- Describe chronic opioid therapy issue and dataset
 
 - Don't go into background problem too much? (for stats paper)
-- Focus more on the imbalanced learning probelm
+- Focus more on the imbalanced learning problem
 - But do I open on the opioid problem or the learning problem?**
 - How much to describe the dataset?
 
 
-
 ## Methods
 
-$\qquad$ The analysis was done in RStuido version 1.1.383. 
+$\qquad$ The analysis was done in RStudio version 1.1.383. 
 
 $\qquad$ We used a roughly 2/3rd temporal split of the data to create training and testing datasets, where years 2008-2011 were used to train (65%), and 2012-2014 were used to test (35%). 
 
@@ -50,31 +47,38 @@ $\qquad$ The model used for this analysis was cross validated lasso regression. 
 
 $\qquad$ The predictors were first narrowed from ? to 35 (?) based on clinical relevance (Can I reference the paper that is under submission since that goes into more details? Is it even necessary). 
 
-$\qquad$ We first evaluated the prediction performance of the dataset without sampling to see the effects of the imbalanced data on the accuracy, sensitivy, and specificity. This was to serve as a baseline to compare with the techniques available to mitigate the issue of poor sensitivity. The predicted probability cutpoint used here was rounding at the standard 0.5 that would be appropriate in balanced datasets. 
+$\qquad$ We first evaluated the prediction performance of the dataset without sampling to see the effects of the imbalanced data on the accuracy, sensitivity, and specificity. This was to serve as a baseline to compare with the techniques available to mitigate the issue of poor sensitivity. The predicted probability cut-point used here was rounding at the standard 0.5 that would be appropriate in balanced datasets. 
 
-$\qquad$ The first approach used to improve performance was to choose a more informed probabilty cutpoint for the data. This was done using the Youden Index, which finds the maximum of the receiver operating characteristic (ROC) curve (reference here!) with the pROC package (do I need to say this?). 
+$\qquad$ The first approach used to improve performance was to choose a more informed probability cut-point for the data. This was done using the Youden Index, which finds the maximum of the receiver operating characteristic (ROC) curve (reference here!) with the pROC package (do I need to say this?). 
 
-$\qquad$ The second approach was through sampling the dataset. Three types of sampling methods were compared--down sampling, up sampling, and Synthetic Minority Over-sampling Technique (SMOTE). Down sampling takes a random sample from the majority class, in this case those who are not classfied as having chronic opioid therapy, in order to match the size of the minority class (referenc?). Up sampling does the reverse to take random samples of the minority class in order to match the majority (reference?). SMOTE combines sampling both from the majority and minority, but instead of taking identical copies of the minority it creates synthetic observations. For each of the three sampling techniques, the probability cutpoint was optmized using the Youden Index as before. 
-
-
+$\qquad$ The second approach was through sampling the dataset. Three types of sampling methods were compared--down sampling, up sampling, and Synthetic Minority Over-sampling Technique (SMOTE). Down sampling takes a random sample from the majority class, in this case those who are not classified as having chronic opioid therapy, in order to match the size of the minority class (reference?). Up sampling does the reverse to take random samples of the minority class in order to match the majority (reference?). SMOTE combines sampling both from the majority and minority, but instead of taking identical copies of the minority it creates synthetic observations. For each of the three sampling techniques, the probability cut-point was optimized using the Youden Index as before. 
 
 
 ## Results
 
-See table 2 for threshold (cutoff), sensitivity, specificity, accurary, npv, ppv, and AUC
+$\qquad$ As expected, without using an optimized cut-point or sampling technique, the sensitivity of the model was extremely poor at 8%, with high specificity and accuracy (99% and 96%). Simply choosing a more informed probability cut-point to 0.043 instead of 0.5 improved the sensitivity to 85% and brought the specificity down to 73%. This cut-point is intuitive as the outcome is present at 5% in the dataset, which would be consistent with a 0.5 cutoff in a evenly split dataset. The up and down sampled datasets both showed the same improved sensitivity with probability cut-points at about 0.4, also with close specificities of 74 and 73%. SMOTE on the other hand, while still seeing improvements on sensitivity, had reversed values with 74% sensitivity and 84% specificity. However, there were improvements in accuracy for SMOTE at 86% as compared to the other three approaches, which had accuracies at 86-87%. 
+
+$\qquad$ There was no change to the negative predicted value across the approaches, and a decrease in positive predicted value. In terms of the ROC analysis, the area under of the curve for each approach was about the same at 86-87%. See Table 2 for full results for the cut-point, sensitivity, specificity, accuracy, negative predicted value, positive predicted value, and area under the curve.
+
+
+- Are we really comparing sampling to cut-points if we use both in the second approach?
+- Also I'm sure we could get matching results with SMOTE if we wanted to see them compare?
+
 
 ## Discussion
 
+$\qquad$ Across the different samples, we saw similar improvements for sensitivity. 
 
+Again are we really comparing cutpoints and sampling if we do both in second approach? What do we say we're finding here
 
-## Conclusion
+## Conclusion & Moving Forward
+
 
 
 
 ## Acknowledgments
 
-Do I just include committee as authors and then acknowledge the University?
-Or whoever is funding me?
+Do I just include committee members as authors and then acknowledge the University?
 
 KL Colborn PhD
 
