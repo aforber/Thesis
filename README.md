@@ -1,6 +1,6 @@
 # Alyssa Forber's Masters Biostatistics Thesis Repo
 
-####This repository contains all work excluding data and code (though code may be added in the future- it is currently on Box) for thesis proposal and paper.
+This repository contains all work excluding data and code (though code may be added in the future- it is currently on Box) for thesis proposal and paper.
 
 # Project Description
 
