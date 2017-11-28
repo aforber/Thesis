@@ -28,5 +28,9 @@ This is the power point for the proposal presentation.
 
 This is the proposal paper.
 
+### Figures
+
+These are any grahpics/tables/results. 
+
 
 
