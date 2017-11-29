@@ -3,7 +3,7 @@ title: "Thesis Proposal"
 subtitle: "Predictive Modeling with Imbalanced Data?"
 author:
 - Alyssa Forber
-- Kathryn Colborn, Elizabeth Juarez-Colunga, Susan Calcaterra
+- Kathryn Colborn, Elizabeth Juarez-Colunga, Susan Calcaterra (swap, susan, elizabeth, katie)
 output: pdf_document
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 geometry: margin=1in
@@ -33,11 +33,26 @@ knitr::opts_chunk$set(echo = TRUE)
 - Do I open on the imbalanced learning problem?
 - How much to describe the dataset?
 
+- start with opioid problem
+- how much increase in opioid use
+- how need to identify patients at increased risk is immediate
+- this presents a statistical problem in classifying patients when identifying a rare outcome
+- cite some other issues in health with rare outcomes and what people have done
+- give fair bit of background (stats in medical, etc) find where people try to predict rare outcomes
+- hopefully no ones done exactly what we've done
+- no one's explored the tradeoffs of cut-points and sampling, what we've sought to do in order to achieve best prediction
+- last paragraph, we sought to identity patients at risk for COT at a safety hospital at Denver, predictive performance, few sentences on what we're doing and what methods and dataset
+
 $\qquad$ Predictive modeling with imbalanced data has been found to have report low sensitivity (reference?). To combat this issue of overlooking many true postitives,  
 
 $\qquad$ To illustrate this issue, we are using electronic health record data from 2008 to 2014 of patients for patients with chronic opioid therapy (COT). Five percent of the 27,705 patients were reported with the outcome, which was defined as receipt of $\geq$ 90-day supply of opioids with < 30-day gap in supply over a 180-day period or receipt of $\geq$ 10 opioid prescriptions over one year. 
 
 ## Methods
+
+Subtitle Data
+- start with describing the data but no statistics, Denver health, years, 
+
+Statistical Methods sub
 
 $\qquad$ The analysis was done in RStudio version 1.1.383. 
 
@@ -51,10 +66,14 @@ $\qquad$ We first evaluated the prediction performance of the dataset without sa
 
 $\qquad$ The first approach used to improve performance was to choose a more informed probability cut-point for the data. This was done using the Youden Index, which finds the maximum of the receiver operating characteristic (ROC) curve (reference here!) with the pROC package (do I need to say this?). 
 
-$\qquad$ The second approach was through sampling the dataset. Three types of sampling methods were compared--down sampling, up sampling, and Synthetic Minority Over-sampling Technique (SMOTE). Down sampling takes a random sample from the majority class, in this case those who are not classified as having chronic opioid therapy, in order to match the size of the minority class (reference?). Up sampling does the reverse to take random samples of the minority class in order to match the majority (reference?). SMOTE combines sampling both from the majority and minority, but instead of taking identical copies of the minority it creates synthetic observations. For each of the three sampling techniques, the probability cut-point was optimized using the Youden Index as before. 
+$\qquad$ The second approach was through sampling the dataset. Three types of sampling methods were compared--down sampling, up sampling, and Synthetic Minority Over-sampling Technique (SMOTE). Down sampling takes a random sample from the majority class, in this case those who are not classified as having chronic opioid therapy, in order to match the size of the minority class (reference?). Up sampling does the reverse to take random samples of the minority class in order to match the majority (reference?). SMOTE combines sampling both from the majority and minority, but instead of taking identical copies of the minority it creates synthetic observations (reference). For each of the three sampling techniques, the probability cut-point was optimized using the Youden Index as before. 
 
 
 ## Results
+
+Results is strictly results, no interpretation
+
+Report the results, but don't go into what is better
 
 $\qquad$ As expected, without using an optimized cut-point or sampling technique, the sensitivity of the model was extremely poor at 8%, with high specificity and accuracy (99% and 96%). Simply choosing a more informed probability cut-point to 0.043 instead of 0.5 improved the sensitivity to 85% and brought the specificity down to 73%. This cut-point is intuitive as the outcome is present at 5% in the dataset, which would be consistent with a 0.5 cutoff in a evenly split dataset. The up and down sampled datasets both showed the same improved sensitivity with probability cut-points at about 0.4, also with close specificities of 74 and 73%. SMOTE on the other hand, while still seeing improvements on sensitivity, had reversed values with 74% sensitivity and 84% specificity. However, there were improvements in accuracy for SMOTE at 86% as compared to the other three approaches, which had accuracies at 86-87%. 
 
@@ -67,6 +86,12 @@ $\qquad$ There was no change to the negative predicted value across the approach
 
 
 ## Discussion
+
+- there do appear to be variables iwth strong associations, but the question of model choice depends on what method- get different vars from lasso if you're doing cutpoint or sampling
+
+sampling gives a case control in your data and I think should give fewer variables (LOOK AT HOW MANY ARE LEFT IN, REMEMBER SOME ARE MULTIPLE CATEGORIES JUST COUNT ONE AND PUT INTO STATS TABLE)
+
+trade offs to discuss with physician, at what point do the sens, spec need to be 
 
 $\qquad$ Across the different samples, we saw similar improvements for sensitivity. 
 
@@ -90,7 +115,7 @@ SL Calcaterra MD, MPH
 
 ## References
 
-ROC, Youden, SMOTE, LASSO, cross-validation Chronic Opioid Therapy
+ROC, Youden, SMOTE, LASSO, cross-validation Chronic Opioid Therapy, up-sampling, down-sampling
 
 A Statistical Model for Prediction of Future Chronic Opioid Use among Hospitalized Patients
 
@@ -98,7 +123,9 @@ A Statistical Model for Prediction of Future Chronic Opioid Use among Hospitaliz
 
 ## Appendix
 
-Include full table 1?
+Include full table 1? Yes include the full table before but pull out some of the ones from the smaller table to quote
+
+Among these set of varaibles, which ones are most important in classying. Aall it supervised learning problem (because observed outcome)
 
 
 \begin{table}
@@ -133,7 +160,7 @@ MME per hospital day $>$ 10 & 80\% & 52\% & $<$.001 \\
 }
 \end{table}
 
-
+Add the number of variables
 
 \begin{table}
 \centering

@@ -259,7 +259,13 @@ plot with all of them on top of each other and show how similar they are?
 ## Moving Forward
 
 - Simulation of different percentages for rare outcomes
-      - When you could run model without sampling or changing cutoffs (though sampling does allow a more parismonious model)
+      - which method performs the best for 5% 10% 50%
+      - plogis(y, 1, int + b1 x age + b2 x op_receipt + ...)
+      - where int <- -1.5 (vary this) b1 <- x (can use estimates from Susan's paper)
+      - we get a y (the only thing we need to generate, not the data)
+      - then use lasso with y and xmatrix and predict to get confusion matrix 
+      - table 3 will be prevelance (5, 20, 50, etc maybe 10 values), and youden vs sampling with the different sens, spec 
+      
 
 - Try different sampling other than defaults for each method
 
