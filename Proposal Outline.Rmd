@@ -40,7 +40,7 @@ Moving Forward
 
 ## Imbalanced Learning Problem
 
-- Presents a problem of imblananced data
+- Presents a problem of imbalanced data
 - Poor sensitivity with rare outcomes
 - Need to improve predictive performance
 
@@ -89,7 +89,6 @@ Discount payment or Medicaid & 76\% & 61\% & $<$.001 \\
 History of chronic pain & 76\% &53\%& $<$.001 \\
 Discharge diagnosis chronic pain & 50\% & 29\% & $<$.001 \\
 Surgical patient & 48\% & 39\% & $<$.001 \\
-Past year: & & &\\
 Benzodiazepine & 16\% & 5\% & $<$.001 \\
 Non-opioid analgesics & 25\% & 9\% & $<$.001 \\
 Number of opioid prescriptions: & & &\\
@@ -109,7 +108,7 @@ MME per hospital day $>$ 10 & 80\% & 52\% & $<$.001 \\
 
 
 - Accurate predicting $\rightarrow$ improving sensitivity and specificity for imbalanced outcome
-- Using and comparing methods of probability cutpoints and sampling
+- Using and comparing methods of probability cut-points and sampling
 
 
 ## Methods
@@ -118,7 +117,7 @@ MME per hospital day $>$ 10 & 80\% & 52\% & $<$.001 \\
 
 - Run model on sampled data
 
-- Get predicted probabilites on the test data
+- Get predicted probabilities on the test data
 
 - Optimize probability cutoff for outcome
 
@@ -141,7 +140,7 @@ subject to $\sum_{j=1}^p |\beta_j| \leq t$ where $t$ is the tuning parameter.
     
 ## Cross Validation
 
-- Cross validattion: 
+- Cross validation: 
     - Find the best "tuning measure" for model selection which determines amount of shrinkage of estimates
     - Split data into k parts and then train on each of those except one you validate against
     - Then pick the tuning measure that minimizes error
@@ -160,7 +159,7 @@ subject to $\sum_{j=1}^p |\beta_j| \leq t$ where $t$ is the tuning parameter.
     - Biased coefficients
 
 
-## ROC & Cutoff Probablities
+## ROC & Cutoff Probabilities
 
 ROC (with pROC package):
 
@@ -174,8 +173,6 @@ ROC (with pROC package):
 
 ![ROC Curve](/Users/alyssaforber/Box Sync/AlyssaKatieResearch/Opioids/Results/ExampleROC.png){ width=60% }
 
-
-    
     
 ## Confusion Matrix
 \begin{columns}
@@ -183,7 +180,6 @@ ROC (with pROC package):
 
 
 $$ Sensitivity = \frac{TP}{TP+FN}$$
-
 
 $$ Specificity = \frac{TN}{TN+FP}$$
 
@@ -198,11 +194,9 @@ $$ Accuracy = \frac{TP+ TN}{TP+FP+TN+FN}$$
 \end{columns}
 
 
-
-
 ## First approach
 
-No Sampling, Optimze Cut-off:
+No Sampling, Optimize Cut-off:
 
 - Use original unsampled data and get predictions off the lasso model
     - Predictions return probability between 0 and 1 for each observation
@@ -211,7 +205,6 @@ No Sampling, Optimze Cut-off:
 
 - Find "best" probability cutoff
       - Youden Index
-
 
 
 ## Second Approach
@@ -295,16 +288,19 @@ Sampling:
 ## Timeline
 
 
+
+
 Defend in March
+
+
+## Questions?
+
+Questions or Suggestions?
 
 ## References
 
 https://rasbt.github.io/mlxtend/user_guide/evaluate/confusion_matrix/
 
 https://svds.com/learning-imbalanced-classes/
-
-## Questions?
-
-Questions?
 
 

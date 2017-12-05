@@ -1,6 +1,6 @@
 ---
 title: "Thesis Proposal"
-subtitle: "Predictive Modeling with Imbalanced Data?"
+subtitle: "Predictive Modeling with Imbalanced Data"
 author:
 - Alyssa Forber
 - Susan Calcaterra, Elizabeth Juarez-Colunga, Kathryn Colborn
@@ -8,10 +8,7 @@ output: pdf_document
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 geometry: margin=1in
 fontsize: 12pt 
-header-includes:
-
 abstract: |
-  Do I need an abstract? 
 
 ---
 
@@ -25,13 +22,9 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-
 ## Introduction
 
-
-- Don't go into background problem too much? (for stats paper)
-- Do I open on the imbalanced learning problem?
-- How much to describe the dataset?
+$\qquad$ The misuse of opioids
 
 - start with opioid problem
 - how much increase in opioid use
@@ -45,29 +38,27 @@ knitr::opts_chunk$set(echo = TRUE)
 
 $\qquad$ Predictive modeling with imbalanced data has been found to have report low sensitivity (reference?). To combat this issue of overlooking many true postitives,  
 
-$\qquad$ To illustrate this issue, we are using electronic health record data from 2008 to 2014 of patients for patients with chronic opioid therapy (COT). Five percent of the 27,705 patients were reported with the outcome, which was defined as receipt of $\geq$ 90-day supply of opioids with < 30-day gap in supply over a 180-day period or receipt of $\geq$ 10 opioid prescriptions over one year. 
 
 ## Methods
 
-Subtitle Data
-- start with describing the data but no statistics, Denver health, years, 
+### Data
 
-Statistical Methods sub
+$\qquad$ To illustrate this issue, we are using electronic health record data from Denver Health from the years 2008 to 2014 of patients for patients with chronic opioid therapy (COT). This is an urban, safety-net hospital. Five percent of the 27,705 patients were reported with the outcome, which was defined as receipt of $\geq$ 90-day supply of opioids with < 30-day gap in supply over a 180-day period or receipt of $\geq$ 10 opioid prescriptions over one year. The data also contained demographic information on the patient including age, race, gender, history of chronic pain, and length of hospital stay. 
 
-$\qquad$ The analysis was done in RStudio version 1.1.383. 
 
-$\qquad$ We used a roughly 2/3rd temporal split of the data to create training and testing datasets, where years 2008-2011 were used to train (65%), and 2012-2014 were used to test (35%). 
+### Statistical Methods
+
+$\qquad$ The analysis was done in RStudio version 1.1.383. We used a roughly 2/3rd temporal split of the data to create training and testing datasets, where years 2008-2011 were used to train (65%), and 2012-2014 were used to test (35%). 
 
 $\qquad$ The model used for this analysis was cross validated lasso regression. This was chosen as it has been found to perform better predictor selection than stepwise selection (reference on this?), and as we were not interested in having interpretable coefficients. 
 
-$\qquad$ The predictors were first narrowed from ? to 35 (?) based on clinical relevance (Can I reference the paper that is under submission since that goes into more details? Is it even necessary). 
+$\qquad$ The predictors were first narrowed from ? to 35 (?) based on clinical relevance. 
 
 $\qquad$ We first evaluated the prediction performance of the dataset without sampling to see the effects of the imbalanced data on the accuracy, sensitivity, and specificity. This was to serve as a baseline to compare with the techniques available to mitigate the issue of poor sensitivity. The predicted probability cut-point used here was rounding at the standard 0.5 that would be appropriate in balanced datasets. 
 
-$\qquad$ The first approach used to improve performance was to choose a more informed probability cut-point for the data. This was done using the Youden Index, which finds the maximum of the receiver operating characteristic (ROC) curve (reference here!) with the pROC package (do I need to say this?). 
+$\qquad$ The first approach used to improve performance was to choose a more informed probability cut-point for the data. This was done using the Youden Index, which finds the maximum of the receiver operating characteristic (ROC) curve (reference here!) with the pROC package. 
 
 $\qquad$ The second approach was through sampling the dataset. Three types of sampling methods were compared--down sampling, up sampling, and Synthetic Minority Over-sampling Technique (SMOTE). Down sampling takes a random sample from the majority class, in this case those who are not classified as having chronic opioid therapy, in order to match the size of the minority class (reference?). Up sampling does the reverse to take random samples of the minority class in order to match the majority (reference?). SMOTE combines sampling both from the majority and minority, but instead of taking identical copies of the minority it creates synthetic observations (reference). For each of the three sampling techniques, the probability cut-point was optimized using the Youden Index as before. 
-
 
 ## Results
 
@@ -93,10 +84,6 @@ $\qquad$ Across the different samples, we saw similar improvements for sensitivi
 
 
 
-
-## Acknowledgments
-
-Do I just include committee members as authors and then acknowledge the University?
 
 
 ## References
