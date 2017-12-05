@@ -32,30 +32,17 @@ Moving Forward
 
 ## Motivation
 
+- Chronic opioid therapy has become an epidemic
+- Over 2 million people had a prescription opioid use disorder (2015 National Survey of Drug Use and Health)
+- Important to identity patients at high risk
+- Allow for hospitals to make informative decisions about prescribing opioids
 
-Opioid information
-
-- explain issue of chronic opioid therapy
-
-- rare outcome
-
-- whether or not to prescribe to patients if likely to progress to opioid therapy
-
-
-## Intro
-
-The United States is facing an unprecedented opioid epidemic. According to data from the 2015 National Survey of Drug Use and Health, over 2 million people had a prescription opioid use disorder.[1]
-
-This is particularly important in the hospital where opioids are commonly prescribed for pain.[10]  Opioid receipt at hospital discharge has been shown to be associated with an increased risk of chronic opioid use.[11]
-
-Predictive tools to identify hospitalized patients at risk for future COT may have clinical utility to improve hospital-based pain management with a focus on limiting opioid prescribing when non-opioid analgesics, or other non-pharmaceutical options, may be effective for pain control.  
 
 ## Imbalanced Learning Problem
 
-
-Sampling Techniques, Bagging
-
-you might not have to get as fancy with things like bagging and just choose a better cutpoint
+- Presents a problem of imblananced data
+- Poor sensitivity with rare outcomes
+- Need to improve predictive performance
 
 
 ## The Data
@@ -121,7 +108,7 @@ MME per hospital day $>$ 10 & 80\% & 52\% & $<$.001 \\
 ## Aims
 
 
-- Accurate predicting $\rightarrow$ improving sensitivity and specificity for unbalanced outcome
+- Accurate predicting $\rightarrow$ improving sensitivity and specificity for imbalanced outcome
 - Using and comparing methods of probability cutpoints and sampling
 
 
@@ -141,14 +128,37 @@ MME per hospital day $>$ 10 & 80\% & 52\% & $<$.001 \\
 
 - Cross validated lasso regression
 
+
+## Lasso
+
 - Lasso:
     - Performs variable selection
     - Shrinks estimates to 0
+    
+$$\hat\beta_{lasso}= argmin \sum_{j=1}^{N}(y_i-\beta_0-\sum_{j=1}^{p}x_{ij}\beta_j)^2 $$
+
+subject to $\sum_{j=1}^p |\beta_j| \leq t$ where $t$ is the tuning parameter. 
+    
+## Cross Validation
 
 - Cross validattion: 
     - Find the best "tuning measure" for model selection which determines amount of shrinkage of estimates
     - Split data into k parts and then train on each of those except one you validate against
-    - Then pick the tuning measure that minimizes error?
+    - Then pick the tuning measure that minimizes error
+
+## Advantages and Disadvantages
+
+
+- Advantages:
+    - Lower variance of the predicted values?
+    - More accurate predictions
+    - Reduces the number of predictors
+
+- Disadvantages:
+    - No interpretation of predictor coefficients
+    - No standard errors out of the model
+    - Biased coefficients
+
 
 ## ROC & Cutoff Probablities
 
@@ -167,24 +177,12 @@ ROC (with pROC package):
 
     
     
-## Confusion Matrix?
+## Confusion Matrix
 
 - show matrix
 - show equations to calculate sens, spec, npv, ppv
 
 
-## Advantages and Disadvantages
-
-
-- Advantages:
-    - Lower variance of the predicted values?
-    - More accurate predictions
-    - Reduces the number of predictors
-
-- Disadvantages:
-    - No interpretation of predictor coefficients
-    - No standard errors out of the model
-    - Biased coefficients
 
 
 ## First approach
