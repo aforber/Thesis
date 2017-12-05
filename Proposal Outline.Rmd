@@ -150,7 +150,7 @@ subject to $\sum_{j=1}^p |\beta_j| \leq t$ where $t$ is the tuning parameter.
 
 
 - Advantages:
-    - Lower variance of the predicted values?
+    - Lower variance of the predicted values
     - More accurate predictions
     - Reduces the number of predictors
 
@@ -178,9 +178,24 @@ ROC (with pROC package):
     
     
 ## Confusion Matrix
+\begin{columns}
+\begin{column}{0.48\textwidth}
 
-- show matrix
-- show equations to calculate sens, spec, npv, ppv
+
+$$ Sensitivity = \frac{TP}{TP+FN}$$
+
+
+$$ Specificity = \frac{TN}{TN+FP}$$
+
+$$ Accuracy = \frac{TP+ TN}{TP+FP+TN+FN}$$
+
+\end{column}
+\begin{column}{0.5\textwidth}
+
+\includegraphics[width=5cm]{/Users/alyssaforber/Documents/Denver/Thesis/Figures/confusion_matrix.png}
+
+\end{column}
+\end{columns}
 
 
 
@@ -205,31 +220,48 @@ Sampling:
 
 - Create sampled data sets that are balanced 
     - Down sample
-        - under-sample majority to equal minority
     - Up sample
-        - over-sample minority to equal majority
     - SMOTE
-        - Synthetic Minority Over-sampling Technique
 
-- Predict and use Youden Index as cutoff
+- Predict and use both standard 0.5 and Youden Index as cutoff
 
+## Down Sampling
 
+- Under-sample majority to equal minority
 
+![Down sample](/Users/alyssaforber/Documents/Denver/Thesis/Figures/undersampling.png){ width=60% }
+
+## Up Sampling
+
+- Over-sample minority to equal majority
+
+![Up sample](/Users/alyssaforber/Documents/Denver/Thesis/Figures/oversampling.png){ width=60% }
+        
+## SMOTE
+
+- Synthetic Minority Over-sampling Technique
+
+![SMOTE](/Users/alyssaforber/Documents/Denver/Thesis/Figures/smote.jpg){ width=60% }
+        
 ## Results
 
 
-
 \begin{table}
-\scalebox{0.7}{
-\begin{tabular}{l c c c c c c c}
+\centering
+\caption {Results} 
+\scalebox{0.65}{
+\begin{tabular}{l c c c c c c c c}
 \hline
-\textbf{Data} & \textbf{Threshold} & \textbf{Specificity} & \textbf{Sensitivity} & \textbf{NPV} & \textbf{PPV} & \textbf{Accuracy} & \textbf{AUC} \\
+\textbf{Data} & \textbf{Threshold} & \textbf{Specificity} & \textbf{Sensitivity} & \textbf{NPV} & \textbf{PPV} & \textbf{Accuracy} & \textbf{AUC}  & \textbf{Covariates}\\
 \hline
-\textbf{Unsampled 0.5} & 0.5 & 99 & 8	& 96 & 35 & 96 & 86  \\
-\textbf{Unsampled} & 0.043 & 73 &	85 & 99	& 12 & 73	& 86 \\
-\textbf{Down sampled} & 0.401	& 73 & 85	& 99 & 12 & 74 & 86  \\
-\textbf{Up sampled} & 0.399	& 74 & 85	& 99 & 12	& 74 & 87 \\
-\textbf{SMOTE} & 0.472 & 84 & 74	& 99 & 17 & 84 & 86 \\
+\textbf{Unsampled 0.5} & 0.5 & 99 & 8	& 96 & 35 & 96 & 86 & 31  \\
+\textbf{Unsampled} & 0.043 & 73 &	85 & 99	& 12 & 73	& 86 & 31\\
+\textbf{Down sampled 0.5} & 0.5 & 81 & 75 & 99 & 15 & 81 & 86 & 34 \\
+\textbf{Down sampled} & 0.401	& 73 & 85	& 99 & 12 & 74 & 86 & 34\\
+\textbf{Up sampled 0.5} & 0.5 & 82 & 75 & 99 & 15 & 82 & 87  & 34 \\
+\textbf{Up sampled} & 0.399	& 74 & 85	& 99 & 12	& 74 & 87  & 34 \\
+\textbf{SMOTE 0.5} & 0.5 & 86 & 71 & 99 & 17 & 85 & 86 & 33 \\
+\textbf{SMOTE} & 0.472 & 84 & 74	& 99 & 17 & 84 & 86  & 33 \\
 \hline
 \end{tabular}
 }
@@ -239,10 +271,6 @@ Sampling:
 ## ROC Plot
 
 ![ROC for Original Data: Younden and 0.5 cutoffs](/Users/alyssaforber/Box Sync/AlyssaKatieResearch/Opioids/Results/LassROCplot.png){ width=60% }
-
-## ROC Plot
-
-plot with all of them on top of each other and show how similar they are?
 
 
 ## Conclusions Thus Far
@@ -256,78 +284,27 @@ plot with all of them on top of each other and show how similar they are?
 
 ## Moving Forward
 
-- Simulation of different percentages for rare outcomes
-      - which method performs the best for 5% 10% 50%
-      - plogis(y, 1, int + b1 x age + b2 x op_receipt + ...)
-      - where int <- -1.5 (vary this) b1 <- x (can use estimates from Susan's paper)
-      - we get a y (the only thing we need to generate, not the data)
-      - then use lasso with y and xmatrix and predict to get confusion matrix 
-      - table 3 will be prevelance (5, 20, 50, etc maybe 10 values), and youden vs sampling with the different sens, spec 
-      
-
-- Try different sampling other than defaults for each method
-
 - Bagging (bootstrap aggregating)
 
-- bootstrap aggregate the coefficients and get bootstrap CI (loop through getting new sample, saving coefficients, get mean and sd across 1000 boot samples)
-
-
-## More Moving Forward
-
-- look up bagging and stepwise selection
-- haven't seen much on bagging and down sampling-- look that up, if not that'll be interesting
-
-
-- check to see if there's a package to do bagging with lasso
-- feed final average model with test set
-- package SparseLearner? or Predict.bagging
-- because when we down sample we only get one subset
-
+- Simulation of different percentages for rare outcomes
+    - explore method performance at 5%, 10%, 50% ect. of outcome
+      
+- Investigate other sampling techniques or cut-point methods
 
 
 ## Timeline
 
-Defend March 15?
+
+Defend in March
+
+## References
+
+https://rasbt.github.io/mlxtend/user_guide/evaluate/confusion_matrix/
+
+https://svds.com/learning-imbalanced-classes/
 
 ## Questions?
 
 Questions?
-
-
-## Notes
-
-
-show smooth spline of age and probability of COT and show it has a curve to it and why we added the quadratic age
-smooth.spline with 3 degrees of freedom
-    - Where would it make sense to include this???
-
-
-accumulate other papers in endnote
-
-(Check out most recent manuscript from paper an citations)
-
-
-## Notes 11.14.17
-
-
-look at logistic and lasso results and compare (probably not necessary to include)
-
-See if there are any other ways to choose a threshold
-
-Might want to come up with another methodlogical advancement
-
-DO THIS!!
-Just notes and what lit to look into
-Abstract, Background, methods, results, conclusions, acknowledgments, tables, figures,
-think about what's table 1
-Be good to bring to meeting with Elizabeth to give her an idea of what we're working on!!!
-
-
-Just showed variables for where there is a really big split between outcomes
-could use those and then maybe a couple others
-
-mention TRIPOD - mention this, about being transparent, read paper
-
-
 
 

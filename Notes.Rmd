@@ -1,0 +1,69 @@
+---
+title: "Notes"
+author: "Alyssa Forber"
+date: "12/5/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Notes
+
+
+
+- look up bagging and stepwise selection
+- haven't seen much on bagging and down sampling-- look that up, if not that'll be interesting
+
+
+- check to see if there's a package to do bagging with lasso
+- feed final average model with test set
+- package SparseLearner? or Predict.bagging
+- because when we down sample we only get one subset
+
+- bootstrap aggregate the coefficients and get bootstrap CI (loop through getting new sample, saving coefficients, get mean and sd across 1000 boot samples)
+
+
+## Simulation
+
+- Simulation of different percentages for rare outcomes
+      - which method performs the best for 5% 10% 50%
+      - plogis(y, 1, int + b1 x age + b2 x op_receipt + ...)
+      - where int <- -1.5 (vary this) b1 <- x (can use estimates from Susan's paper)
+      - we get a y (the only thing we need to generate, not the data)
+      - then use lasso with y and xmatrix and predict to get confusion matrix 
+      - table 3 will be prevelance (5, 20, 50, etc maybe 10 values), and youden vs sampling with the different sens, spec 
+
+
+show smooth spline of age and probability of COT and show it has a curve to it and why we added the quadratic age
+smooth.spline with 3 degrees of freedom
+    - Where would it make sense to include this???
+
+
+accumulate other papers in endnote
+
+(Check out most recent manuscript from paper an citations)
+
+
+## Notes 11.14.17
+
+
+look at logistic and lasso results and compare (probably not necessary to include)
+
+See if there are any other ways to choose a threshold
+
+Might want to come up with another methodlogical advancement
+
+DO THIS!!
+Just notes and what lit to look into
+Abstract, Background, methods, results, conclusions, acknowledgments, tables, figures,
+think about what's table 1
+Be good to bring to meeting with Elizabeth to give her an idea of what we're working on!!!
+
+
+Just showed variables for where there is a really big split between outcomes
+could use those and then maybe a couple others
+
+mention TRIPOD - mention this, about being transparent, read paper
+
