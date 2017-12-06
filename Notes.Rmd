@@ -13,6 +13,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 
+Doing what we're doing:
+https://pdfs.semanticscholar.org/7722/0ef0920c43e6814d471b4f35c75fc97e13c6.pdf
+
+
+
+
 - look up bagging and stepwise selection
 - haven't seen much on bagging and down sampling-- look that up, if not that'll be interesting
 

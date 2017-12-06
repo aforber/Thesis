@@ -144,6 +144,8 @@ subject to $\sum_{j=1}^p |\beta_j| \leq t$ where $t$ is the tuning parameter.
     - Find the best "tuning measure" for model selection which determines amount of shrinkage of estimates
     - Split data into k parts and then train on each of those except one you validate against
     - Then pick the tuning measure that minimizes error
+    
+![K fold cross validation](/Users/alyssaforber/Documents/Denver/Thesis/Figures/cross_val.jpeg){ width=60% }
 
 ## Advantages and Disadvantages
 
@@ -288,8 +290,9 @@ Sampling:
 
 ## Timeline
 
+Make changes and additions by January
 
-
+Finalize paper in Februrary
 
 Defend in March
 
