@@ -278,9 +278,10 @@ Sampling:
 ## Moving Forward
 
 - Bagging (bootstrap aggregating)
+    - Model averaging approach
 
 - Simulation of different percentages for rare outcomes
-    - explore method performance at 5%, 10%, 50% ect. of outcome
+    - Explore method performance at 5%, 10%, 50% ect. of outcome
       
 - Investigate other sampling techniques or cut-point methods
 

@@ -8,8 +8,6 @@ output: pdf_document
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 geometry: margin=1in
 fontsize: 12pt 
-abstract: |
-
 ---
 
 ```{r setup, include=FALSE}
@@ -24,18 +22,14 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introduction
 
-$\qquad$ The misuse of opioids has become an increasing problem in the United States, and the need to identify patients at increase risk for opioid abuse is immediate. STATS ON OPIOID USE. 
+$\qquad$ The misuse of opioids has become an increasing problem in the United States, and the need to identify patients at increase risk for opioid abuse is immediate. The number of opioid related overdose deaths has continued to increase, and deaths from prescripted opioids have more than quadrupled since 1997.[^fn1] In 2015 alone there were 20,101 overdose deaths related to prescription opioids and 12,990 overdose deaths related to heroin.[^fn2]
 
-- start with opioid problem
-- how much increase in opioid use
-- how need to identify patients at increased risk is immediate
-- this presents a statistical problem in classifying patients when identifying a rare outcome
+
+$\qquad$ This issue now presents a statical problem, as this is a rare outcome which makes prediction more challenging. Predictive modeling with imbalanced data has been found to report low sensitivity (reference?). Many people have tried to combat this issue in the past. GIVE EXAMPLES. 
+
 - cite some other issues in health with rare outcomes and what people have done
 - give fair bit of background (stats in medical, etc) find where people try to predict rare outcomes
 
-
-
-$\qquad$ However this presents a statical problem, as this is a rare outcome which makes prediction more challenging. Predictive modeling with imbalanced data has been found to report low sensitivity (reference?). Many people have tried to combat this issue in the past. GIVE EXAMPLES. 
 However, no one has yet explored the tradeoffs of probility cut-points and sampling methods, which is what we desired to do in this analysis to achieve the best prediction. We sought to identify patients at risk for chronic opioid therapy using several different approaches to optimize probability cut-points and sample the data in order to compare and contrast the predictive performance of these imbalanced data techniques. 
 
 
@@ -50,15 +44,15 @@ $\qquad$ To illustrate this issue, we are using electronic health record data fr
 
 $\qquad$ The analysis was done in RStudio version 1.1.383. We used a roughly 2/3rd temporal split of the data to create training and testing datasets, where years 2008-2011 were used to train (65%), and 2012-2014 were used to test (35%). 
 
-$\qquad$ The model used for this analysis was cross validated lasso regression. This was chosen as it has been found to perform better predictor selection than stepwise selection (reference on this?), and as we were not interested in having interpretable coefficients. 
+$\qquad$ The model used for this analysis was cross validated lasso regression.[^fn3][^fn4] This was chosen as it has been found to perform better predictor selection than stepwise selection (reference on this?), and as we were not interested in having interpretable coefficients. 
 
 $\qquad$ The predictors were first narrowed from 50 to 35 based on clinical relevance. 
 
 $\qquad$ We first evaluated the prediction performance of the dataset without sampling to see the effects of the imbalanced data on the accuracy, sensitivity, and specificity. This was to serve as a baseline to compare with the techniques available to mitigate the issue of poor sensitivity. The predicted probability cut-point used here was rounding at the standard 0.5 that would be appropriate in balanced datasets. 
 
-$\qquad$ The first approach used to improve performance was to choose a more informed probability cut-point for the data. This was done using the Youden Index, which finds the maximum of the receiver operating characteristic (ROC) curve (reference here!) with the pROC package. 
+$\qquad$ The first approach used to improve performance was choosing a more informed probability cut-point for the data. This was done using the Youden Index[^fn5], which finds the maximum of the receiver operating characteristic (ROC) curve[^fn6] with the pROC package. 
 
-$\qquad$ The second approach was through sampling the dataset. Three types of sampling methods were compared--down sampling, up sampling, and Synthetic Minority Over-sampling Technique (SMOTE). Down sampling takes a random sample from the majority class, in this case those who are not classified as having chronic opioid therapy, in order to match the size of the minority class (reference?). Up sampling does the reverse to take random samples of the minority class in order to match the majority (reference?). SMOTE combines sampling both from the majority and minority, but instead of taking identical copies of the minority it creates synthetic observations using nearest neighbors (reference). For each of the three sampling techniques, the standard 0.5 probability cut-point was used, and the cut-point was optimized using the Youden Index for comparison. 
+$\qquad$ The second approach was through sampling the dataset. Three types of sampling methods were compared--down sampling, up sampling, and Synthetic Minority Over-sampling Technique (SMOTE)[^fn7]. Down sampling takes a random sample from the majority class, in this case those who are not classified as having chronic opioid therapy, in order to match the size of the minority class (reference?). Up sampling does the reverse to take random samples of the minority class in order to match the majority (reference?). SMOTE combines sampling both from the majority and minority, but instead of taking identical copies of the minority it creates synthetic observations using nearest neighbors (reference). For each of the three sampling techniques, the standard 0.5 probability cut-point was used, and the cut-point was optimized using the Youden Index for comparison. 
 
 ## Results
 
@@ -77,10 +71,19 @@ $\qquad$ To expland upon this analysis, we plan to implement a simulation that e
 
 ## References
 
-ROC, Youden, SMOTE, LASSO, cross-validation Chronic Opioid Therapy, up-sampling, down-sampling
+[^fn3]:Browne, M. W. (2000). "Cross-validation methods." Journal of Mathematical Psychology 44(1): 108-132.
 
-A Statistical Model for Prediction of Future Chronic Opioid Use among Hospitalized Patients
+[^fn4]: Tibshirani, R. (1996). Regression Shrinkage and Selection via the Lasso. J. Roy. Stat. Soc. Ser. B, 58(1), 267–288.
 
+[^fn1]:CDC. Wide-ranging online data for epidemiologic research (WONDER). Atlanta, GA: CDC, National Center for Health Statistics; 2016. Available at http://wonder.cdc.gov.
+
+[^fn2]: Rudd RA, Seth P, David F, Scholl L. Increases in Drug and Opioid-Involved Overdose Deaths — United States, 2010–2015. MMWR Morb Mortal Wkly Rep 2016;65:1445–1452. DOI: http://dx.doi.org/10.15585/mmwr.mm655051e1
+
+[^fn6]: Zou, K. H., et al. (2007). "Receiver-operating characteristic analysis for evaluating diagnostic tests and predictive models." Circulation 115(5): 654-657.
+
+[^fn7]: Nakamura, M., et al. (2013). "LVQ-SMOTE - Learning Vector Quantization based Synthetic Minority Over-sampling Technique for biomedical data." BioData Min 6(1): 16.
+
+[^fn5]: Fluss, R., et al. (2005). "Estimation of the Youden Index and its associated cutoff point." Biom J 47(4): 458-472.
 
 
 \begin{table}
