@@ -178,17 +178,19 @@ ROC (with pROC package):
     
 ## Confusion Matrix
 \begin{columns}
-\begin{column}{0.48\textwidth}
+\begin{column}{0.58\textwidth}
 
-
+\textbf{Correctly identify those w/ outcome:}
 $$ Sensitivity = \frac{TP}{TP+FN}$$
 
+\textbf{Correctly identify those w/o outcome:}
 $$ Specificity = \frac{TN}{TN+FP}$$
 
+\textbf{Correctly identify either group:}
 $$ Accuracy = \frac{TP+ TN}{TP+FP+TN+FN}$$
 
 \end{column}
-\begin{column}{0.5\textwidth}
+\begin{column}{0.42\textwidth}
 
 \includegraphics[width=5cm]{/Users/alyssaforber/Documents/Denver/Thesis/Figures/confusion_matrix.png}
 
