@@ -131,8 +131,9 @@ MME per hospital day $>$ 10 & 80\% & 52\% & $<$.001 \\
 ## Lasso
 
 - Lasso:
-    - Performs variable selection
-    - Shrinks estimates to 0
+    - Shrinks estimates
+    - Performs variable selection when shrunk to 0
+    
     
 $$\hat\beta_{lasso}= argmin \sum_{j=1}^{N}(y_i-\beta_0-\sum_{j=1}^{p}x_{ij}\beta_j)^2 $$
 
