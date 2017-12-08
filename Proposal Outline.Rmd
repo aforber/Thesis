@@ -203,7 +203,7 @@ $$ Accuracy = \frac{TP+ TN}{TP+FP+TN+FN}$$
 
 No Sampling, Optimize Cut-off:
 
-- Use original unsampled data and get predictions off the lasso model
+- Use original unsampled data and get predictions from the lasso model
     - Predictions return probability between 0 and 1 for each observation
 
 - Use 0.5 standard probability cutoff to compare
@@ -278,7 +278,7 @@ Sampling:
 - Depening on situation the clinician may like different sensitivity/specificity
 
 - Some may want to be more conservative, others may not 
-    - Example: cancer patients in a significant pain
+    - Example: cancer patients in significant pain
 
 ## Moving Forward
 
@@ -305,6 +305,10 @@ Defend in March
 Questions or Suggestions?
 
 ## References
+
+http://dx.doi.org/10.15585/mmwr.mm655051e1
+
+http://wonder.cdc.gov
 
 https://rasbt.github.io/mlxtend/user_guide/evaluate/confusion_matrix/
 

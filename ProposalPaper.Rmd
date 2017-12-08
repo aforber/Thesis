@@ -65,7 +65,7 @@ $\qquad$ To expland upon this analysis, we plan to implement a simulation that e
 
 [^fn1]:CDC. Wide-ranging online data for epidemiologic research (WONDER). Atlanta, GA: CDC, National Center for Health Statistics; 2016. Available at http://wonder.cdc.gov.
 
-[^fn2]: Rudd RA, Seth P, David F, Scholl L. Increases in Drug and Opioid-Involved Overdose Deaths — United States, 2010–2015. MMWR Morb Mortal Wkly Rep 2016;65:1445–1452. DOI: http://dx.doi.org/10.15585/mmwr.mm655051e1
+[^fn2]: Rudd RA, Seth P, David F, Scholl L. Increases in Drug and Opioid-Involved Overdose Deaths — United States, 2010–2015. MMWR Morb Mortal Wkly Rep 2016;65:1445–1452. DOI: http://dx.doi.org/10.15585/mmwr.mm655051e1.
 
 [^fn6]: Zou, K. H., et al. (2007). "Receiver-operating characteristic analysis for evaluating diagnostic tests and predictive models." Circulation 115(5): 654-657.
 
