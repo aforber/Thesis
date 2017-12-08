@@ -157,16 +157,16 @@ subject to $\sum_{j=1}^p |\beta_j| \leq t$ where $t$ is the tuning parameter.
     - Reduces the number of predictors
 
 - Disadvantages:
-    - No interpretation of predictor coefficients
-    - No standard errors out of the model
-    - Biased coefficients
+    - Biased coefficients, inference not same as logistic regression
+    - No standard errors or p-values out of the model
+
 
 
 ## ROC & Cutoff Probabilities
 
 ROC (with pROC package):
 
-- ROC curve plots sensitivity vs specificity
+- ROC curve plots sensitivity vs specificity for each cut-off
 - Top left corner is ideal
 - Youden Index is the furthest upper left corner or "max"
 
@@ -284,6 +284,9 @@ Sampling:
 
 - Bagging (bootstrap aggregating)
     - Model averaging approach
+    
+- Stacking
+    - Algorithm averaging approach
 
 - Simulation of different percentages for rare outcomes
     - Explore method performance at 5%, 10%, 50% ect. of outcome
