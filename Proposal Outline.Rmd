@@ -98,7 +98,7 @@ Number of opioid prescriptions: & & &\\
 3 & 9\% & 2\% & \\
 4-9 & 23\% & 3\% & $<$.001 \\
 Receipt of opioid at discharge & 56\% & 28\% & $<$.001 \\
-MME per hospital day $>$ 10 & 80\% & 52\% & $<$.001 \\
+$>$ 10 MME per hospital day & 80\% & 52\% & $<$.001 \\
 \hline
 \end{tabular} 
 }
@@ -275,7 +275,7 @@ Sampling:
 
 - Seeing similar results for both methods
 
-- Depening on situation the clinician may like different sensitivity/specificity
+- Depending on situation the clinician may like different sensitivity/specificity
 
 - Some may want to be more conservative, others may not 
     - Example: cancer patients in significant pain
@@ -289,7 +289,7 @@ Sampling:
     - Algorithm averaging approach
 
 - Simulation of different percentages for rare outcomes
-    - Explore method performance at 5%, 10%, 50% ect. of outcome
+    - Explore method performance at 5%, 10%, 50% etc. of outcome
       
 - Investigate other sampling techniques or cut-point methods
 
