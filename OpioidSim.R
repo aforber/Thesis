@@ -28,24 +28,23 @@ library(pROC)
 
 opd = read.csv('/Users/alyssaforber/Box Sync/AlyssaKatieResearch/Opioids/Data/ropdata5_red.csv')
 
-opd = opd[c("Op_Chronic" , "age" , "OP_Receipt" , "ChronicPDcDx" ,
-            "visit_year", "Op_PastChronic")]
+opd = opd[c("Op_Chronic" , "age" , "OP_Receipt" , "ChronicPDcDx" ,"visit_year")]
 
 # splitting 08-11 and 12-14 to make 2/3 split
-#train <- subset(opd, visit_year < 2012)
-#train$visit_year <- NULL
+train <- subset(opd, visit_year < 2012)
+train$visit_year <- NULL
 
-#glm <- glm(Op_Chronic ~ age + OP_Receipt + ChronicPHxDx, 
-#           data = train, family = "binomial")
-#summary(glm)
+glm <- glm(Op_Chronic ~ age + OP_Receipt + ChronicPDcDx, 
+           data = train, family = "binomial")
+summary(glm)
 
 
 # COEFFICIENTS
-b.int = -4.153634  ## intercept
-b.age =  .00571  ## age
-b.chronic = 0.908339 ## chronic pain
-#b.num = -.7 ## past year number of opioid
-b.receipt = 1.232639 ## receipt of opioid at discharge
+b.int = -3.3  ## intercept
+b.age =  0.007875  ## age
+b.chronic = 0.789668 ## chronic pain
+#b.num =  ## past year number of opioid
+b.receipt = 1.232307 ## receipt of opioid at discharge
 
 niterations <- 10
 
@@ -61,6 +60,22 @@ smote5 <- matrix(data=NA, nrow = niterations, ncol = 3)
 
 ysim <- vector()
 
+#-----------------------------------
+# experimenting with parallel cores
+#install.packages("parallel")
+#library(parallel)
+
+# Calculate the number of cores
+#no_cores <- detectCores() - 1
+# I have 2 physical cores, but 4 logical ones
+
+# Initiate cluster
+#cl <- makeCluster(no_cores)
+#stopCluster(cl)
+#-----------------------------------
+
+
+
 
 for (i in 1:niterations){
   
@@ -69,7 +84,7 @@ for (i in 1:niterations){
   #---------------------------
   all.opd <- as.data.frame(transform(opd, Op_Chronic_Sim=rbinom(27705, 1, 
                                                          plogis(b.int + b.age*opd$age + 
-                                                                b.chronic*opd$ChronicPHxDx + 
+                                                                b.chronic*opd$ChronicPDcDx + 
                                                                 #b.num*opd$PriorOp5 + 
                                                                 b.receipt*opd$OP_Receipt))))
   # save the outcome percentage
@@ -110,40 +125,38 @@ for (i in 1:niterations){
   # SMOTE SAMPLE
   #--------------
 
-  #defaults are 200 up and 200 down
   smote_train <- SMOTE(Op_Chronic_Sim ~ ., data  = full_train) 
   
   #--------------------------
   # RUN MODELS
   #--------------------------
   
+  # model.matrix for test data for all datasets
+  # full test and new test are the same, needed for all, just different format
+  newtest <- model.matrix(full_test$Op_Chronic_Sim ~ age + OP_Receipt + ChronicPDcDx, 
+                          data = full_test)
+  
   #----------------
   ## ORIGINAL DATA
   #----------------
   
   # run model.matrix for train data
-  #newtrain <- model.matrix(Op_Chronic_Sim~.,data=full_train) 
-  newtrain <- model.matrix(Op_Chronic_Sim ~ age + OP_Receipt + ChronicPHxDx, data=full_train) 
+  newtrain <- model.matrix(Op_Chronic_Sim ~ age + OP_Receipt + ChronicPDcDx, data=full_train) 
   
   # run cv.glmnet with matrix
   cvlasso <- cv.glmnet(newtrain, y = as.factor(full_train$Op_Chronic_Sim), family = "binomial")
-  
-  # model.matrix for test data
-  #newtest <- model.matrix(full_test$Op_Chronic_Sim ~ . , data = full_test)
-  newtest <- model.matrix(full_test$Op_Chronic_Sim ~ age + OP_Receipt + ChronicPHxDx, 
-                          data = full_test)
-  
+
   # predict with matrix
   predict_lass <- predict(cvlasso, newtest, type = "response", s = "lambda.min")
   
   ###### pROC PACKAGE
-  roc_lass <- roc(full_test$Op_Chronic_Sim, predict_lass)
+  roc_lass <- roc(full_test$Op_Chronic_Sim, as.numeric(predict_lass))
  
-  #### calculate with youden
+  #### calculate with youden and save
   fullY[i,] <- coords(roc_lass, x = "best", best.method = "youden", 
                         ret = c("specificity", "sensitivity", "accuracy"))
   
-  #### calculate with 0.5 cutoff
+  #### calculate with 0.5 cutoff and save
   full5[i,] <- coords(roc_lass, x = 0.5, input = "threshold",
                          ret = c("specificity", "sensitivity", "accuracy"))
   
@@ -152,20 +165,16 @@ for (i in 1:niterations){
   #-------------
   
   # run model.matrix for train data
-  #newtrain <- model.matrix(Class~.,data=down_train)
-  newtrain <- model.matrix(Class ~ age + OP_Receipt + ChronicPHxDx, data=down_train)
+  newtrain <- model.matrix(Class ~ age + OP_Receipt + ChronicPDcDx, data=down_train)
   
   # run cv.glmnet with matrix
   cvlasso <- cv.glmnet(newtrain, y = as.factor(down_train$Class), family = "binomial")
-  
-  # don't think we need this, test data is the same for all
-  #newtest <- model.matrix(full_test$Op_Chronic_Sim ~ . , data = full_test)
   
   # predict with matrix
   predict_down <- predict(cvlasso, newtest, type = "response", s = "lambda.min")
   
   ###### pROC PACKAGE
-  roc_down <- roc(full_test$Op_Chronic_Sim, predict_down)
+  roc_down <- roc(full_test$Op_Chronic_Sim, as.numeric(predict_down))
   
   #### calculate with youden
   downY[i,] <- coords(roc_down, x = "best", best.method = "youden", 
@@ -180,20 +189,16 @@ for (i in 1:niterations){
   #--------------------
   
   # run model.matrix for train data
-  #newtrain <- model.matrix(Class~.,data=up_train) 
-  newtrain <- model.matrix(Class~ age + OP_Receipt + ChronicPHxDx, data=up_train)
+  newtrain <- model.matrix(Class~ age + OP_Receipt + ChronicPDcDx, data=up_train)
   
   # run cv.glmnet with matrix
   cvlasso <- cv.glmnet(newtrain, y = as.factor(up_train$Class), family = "binomial")
-  
-  # don't think we need this, test data is the same for all
-  #newtest <- model.matrix(full_test$Op_Chronic_Sim ~ . , data = full_test)
-  
+
   # predict with matrix
   predict_up <- predict(cvlasso, newtest, type = "response", s = "lambda.min")
   
   ###### pROC PACKAGE
-  roc_up <- roc(full_test$Op_Chronic_Sim, predict_up)
+  roc_up <- roc(full_test$Op_Chronic_Sim, as.numeric(predict_up))
 
   #### calculate with youden
   upY[i,] <- coords(roc_up, x = "best", best.method = "youden", 
@@ -209,20 +214,16 @@ for (i in 1:niterations){
   #--------------------
   
   # run model.matrix for train data
-  #newtrain <- model.matrix(Op_Chronic_Sim~.,data=smote_train)
-  newtrain <- model.matrix(Op_Chronic_Sim ~ age + OP_Receipt + ChronicPHxDx, data=smote_train)
+  newtrain <- model.matrix(Op_Chronic_Sim ~ age + OP_Receipt + ChronicPDcDx, data=smote_train)
   
   # run cv.glmnet with matrix
   cvlasso <- cv.glmnet(newtrain, y = as.factor(smote_train$Op_Chronic_Sim), family = "binomial")
-  
-  # don't think we need this, test data is the same for all
-  #newtest <- model.matrix(full_test$Op_Chronic_Sim ~ . , data = full_test)
-  
+
   # predict with matrix
   predict_smote <- predict(cvlasso, newtest, type = "response", s = "lambda.min")
   
   ###### pROC PACKAGE
-  roc_smote <- roc(full_test$Op_Chronic_Sim, predict_smote)
+  roc_smote <- roc(full_test$Op_Chronic_Sim, as.numeric(predict_smote))
   
   #### calculate with youden 
   smoteY[i,] <- coords(roc_smote, x = "best", best.method = "youden", 
@@ -234,3 +235,36 @@ for (i in 1:niterations){
 
 }
 
+# LOOK AT RESULTS
+
+mean(ysim)
+# int= -3.970231, %= 0.05899296
+# int= -4, %= 0.05730013
+# int= -4.5, %= 0.03676232
+# int= -4.2 , %= 0.04892258
+# int= -4.1, %= 0.05314203
+
+# int= -4.7, %= 0.02981772
+
+# int= -3, %= 0.1353366
+# int= -3.2, %= 0.1147591
+# int= -3.3, %= 0.1058437, 0.1058293
+
+
+colMeans(fullY)
+colMeans(full5)
+
+colMeans(downY)
+colMeans(down5)
+
+colMeans(upY)
+colMeans(up5)
+
+colMeans(smoteY)
+colMeans(smote5)
+
+plot(colMeans(fullY), pch=16, xaxt = "n", ylab="")
+lines(colMeans(downY), pch=16, col="blue", type="p")
+lines(colMeans(upY), pch=16, col="red", type="p")
+lines(colMeans(smoteY), pch=16, col="green", type="p")
+axis(1, at=1:3, labels=c("Specificity", "Sensitivity", "AUC"))
