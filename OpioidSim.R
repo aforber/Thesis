@@ -40,13 +40,13 @@ summary(glm)
 
 
 # COEFFICIENTS
-b.int = -3.3  ## intercept
+b.int = -4.2  ## intercept
 b.age =  0.007875  ## age
 b.chronic = 0.789668 ## chronic pain
 #b.num =  ## past year number of opioid
 b.receipt = 1.232307 ## receipt of opioid at discharge
 
-niterations <- 10
+niterations <- 1000
 
 # EMPTY MATRICES
 fullY <- matrix(data=NA, nrow = niterations, ncol = 3)
@@ -76,7 +76,7 @@ ysim <- vector()
 
 
 
-
+Sys.time()
 for (i in 1:niterations){
   
   #---------------------------
@@ -153,12 +153,18 @@ for (i in 1:niterations){
   roc_lass <- roc(full_test$Op_Chronic_Sim, as.numeric(predict_lass))
  
   #### calculate with youden and save
-  fullY[i,] <- coords(roc_lass, x = "best", best.method = "youden", 
+  results <- coords(roc_lass, x = "best", best.method = "youden", 
                         ret = c("specificity", "sensitivity", "accuracy"))
+  fullY[i,1] <- results[1]
+  fullY[i,2] <- results[2]
+  fullY[i,3] <- results[3]
   
   #### calculate with 0.5 cutoff and save
-  full5[i,] <- coords(roc_lass, x = 0.5, input = "threshold",
+  results <- coords(roc_lass, x = 0.5, input = "threshold",
                          ret = c("specificity", "sensitivity", "accuracy"))
+  full5[i,1] <- results[1]
+  full5[i,2] <- results[2]
+  full5[i,3] <- results[3]
   
   #-------------
   # DOWN SAMPLE
@@ -177,12 +183,18 @@ for (i in 1:niterations){
   roc_down <- roc(full_test$Op_Chronic_Sim, as.numeric(predict_down))
   
   #### calculate with youden
-  downY[i,] <- coords(roc_down, x = "best", best.method = "youden", 
+  results <- coords(roc_down, x = "best", best.method = "youden", 
                         ret = c("specificity", "sensitivity", "accuracy"))
+  downY[i,1] <- results[1]
+  downY[i,2] <- results[2]
+  downY[i,3] <- results[3]
   
   #### calculate with 0.5 cutoff
-  down5[i,] <- coords(roc_down, x = 0.5, input = "threshold",
+  results <- coords(roc_down, x = 0.5, input = "threshold",
                          ret = c("specificity", "sensitivity", "accuracy"))
+  down5[i,1] <- results[1]
+  down5[i,2] <- results[2]
+  down5[i,3] <- results[3]
   
   #--------------------
   # UP SAMPLE
@@ -201,12 +213,18 @@ for (i in 1:niterations){
   roc_up <- roc(full_test$Op_Chronic_Sim, as.numeric(predict_up))
 
   #### calculate with youden
-  upY[i,] <- coords(roc_up, x = "best", best.method = "youden", 
+  results <- coords(roc_up, x = "best", best.method = "youden", 
                       ret = c("specificity", "sensitivity", "accuracy"))
+  upY[i,1] <- results[1]
+  upY[i,2] <- results[2]
+  upY[i,3] <- results[3]
   
   #### calculate with 0.5 cutoff
-  up5[i,] <- coords(roc_up, x = 0.5, input = "threshold",
+  results <- coords(roc_up, x = 0.5, input = "threshold",
                        ret = c("specificity", "sensitivity", "accuracy"))
+  up5[i,1] <- results[1]
+  up5[i,2] <- results[2]
+  up5[i,3] <- results[3]
   
   
   #--------------------
@@ -226,18 +244,33 @@ for (i in 1:niterations){
   roc_smote <- roc(full_test$Op_Chronic_Sim, as.numeric(predict_smote))
   
   #### calculate with youden 
-  smoteY[i,] <- coords(roc_smote, x = "best", best.method = "youden", 
+  results <- coords(roc_smote, x = "best", best.method = "youden", 
                          ret = c("specificity", "sensitivity", "accuracy"))
+  smoteY[i,1] <- results[1]
+  smoteY[i,2] <- results[2]
+  smoteY[i,3] <- results[3]
   
   #### calculate with 0.5 cutoff
-  smote5[i,] <- coords(roc_smote, x = 0.5, input = "threshold",
+  results <- coords(roc_smote, x = 0.5, input = "threshold",
                           ret = c("specificity", "sensitivity", "accuracy"))
+  smote5[i,1] <- results[1]
+  smote5[i,2] <- results[2]
+  smote5[i,3] <- results[3]
 
 }
 
 # LOOK AT RESULTS
 
 mean(ysim)
+Sys.time()
+
+# started 20:37:46
+# ended 22:03:23
+
+# started 20:47:36
+# ended 22:26:07
+
+
 # int= -3.970231, %= 0.05899296
 # int= -4, %= 0.05730013
 # int= -4.5, %= 0.03676232
@@ -251,19 +284,17 @@ mean(ysim)
 # int= -3.3, %= 0.1058437, 0.1058293
 
 
-colMeans(fullY)
-colMeans(full5)
+total_results <- rbind(colMeans(fullY), colMeans(full5), colMeans(downY), colMeans(down5),
+                       colMeans(upY), colMeans(up5), colMeans(smoteY), colMeans(smote5))
+colnames(total_results) <- c("Specificity", "Sensitivity", "AUC")
+rownames(total_results) <- c("Full Youden", "Full 0.5", "Down Youden", "Down 0.5",
+                             "Up Youden", "Up 0.5", "SMOTE Youden", "SMOTE 0.5")
+total_results <- rbind(total_results, c("percent", mean(ysim)*100, ""))
 
-colMeans(downY)
-colMeans(down5)
+write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Sim3_20180112.csv")
 
-colMeans(upY)
-colMeans(up5)
 
-colMeans(smoteY)
-colMeans(smote5)
-
-plot(colMeans(fullY), pch=16, xaxt = "n", ylab="")
+plot(colMeans(fullY), pch=16, xaxt = "n", ylab="", xlab="", main = "Outcome = 3.00%")
 lines(colMeans(downY), pch=16, col="blue", type="p")
 lines(colMeans(upY), pch=16, col="red", type="p")
 lines(colMeans(smoteY), pch=16, col="green", type="p")
