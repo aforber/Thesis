@@ -40,7 +40,7 @@ summary(glm)
 
 
 # COEFFICIENTS
-b.int = -4.2  ## intercept
+b.int = -3.3  ## intercept
 b.age =  0.007875  ## age
 b.chronic = 0.789668 ## chronic pain
 #b.num =  ## past year number of opioid
@@ -270,18 +270,25 @@ Sys.time()
 # started 20:47:36
 # ended 22:26:07
 
+# started 00:09:50
+# ended 01:47:49
+
+# started 02:14:30
+# ended 04:18:23
+
 
 # int= -3.970231, %= 0.05899296
 # int= -4, %= 0.05730013
 # int= -4.5, %= 0.03676232
 # int= -4.2 , %= 0.04892258
+# int= -4.15, %= 0.05007255
 # int= -4.1, %= 0.05314203
 
 # int= -4.7, %= 0.02981772
 
 # int= -3, %= 0.1353366
 # int= -3.2, %= 0.1147591
-# int= -3.3, %= 0.1058437, 0.1058293
+# int= -3.3, %= 0.1058437, 0.1058293, 0.1062083
 
 
 total_results <- rbind(colMeans(fullY), colMeans(full5), colMeans(downY), colMeans(down5),
@@ -291,10 +298,10 @@ rownames(total_results) <- c("Full Youden", "Full 0.5", "Down Youden", "Down 0.5
                              "Up Youden", "Up 0.5", "SMOTE Youden", "SMOTE 0.5")
 total_results <- rbind(total_results, c("percent", mean(ysim)*100, ""))
 
-write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Sim3_20180112.csv")
+write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Sim10_20180115.csv")
 
 
-plot(colMeans(fullY), pch=16, xaxt = "n", ylab="", xlab="", main = "Outcome = 3.00%")
+plot(colMeans(fullY), pch=16, xaxt = "n", ylab="", xlab="", main = "Outcome = 5.01%")
 lines(colMeans(downY), pch=16, col="blue", type="p")
 lines(colMeans(upY), pch=16, col="red", type="p")
 lines(colMeans(smoteY), pch=16, col="green", type="p")
