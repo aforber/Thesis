@@ -8,13 +8,9 @@
 
 rm(list=ls())
 
-#install.packages("DMwR")
 library(DMwR)
-#install.packages("caret")
 library(caret)
-#install.packages("glmnet")
 library(glmnet)
-#install.packages("pROC")
 library(pROC)
 
 
@@ -40,7 +36,7 @@ summary(glm)
 
 
 # COEFFICIENTS
-b.int = -3.3  ## intercept
+b.int = -5.82  ## intercept
 b.age =  0.007875  ## age
 b.chronic = 0.789668 ## chronic pain
 #b.num =  ## past year number of opioid
@@ -290,6 +286,8 @@ Sys.time()
 # int= -3.2, %= 0.1147591
 # int= -3.3, %= 0.1058437, 0.1058293, 0.1062083
 
+# int= -5.82, %= 0.0100379
+
 
 total_results <- rbind(colMeans(fullY), colMeans(full5), colMeans(downY), colMeans(down5),
                        colMeans(upY), colMeans(up5), colMeans(smoteY), colMeans(smote5))
@@ -298,10 +296,10 @@ rownames(total_results) <- c("Full Youden", "Full 0.5", "Down Youden", "Down 0.5
                              "Up Youden", "Up 0.5", "SMOTE Youden", "SMOTE 0.5")
 total_results <- rbind(total_results, c("percent", mean(ysim)*100, ""))
 
-write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Sim10_20180115.csv")
+write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Sim1_20180116.csv")
 
 
-plot(colMeans(fullY), pch=16, xaxt = "n", ylab="", xlab="", main = "Outcome = 5.01%")
+plot(colMeans(fullY), pch=16, xaxt = "n", ylab="", xlab="", main = "Outcome = 1.0%")
 lines(colMeans(downY), pch=16, col="blue", type="p")
 lines(colMeans(upY), pch=16, col="red", type="p")
 lines(colMeans(smoteY), pch=16, col="green", type="p")
