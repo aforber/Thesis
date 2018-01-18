@@ -39,23 +39,24 @@ x1 <- rep(1, 8)
 x2 <- rep(2, 8)
 x3 <- rep(3, 8)
 pts <- rep(c(16, 17),4)
-cls <- rep(c("purple", "blue", "red", "green"), each=2) # make youden dot, 0.5 triangle
+cls <- rep(c("purple", "blue", "red", "green4"), each=2) # make youden dot, 0.5 triangle
 
 
 # TURN PLOT INTO FUNCTION
-plotsim <- function(sim){
+plotsim <- function(sim, percent){
   
-  plot(x=x1, sim[,2], pch=pts,  ylab="", xlab="", xaxt = "n", main = "Outcome = 1.0%", xlim=c(0.5,3.5),
+  plot(x=x1, sim[,2], pch=pts,  ylab="", xlab="", xaxt = "n", main = paste("Outcome = ", percent, "%"), xlim=c(0.5,3.5),
      ylim=c(0,1),col=cls)
-  lines(x=x2, sim[,3], pch=16, type="p", col=cls)
-  lines(x=x3, sim[,4], pch=16,type="p",col=cls)
+  lines(x=x2, sim[,3], pch=pts, type="p", col=cls)
+  lines(x=x3, sim[,4], pch=pts,type="p",col=cls)
   axis(1, at=1:3, labels=c("Specificity", "Sensitivity", "AUC"))
-  legend(x=0.5, y=.4, legend=c("Full", "Down", "Up", "SMOTE"), col=c("purple", "blue", "red", "green"), 
+  legend(x=0.5, y=.4, legend=c("Full", "Down", "Up", "SMOTE"), col=c("purple", "blue", "red", "green4"), 
        cex=.8, bty="n", pch=16)
   legend(x=2.8, y=.28, legend=c("Youden", "0.5 cutoff"), col="black", pch=c(16,17), bty="n", cex=0.8)
 }
 
-plotsim(sim10)
+plotsim(sim5, 5)
 # they all pretty much look identical
+
 
 
