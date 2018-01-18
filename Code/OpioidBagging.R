@@ -11,16 +11,10 @@ rm(list=ls())
 
 
 #install.packages("BDgraph")
-#install.packages("SparseLearner")
 library(SparseLearner)
-?Bagging.lasso
-
-
 
 
 opd = read.csv('/Users/alyssaforber/Box Sync/AlyssaKatieResearch/Opioids/Data/ropdata5_red.csv')
-
-print(table(opd$Op_Chronic))
 
 opd = opd[c("age" , "agesq" , "genderm" , "racehisp" , "raceaa" , "Op_Chronic" ,
             "raceoth" , "genm_racehisp" , "genm_raceaa" , "genm_raceoth" ,
@@ -136,17 +130,14 @@ colnames(confmat_lass) <- c("Op_Chronic", "Pred")
 
 
 ## NOW TRY BAGGING
+# Not entirely sure how all the details work
 
-# so this does cross fold validation at the same time? 
-# is it defaulted to select the min lambda?
-# it is not recommended for large datasets--would this be considered large?
-
-bag <- Bagging.lasso(newtrain, y = as.factor(full_train$Op_Chronic), family = "binomial")
+bag_full <- Bagging.lasso(newtrain, y = as.factor(full_train$Op_Chronic), family = "binomial")
 # this takes a very long time to run!! 
 # a couple minutes for each iteration and it defaults 100 iterations!
 
 
-
-
+pred_bag_full <- Predict.bagging(bag, newx= newtest)
+hist(pred_bag_full)
 
 
