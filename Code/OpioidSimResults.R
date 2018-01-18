@@ -55,7 +55,7 @@ plotsim <- function(sim, percent){
   legend(x=2.8, y=.28, legend=c("Youden", "0.5 cutoff"), col="black", pch=c(16,17), bty="n", cex=0.8)
 }
 
-plotsim(sim5, 5)
+plotsim(sim10, 10)
 # they all pretty much look identical
 
 

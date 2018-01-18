@@ -136,6 +136,8 @@ bag_full <- Bagging.lasso(newtrain, y = as.factor(full_train$Op_Chronic), family
 # this takes a very long time to run!! 
 # a couple minutes for each iteration and it defaults 100 iterations!
 
+# started at 11am
+
 
 pred_bag_full <- Predict.bagging(bag, newx= newtest)
 hist(pred_bag_full)

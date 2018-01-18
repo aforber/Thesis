@@ -13,7 +13,6 @@ library(caret)
 library(glmnet)
 library(pROC)
 
-
 # 1. Pick three or four most important vars to use:
 # age (age), chronic pain at discharge (ChronicPDcDx), 
 # past year number of opioid prescr/Number of opioid prescriptions filled in 
@@ -36,7 +35,7 @@ summary(glm)
 
 
 # COEFFICIENTS
-b.int = -5.82  ## intercept
+b.int = -2.18  ## intercept
 b.age =  0.007875  ## age
 b.chronic = 0.789668 ## chronic pain
 #b.num =  ## past year number of opioid
@@ -287,6 +286,15 @@ Sys.time()
 # int= -3.3, %= 0.1058437, 0.1058293, 0.1062083
 
 # int= -5.82, %= 0.0100379
+
+# int= -1, %= 0.4905468
+# int= -0.97, %= 0.4966973
+# int= -0.965, %= 0.499408
+
+# int= -2.2, %= 0.2469157
+# int= -2.17, %= 0.2527666
+# int= -2.19, %= 0.2488973
+# int= -2.18, %= 0.249695
 
 
 total_results <- rbind(colMeans(fullY), colMeans(full5), colMeans(downY), colMeans(down5),
