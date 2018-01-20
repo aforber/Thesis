@@ -35,7 +35,7 @@ summary(glm)
 
 
 # COEFFICIENTS
-b.int = -2.18  ## intercept
+b.int = -0.965  ## intercept
 b.age =  0.007875  ## age
 b.chronic = 0.789668 ## chronic pain
 #b.num =  ## past year number of opioid
@@ -44,13 +44,13 @@ b.receipt = 1.232307 ## receipt of opioid at discharge
 niterations <- 1000
 
 # EMPTY MATRICES
-fullY <- matrix(data=NA, nrow = niterations, ncol = 3)
+fullY <- matrix(data=NA, nrow = niterations, ncol = 4)
 full5 <- matrix(data=NA, nrow = niterations, ncol = 3)
-upY <- matrix(data=NA, nrow = niterations, ncol = 3)
+upY <- matrix(data=NA, nrow = niterations, ncol = 4)
 up5 <- matrix(data=NA, nrow = niterations, ncol = 3)
-downY <- matrix(data=NA, nrow = niterations, ncol = 3)
+downY <- matrix(data=NA, nrow = niterations, ncol = 4)
 down5 <- matrix(data=NA, nrow = niterations, ncol = 3)
-smoteY <- matrix(data=NA, nrow = niterations, ncol = 3)
+smoteY <- matrix(data=NA, nrow = niterations, ncol = 4)
 smote5 <- matrix(data=NA, nrow = niterations, ncol = 3)
 
 ysim <- vector()
@@ -149,10 +149,11 @@ for (i in 1:niterations){
  
   #### calculate with youden and save
   results <- coords(roc_lass, x = "best", best.method = "youden", 
-                        ret = c("specificity", "sensitivity", "accuracy"))
+                        ret = c("specificity", "sensitivity", "accuracy", "threshold"))
   fullY[i,1] <- results[1]
   fullY[i,2] <- results[2]
   fullY[i,3] <- results[3]
+  fullY[i,4] <- results[4]
   
   #### calculate with 0.5 cutoff and save
   results <- coords(roc_lass, x = 0.5, input = "threshold",
@@ -179,10 +180,11 @@ for (i in 1:niterations){
   
   #### calculate with youden
   results <- coords(roc_down, x = "best", best.method = "youden", 
-                        ret = c("specificity", "sensitivity", "accuracy"))
+                        ret = c("specificity", "sensitivity", "accuracy", "threshold"))
   downY[i,1] <- results[1]
   downY[i,2] <- results[2]
   downY[i,3] <- results[3]
+  downY[i,4] <- results[4]
   
   #### calculate with 0.5 cutoff
   results <- coords(roc_down, x = 0.5, input = "threshold",
@@ -209,10 +211,11 @@ for (i in 1:niterations){
 
   #### calculate with youden
   results <- coords(roc_up, x = "best", best.method = "youden", 
-                      ret = c("specificity", "sensitivity", "accuracy"))
+                      ret = c("specificity", "sensitivity", "accuracy", "threshold"))
   upY[i,1] <- results[1]
   upY[i,2] <- results[2]
   upY[i,3] <- results[3]
+  upY[i,4] <- results[4]
   
   #### calculate with 0.5 cutoff
   results <- coords(roc_up, x = 0.5, input = "threshold",
@@ -240,10 +243,11 @@ for (i in 1:niterations){
   
   #### calculate with youden 
   results <- coords(roc_smote, x = "best", best.method = "youden", 
-                         ret = c("specificity", "sensitivity", "accuracy"))
+                         ret = c("specificity", "sensitivity", "accuracy", "threshold"))
   smoteY[i,1] <- results[1]
   smoteY[i,2] <- results[2]
   smoteY[i,3] <- results[3]
+  smoteY[i,4] <- results[4]
   
   #### calculate with 0.5 cutoff
   results <- coords(roc_smote, x = 0.5, input = "threshold",
@@ -270,6 +274,14 @@ Sys.time()
 
 # started 02:14:30
 # ended 04:18:23
+
+# 25 % prevalance took 4 hours!!!
+# started 17:30:20
+# ended 21:38:14
+
+# 50% prevalance took 11 hours!!!!!!!!!!!!
+# started 2018-01-19 21:54:02
+# ended 2018-01-20 09:02:37
 
 
 # int= -3.970231, %= 0.05899296
@@ -304,7 +316,7 @@ rownames(total_results) <- c("Full Youden", "Full 0.5", "Down Youden", "Down 0.5
                              "Up Youden", "Up 0.5", "SMOTE Youden", "SMOTE 0.5")
 total_results <- rbind(total_results, c("percent", mean(ysim)*100, ""))
 
-write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Sim1_20180116.csv")
+write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Sim50_20180120.csv")
 
 
 plot(colMeans(fullY), pch=16, xaxt = "n", ylab="", xlab="", main = "Outcome = 1.0%")

@@ -11,12 +11,16 @@ sim1 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Sim1_20180
 sim3 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Sim3_20180112.csv")
 sim5 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Sim5_20180115.csv")
 sim10 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Sim10_20180115.csv")
+sim25 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Sim25_20180119.csv")
+sim50 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Sim50_20180120.csv")
 
 # remove last row of each with the outcome percent
 sim1<- sim1[1:8,]
 sim3<- sim3[1:8,]
 sim5<- sim5[1:8,]
 sim10<- sim10[1:8,]
+sim25<- sim50[1:8,]
+sim50<- sim50[1:8,]
 
 # separate the type column into two columsn (one with youden or 0.5, and one with sampling type)
 library(stringr)
@@ -24,12 +28,16 @@ sim1 <- cbind(sim1, type = str_split_fixed(sim1$X, " ", 2))
 sim3 <- cbind(sim3, type = str_split_fixed(sim3$X, " ", 2))
 sim5 <- cbind(sim5, type = str_split_fixed(sim5$X, " ", 2))
 sim10 <- cbind(sim10, type = str_split_fixed(sim10$X, " ", 2))
+sim25 <- cbind(sim10, type = str_split_fixed(sim25$X, " ", 2))
+sim50 <- cbind(sim10, type = str_split_fixed(sim50$X, " ", 2))
 
 # makes sure specificity is treaded as a numeric column
 sim1$Specificity <- as.numeric(as.character(sim1$Specificity))
 sim3$Specificity <- as.numeric(as.character(sim3$Specificity))
 sim5$Specificity <- as.numeric(as.character(sim5$Specificity))
 sim10$Specificity <- as.numeric(as.character(sim10$Specificity))
+sim25$Specificity <- as.numeric(as.character(sim25$Specificity))
+sim50$Specificity <- as.numeric(as.character(sim50$Specificity))
 
 # could look at just full youden and 0.5 for each sim and so on
 # or could look at just each sim in total 
@@ -57,6 +65,20 @@ plotsim <- function(sim, percent){
 
 plotsim(sim10, 10)
 # they all pretty much look identical
+
+# PLOT OF SENSITIVITY AGAINST PREVALENCE
+# only for full data 
+
+# the sensitivities are 0 for all of them...
+
+sensYoud <- cbind(c(1, 3, 5, 10, 25, 50), c(sim1[1,3], sim3[1,3], sim5[1,3], sim10[1,3], sim25[1,3], sim50[1,3]))
+plot(sensYoud, pch=16, ylim=c(0,1))
+
+
+# PLOT OF PREVALENCE BY THRESHOLD 
+
+
+
 
 
 
