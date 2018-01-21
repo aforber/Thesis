@@ -35,7 +35,7 @@ summary(glm)
 
 
 # COEFFICIENTS
-b.int = -0.965  ## intercept
+b.int = -4.15  ## intercept
 b.age =  0.007875  ## age
 b.chronic = 0.789668 ## chronic pain
 #b.num =  ## past year number of opioid
@@ -71,7 +71,7 @@ ysim <- vector()
 
 
 
-Sys.time()
+start <- Sys.time()
 for (i in 1:niterations){
   
   #---------------------------
@@ -261,19 +261,9 @@ for (i in 1:niterations){
 # LOOK AT RESULTS
 
 mean(ysim)
-Sys.time()
+end <- Sys.time()
+end-start
 
-# started 20:37:46
-# ended 22:03:23
-
-# started 20:47:36
-# ended 22:26:07
-
-# started 00:09:50
-# ended 01:47:49
-
-# started 02:14:30
-# ended 04:18:23
 
 # 25 % prevalance took 4 hours!!!
 # started 17:30:20
@@ -283,40 +273,27 @@ Sys.time()
 # started 2018-01-19 21:54:02
 # ended 2018-01-20 09:02:37
 
+# 1% was 1.44 hours
+# 3% was 1.6 hours
 
-# int= -3.970231, %= 0.05899296
-# int= -4, %= 0.05730013
-# int= -4.5, %= 0.03676232
-# int= -4.2 , %= 0.04892258
-# int= -4.15, %= 0.05007255
-# int= -4.1, %= 0.05314203
 
-# int= -4.7, %= 0.02981772
-
-# int= -3, %= 0.1353366
-# int= -3.2, %= 0.1147591
-# int= -3.3, %= 0.1058437, 0.1058293, 0.1062083
-
+# INTERCEPTS FOR PERCENTAGES
 # int= -5.82, %= 0.0100379
-
-# int= -1, %= 0.4905468
-# int= -0.97, %= 0.4966973
+# int= -4.7, %= 0.02981772
+# int= -4.15, %= 0.05007255
+# int= -3.3, %= 0.1058437, 0.1058293, 0.1062083
+# int= -2.18, %= 0.249695
 # int= -0.965, %= 0.499408
 
-# int= -2.2, %= 0.2469157
-# int= -2.17, %= 0.2527666
-# int= -2.19, %= 0.2488973
-# int= -2.18, %= 0.249695
 
-
-total_results <- rbind(colMeans(fullY), colMeans(full5), colMeans(downY), colMeans(down5),
-                       colMeans(upY), colMeans(up5), colMeans(smoteY), colMeans(smote5))
-colnames(total_results) <- c("Specificity", "Sensitivity", "AUC")
+total_results <- rbind(colMeans(fullY), c(colMeans(full5), .5), colMeans(downY), c(colMeans(down5), .5),
+                       colMeans(upY), c(colMeans(up5), .5), colMeans(smoteY), c(colMeans(smote5), .5))
+colnames(total_results) <- c("Specificity", "Sensitivity", "AUC", "Threshold")
 rownames(total_results) <- c("Full Youden", "Full 0.5", "Down Youden", "Down 0.5",
                              "Up Youden", "Up 0.5", "SMOTE Youden", "SMOTE 0.5")
-total_results <- rbind(total_results, c("percent", mean(ysim)*100, ""))
+total_results <- rbind(total_results, c("percent", mean(ysim)*100, "", ""))
 
-write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Sim50_20180120.csv")
+write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Sim3_20180120.csv")
 
 
 plot(colMeans(fullY), pch=16, xaxt = "n", ylab="", xlab="", main = "Outcome = 1.0%")
