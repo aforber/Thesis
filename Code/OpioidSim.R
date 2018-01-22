@@ -277,6 +277,7 @@ end-start
 # 3% was 1.6 hours
 # 5% was 1.6 hours
 # 10% was 2.1 hours
+# 25% was 4.1 hours
 
 
 # INTERCEPTS FOR PERCENTAGES
@@ -295,7 +296,7 @@ rownames(total_results) <- c("Full Youden", "Full 0.5", "Down Youden", "Down 0.5
                              "Up Youden", "Up 0.5", "SMOTE Youden", "SMOTE 0.5")
 total_results <- rbind(total_results, c("percent", mean(ysim)*100, "", ""))
 
-write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Sim10_20180121.csv")
+write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Sim10_20180122.csv")
 
 
 plot(colMeans(fullY), pch=16, xaxt = "n", ylab="", xlab="", main = "Outcome = 1.0%")
