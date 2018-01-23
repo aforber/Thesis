@@ -35,7 +35,7 @@ summary(glm)
 
 
 # COEFFICIENTS
-b.int = -2.18  ## intercept
+b.int = -0.965  ## intercept
 b.age =  0.007875  ## age
 b.chronic = 0.789668 ## chronic pain
 #b.num =  ## past year number of opioid
@@ -278,13 +278,14 @@ end-start
 # 5% was 1.6 hours
 # 10% was 2.1 hours
 # 25% was 4.1 hours
+# 50% was 10.2 hours
 
 
 # INTERCEPTS FOR PERCENTAGES
 # int= -5.82, %= 0.0100379
 # int= -4.7, %= 0.02981772
 # int= -4.15, %= 0.05007255
-# int= -3.3, %= 0.1058437, 0.1058293, 0.1062083
+# int= -3.6, %= 0.1003321
 # int= -2.18, %= 0.249695
 # int= -0.965, %= 0.499408
 
@@ -296,7 +297,7 @@ rownames(total_results) <- c("Full Youden", "Full 0.5", "Down Youden", "Down 0.5
                              "Up Youden", "Up 0.5", "SMOTE Youden", "SMOTE 0.5")
 total_results <- rbind(total_results, c("percent", mean(ysim)*100, "", ""))
 
-write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Sim10_20180122.csv")
+write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Sim50_20180123.csv")
 
 
 plot(colMeans(fullY), pch=16, xaxt = "n", ylab="", xlab="", main = "Outcome = 1.0%")
