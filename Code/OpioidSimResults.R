@@ -66,19 +66,29 @@ plotsim <- function(sim, percent){
 plotsim(sim10, 10)
 # they all pretty much look identical
 
+#----------
 # PLOT OF SENSITIVITY AGAINST PREVALENCE
-# only for full data 
+#----------
 
-# the sensitivities are 0 for all of them...
+# the sensitivities are 0 for ones less than 25
 
 sensYoud <- cbind(c(1, 3, 5, 10, 25, 50), c(sim1[1,3], sim3[1,3], sim5[1,3], sim10[1,3], sim25[1,3], sim50[1,3]))
-plot(sensYoud, pch=16, ylim=c(0,1))
 
+sens5 <- cbind(c(1, 3, 5, 10, 25, 50), c(sim1[2,3], sim3[2,3], sim5[2,3], sim10[2,3], sim25[2,3], sim50[2,3]))
 
+# PLOT WITH POINTS
+plot(sens5, pch=16, ylim=c(0,1), xlab="Prevalence", ylab="Sensitivity", main="Sensitivity vs Prevalence")
+lines(sensYoud, type="p", pch=16, col="red")
+lines(sensYoud, col="red", lwd=2)
+lines(sens5, lwd=2)
+legend(x=38, y=.27, legend=c("Youden", "0.5"), bty="n", col=c("red", "black"), pch=16, ncol=1, cex=.9)
+
+#----------
 # PLOT OF PREVALENCE BY THRESHOLD 
+#----------
 
 thresh <- cbind(c(1, 3, 5, 10, 25, 50), c(sim1[1,5], sim3[1,5], sim5[1,5], sim10[1,5], sim25[1,5], sim50[1,5]))
 plot(thresh, pch=16, xlab = "Prevalence %", ylab ="Youden Threshold", main="Threshold vs Prevalence")
-
+lines(thresh, lwd=2)
 
 
