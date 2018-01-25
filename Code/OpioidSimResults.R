@@ -14,35 +14,30 @@ sim10 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Sim10_201
 sim25 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Sim25_20180122.csv")
 sim50 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Sim50_20180123.csv")
 
-# remove last row of each with the outcome percent
-sim1<- sim1[1:8,]
-sim3<- sim3[1:8,]
-sim5<- sim5[1:8,]
-sim10<- sim10[1:8,]
-sim25<- sim25[1:8,]
-sim50<- sim50[1:8,]
 
-# separate the type column into two columsn (one with youden or 0.5, and one with sampling type)
+# putting output into correct format function
 library(stringr)
-sim1 <- cbind(sim1, type = str_split_fixed(sim1$X, " ", 2))
-sim3 <- cbind(sim3, type = str_split_fixed(sim3$X, " ", 2))
-sim5 <- cbind(sim5, type = str_split_fixed(sim5$X, " ", 2))
-sim10 <- cbind(sim10, type = str_split_fixed(sim10$X, " ", 2))
-sim25 <- cbind(sim25, type = str_split_fixed(sim25$X, " ", 2))
-sim50 <- cbind(sim50, type = str_split_fixed(sim50$X, " ", 2))
 
-# makes sure specificity is treaded as a numeric column
-sim1$Specificity <- as.numeric(as.character(sim1$Specificity))
-sim3$Specificity <- as.numeric(as.character(sim3$Specificity))
-sim5$Specificity <- as.numeric(as.character(sim5$Specificity))
-sim10$Specificity <- as.numeric(as.character(sim10$Specificity))
-sim25$Specificity <- as.numeric(as.character(sim25$Specificity))
-sim50$Specificity <- as.numeric(as.character(sim50$Specificity))
+myformat <- function(sim){
+  sim <- sim[1:8,]
+  sim <- cbind(sim, type = str_split_fixed(sim$X, " ", 2))
+  sim$Specificity <- as.numeric(as.character(sim$Specificity))
+  sim
+}
 
-# could look at just full youden and 0.5 for each sim and so on
-# or could look at just each sim in total 
+sim1 <- myformat(sim1)
+sim3 <- myformat(sim3)
+sim5 <- myformat(sim5)
+sim10 <- myformat(sim10)
+sim25 <- myformat(sim25)
+sim50 <- myformat(sim50)
 
-# JUST FOR SIMULATION 1, ALL THE COMPONENTS
+
+#--------------------------
+# PLOT
+#--------------------------
+
+
 x1 <- rep(1, 8)
 x2 <- rep(2, 8)
 x3 <- rep(3, 8)
