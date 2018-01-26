@@ -265,14 +265,6 @@ end <- Sys.time()
 end-start
 
 
-# 25 % prevalance took 4 hours!!!
-# started 17:30:20
-# ended 21:38:14
-
-# 50% prevalance took 11 hours!!!!!!!!!!!!
-# started 2018-01-19 21:54:02
-# ended 2018-01-20 09:02:37
-
 # 1% was 1.44 hours
 # 3% was 1.6 hours
 # 5% was 1.6 hours
