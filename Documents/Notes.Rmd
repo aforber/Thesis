@@ -16,6 +16,17 @@ knitr::opts_chunk$set(echo = TRUE)
 Doing what we're doing:
 https://pdfs.semanticscholar.org/7722/0ef0920c43e6814d471b4f35c75fc97e13c6.pdf
 
+Notes 2.7.18
+- look up the similar paper, and the papers they reference so we can cite them
+- no equations needed when talking about methods
+- in data section talk about the covariates
+- say briefly, and give some basic stats in results like percent female, etc.
+- can show that ROC curves to prove that there's really no difference
+- reference from section in https://www2.unil.ch/biomapper/Download/Lobo-GloEcoBioGeo-2007.pdf
+- did similar paper do threshold and sample or just one at a time?
+- in intro you can mention our two case studies along with other examples
+- bioinformatics or statistics in medicine journals
+
 
 
 

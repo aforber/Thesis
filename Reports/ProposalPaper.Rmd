@@ -1,13 +1,15 @@
 ---
 title: "Thesis Proposal"
-subtitle: "Predictive Modeling with Imbalanced Data"
 author:
 - Alyssa Forber
 - Susan Calcaterra, Elizabeth Juarez-Colunga, Kathryn Colborn
-output: pdf_document
 date: "`r format(Sys.time(), '%B %d, %Y')`"
+output:
+  pdf_document: default
+  word_document: default
 geometry: margin=1in
-fontsize: 12pt 
+subtitle: Predictive Modeling with Imbalanced Data
+fontsize: 12pt
 ---
 
 ```{r setup, include=FALSE}
