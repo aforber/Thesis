@@ -11,6 +11,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Notes
 
+2.20.18
+
+Have a table of simulation scenarios
+The simulation in Maxie's is a page
+
+Put the forumala for logistic e^z/1+e^z and then put the starting values?
 
 
 Doing what we're doing:
