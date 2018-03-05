@@ -14,6 +14,10 @@ knitr::opts_chunk$set(echo = TRUE)
 2.20.18
 
 Have a table of simulation scenarios
+- Not sure how to make simulation scenario table, what should be in it?
+- and which prevalences are we narrowing down to?
+- we have 1,3,5,10,25,50
+
 The simulation in Maxie's is a page
 
 Put the forumala for logistic e^z/1+e^z and then put the starting values?
