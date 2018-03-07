@@ -48,7 +48,7 @@ myswitch <- function(sim){
   sim <- rbind(sim[2,], sim[1,], sim[4,], sim[3,], sim[6,], sim[5,], sim[8,], sim[7,])
   # re-order columns to match
   sim <- setcolorder(sim, c(1,5,3,2,4,6,7))
-  sim
+  sim 
 }
 
 sim3S <- myswitch(sim3)
@@ -63,6 +63,17 @@ simTab <- rbind(fill,sim3S[,c(1:5)],
                 fill,sim50S[,c(1:5)])
 
 # 1, 10, 19, 28 row first column need the prevalence
+simTab[,1] <- as.character(simTab[,1])
+simTab[1,1] <- "3%"
+simTab[10,1] <- "5%"
+simTab[19,1] <- "10%"
+simTab[28,1] <- "50%"
+
+# multiply by 100 and round
+simTab[,3:5] <- simTab[,3:5]*100
+simTab[,3:5] <- round(simTab[,3:5], digits = 1)
+simTab[,2] <- round(simTab[,2], digits = 3)
+write.csv(simTab, '/Users/alyssaforber/Documents/Denver/Thesis/Results/SimTable20180307.csv')
 
 
 
