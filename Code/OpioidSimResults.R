@@ -7,12 +7,12 @@
 
 rm(list=ls())
 
-sim1 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Sim1_20180120.csv")
-sim3 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Sim3_20180120.csv")
-sim5 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Sim5_20180120.csv")
-sim10 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Sim10_20180122.csv")
-sim25 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Sim25_20180122.csv")
-sim50 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Sim50_20180123.csv")
+sim1 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation/Sim1_20180120.csv")
+sim3 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation/Sim3_20180120.csv")
+sim5 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation/Sim5_20180120.csv")
+sim10 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation/Sim10_20180122.csv")
+sim25 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation/Sim25_20180122.csv")
+sim50 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation/Sim50_20180123.csv")
 
 
 # putting output into correct format function
@@ -31,6 +31,39 @@ sim5 <- myformat(sim5)
 sim10 <- myformat(sim10)
 sim25 <- myformat(sim25)
 sim50 <- myformat(sim50)
+
+
+#---------------------------
+# MAKE ONE RESULTS TABLE
+#---------------------------
+
+# We want threshold, then sens, then spec, then accuracy (which we don't have yet)
+# Want in order, and just for 3, 5, 10, and 50%
+# Need it have .5 first and then youden-- switch all to match other tables
+
+library(data.table)
+
+myswitch <- function(sim){
+  # re-order rows to match other tables in paper
+  sim <- rbind(sim[2,], sim[1,], sim[4,], sim[3,], sim[6,], sim[5,], sim[8,], sim[7,])
+  # re-order columns to match
+  sim <- setcolorder(sim, c(1,5,3,2,4,6,7))
+  sim
+}
+
+sim3S <- myswitch(sim3)
+sim5S <- myswitch(sim5)
+sim10S <- myswitch(sim10)
+sim50S <- myswitch(sim50)
+
+fill <- c(NA,NA, NA, NA,NA, NA, NA)
+simTab <- rbind(fill,sim3S[,c(1:5)], 
+                fill,sim5S[,c(1:5)],
+                fill,sim10S[,c(1:5)],
+                fill,sim50S[,c(1:5)])
+
+# 1, 10, 19, 28 row first column need the prevalence
+
 
 
 #--------------------------
