@@ -35,13 +35,25 @@ summary(glm)
 
 
 # COEFFICIENTS
-b.int = -0.965  ## intercept
-b.age =  0.007875  ## age
-b.chronic = 0.789668 ## chronic pain
-#b.num =  ## past year number of opioid
-b.receipt = 1.232307 ## receipt of opioid at discharge
 
-niterations <- 1000
+# age 0.007875
+# chronic pain 0.789668
+# receipt of opioid 1.232307
+
+# INTERCEPTS FOR PERCENTAGES
+# int= -5.82, %= 0.0100379
+# int= -4.7, %= 0.02981772
+# int= -4.15, %= 0.05007255
+# int= -3.6, %= 0.1003321
+# int= -2.18, %= 0.249695
+# int= -0.965, %= 0.499408
+
+b.int = -11.5  ## intercept
+b.age =  0.1  ## age
+b.chronic = 1.2 ## chronic pain
+b.receipt = 3 ## receipt of opioid at discharge
+
+niterations <- 10
 
 # EMPTY MATRICES
 fullY <- matrix(data=NA, nrow = niterations, ncol = 4)
@@ -54,21 +66,6 @@ smoteY <- matrix(data=NA, nrow = niterations, ncol = 4)
 smote5 <- matrix(data=NA, nrow = niterations, ncol = 3)
 
 ysim <- vector()
-
-#-----------------------------------
-# experimenting with parallel cores
-#install.packages("parallel")
-#library(parallel)
-
-# Calculate the number of cores
-#no_cores <- detectCores() - 1
-# I have 2 physical cores, but 4 logical ones
-
-# Initiate cluster
-#cl <- makeCluster(no_cores)
-#stopCluster(cl)
-#-----------------------------------
-
 
 
 start <- Sys.time()
@@ -284,13 +281,30 @@ end-start
 
 total_results <- rbind(colMeans(fullY), c(colMeans(full5), .5), colMeans(downY), c(colMeans(down5), .5),
                        colMeans(upY), c(colMeans(up5), .5), colMeans(smoteY), c(colMeans(smote5), .5))
-colnames(total_results) <- c("Specificity", "Sensitivity", "AUC", "Threshold")
+
+
+# add AUC to the table
+auc <- c(roc_lass$auc, roc_lass$auc, roc_down$auc, roc_down$auc, 
+         roc_up$auc, roc_up$auc, roc_smote$auc,roc_smote$auc)
+total_results <- cbind(total_results, auc)
+
+colnames(total_results) <- c("Specificity", "Sensitivity", "Accuracy", "Threshold", "AUC")
 rownames(total_results) <- c("Full Youden", "Full 0.5", "Down Youden", "Down 0.5",
                              "Up Youden", "Up 0.5", "SMOTE Youden", "SMOTE 0.5")
-total_results <- rbind(total_results, c("percent", mean(ysim)*100, "", ""))
 
-write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Sim50_20180123.csv")
+total_results <- rbind(total_results, c("percent", mean(ysim)*100, "", "", ""))
 
+# check the sim percent before writing
+#write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/SimulationRetry/Sim3_20180307.csv")
+
+
+# I increased the coefficients slightly, and it lowered the specificity to not be 100
+# for the .5 full but the sensititivy is still 0 so I'll try to increse them more
+# I increased the coefficients even more (and had to adjust the intercept to keep the 
+# prevalence low) and I saw the spec go down even more from 100 but still keep 0 sens
+
+# with the coefficients even more increased and the prev at 8 percent we see some sens (23%?)
+# but once I change to intercept to get it to 3 percent it's zero again
 
 plot(colMeans(fullY), pch=16, xaxt = "n", ylab="", xlab="", main = "Outcome = 1.0%")
 lines(colMeans(downY), pch=16, col="blue", type="p")
