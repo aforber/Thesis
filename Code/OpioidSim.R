@@ -48,12 +48,13 @@ summary(glm)
 # int= -2.18, %= 0.249695
 # int= -0.965, %= 0.499408
 
-b.int = -11.5  ## intercept
-b.age =  0.1  ## age
-b.chronic = 1.2 ## chronic pain
-b.receipt = 3 ## receipt of opioid at discharge
 
-niterations <- 10
+b.int = -9.91  ## intercept
+b.age =  0.007875*4 ## age
+b.chronic = 0.789668*4 ## chronic pain
+b.receipt = 1.232307*4 ## receipt of opioid at discharge
+
+niterations <- 1000
 
 # EMPTY MATRICES
 fullY <- matrix(data=NA, nrow = niterations, ncol = 4)
@@ -261,13 +262,16 @@ mean(ysim)
 end <- Sys.time()
 end-start
 
-
+# original coefficients
 # 1% was 1.44 hours
 # 3% was 1.6 hours
 # 5% was 1.6 hours
 # 10% was 2.1 hours
 # 25% was 4.1 hours
 # 50% was 10.2 hours
+
+# 4*coefficients
+# 3% was 2.4 hours
 
 
 # INTERCEPTS FOR PERCENTAGES
@@ -295,7 +299,7 @@ rownames(total_results) <- c("Full Youden", "Full 0.5", "Down Youden", "Down 0.5
 total_results <- rbind(total_results, c("percent", mean(ysim)*100, "", "", ""))
 
 # check the sim percent before writing
-#write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/SimulationRetry/Sim3_20180307.csv")
+#write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/SimulationRetry/Sim5_20180308.csv")
 
 
 # I increased the coefficients slightly, and it lowered the specificity to not be 100
