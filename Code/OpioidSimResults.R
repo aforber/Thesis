@@ -7,12 +7,20 @@
 
 rm(list=ls())
 
-sim1 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation/Sim1_20180120.csv")
-sim3 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation/Sim3_20180120.csv")
-sim5 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation/Sim5_20180120.csv")
-sim10 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation/Sim10_20180122.csv")
-sim25 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation/Sim25_20180122.csv")
-sim50 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation/Sim50_20180123.csv")
+#sim1 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation/Sim1_20180120.csv")
+#sim3 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation/Sim3_20180120.csv")
+#sim5 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation/Sim5_20180120.csv")
+#sim10 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation/Sim10_20180122.csv")
+#sim25 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation/Sim25_20180122.csv")
+#sim50 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation/Sim50_20180123.csv")
+
+
+# RE-DONE SIM WITH 400% COEFF INCREASE 
+sim3 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/SimulationRetry/Sim3_20180308.csv")
+sim5 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/SimulationRetry/Sim5_20180308.csv")
+sim10 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/SimulationRetry/Sim10_20180308.csv")
+sim50 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/SimulationRetry/Sim50_20180309.csv")
+
 
 
 # putting output into correct format function
@@ -25,11 +33,11 @@ myformat <- function(sim){
   sim
 }
 
-sim1 <- myformat(sim1)
+#sim1 <- myformat(sim1)
 sim3 <- myformat(sim3)
 sim5 <- myformat(sim5)
 sim10 <- myformat(sim10)
-sim25 <- myformat(sim25)
+#sim25 <- myformat(sim25)
 sim50 <- myformat(sim50)
 
 
@@ -47,7 +55,7 @@ myswitch <- function(sim){
   # re-order rows to match other tables in paper
   sim <- rbind(sim[2,], sim[1,], sim[4,], sim[3,], sim[6,], sim[5,], sim[8,], sim[7,])
   # re-order columns to match
-  sim <- setcolorder(sim, c(1,5,3,2,4,6,7))
+  sim <- setcolorder(sim, c(1,5,3,2,4,6,7,8)) # Added 8 with added AUC from Sim Retry
   sim 
 }
 
@@ -56,11 +64,11 @@ sim5S <- myswitch(sim5)
 sim10S <- myswitch(sim10)
 sim50S <- myswitch(sim50)
 
-fill <- c(NA,NA, NA, NA,NA, NA, NA)
-simTab <- rbind(fill,sim3S[,c(1:5)], 
-                fill,sim5S[,c(1:5)],
-                fill,sim10S[,c(1:5)],
-                fill,sim50S[,c(1:5)])
+fill <- c(NA, NA, NA, NA, NA, NA, NA, NA)
+simTab <- rbind(fill,sim3S[,c(1:6)], # changed to six with the added AUC from Sim Retry
+                fill,sim5S[,c(1:6)],
+                fill,sim10S[,c(1:6)],
+                fill,sim50S[,c(1:6)])
 
 # 1, 10, 19, 28 row first column need the prevalence
 simTab[,1] <- as.character(simTab[,1])
@@ -70,10 +78,10 @@ simTab[19,1] <- "10%"
 simTab[28,1] <- "50%"
 
 # multiply by 100 and round
-simTab[,3:5] <- simTab[,3:5]*100
-simTab[,3:5] <- round(simTab[,3:5], digits = 1)
+simTab[,3:6] <- simTab[,3:6]*100    # changed from 5 to 6 for added AUC
+simTab[,3:6] <- round(simTab[,3:6], digits = 1)
 simTab[,2] <- round(simTab[,2], digits = 3)
-write.csv(simTab, '/Users/alyssaforber/Documents/Denver/Thesis/Results/SimTable20180307.csv')
+#write.csv(simTab, '/Users/alyssaforber/Documents/Denver/Thesis/Results/SimTable20180310.csv')
 
 
 
