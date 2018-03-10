@@ -49,7 +49,7 @@ summary(glm)
 # int= -0.965, %= 0.499408
 
 
-b.int = -8.52  ## intercept
+b.int = -3.51  ## intercept
 b.age =  0.007875*4 ## age
 b.chronic = 0.789668*4 ## chronic pain
 b.receipt = 1.232307*4 ## receipt of opioid at discharge
@@ -273,6 +273,8 @@ end-start
 # 4*coefficients
 # 3% was 2.4 hours
 # 5% was 2.6 hours
+# 10% was 3.05 hours
+# 50% was 13.9 hours
 
 
 # INTERCEPTS FOR PERCENTAGES
@@ -282,6 +284,13 @@ end-start
 # int= -3.6, %= 0.1003321
 # int= -2.18, %= 0.249695
 # int= -0.965, %= 0.499408
+
+# INTERCEPTS FOR PERCENTAGES COEFFS * 4!
+# int= -10.68, %= 0.02997654
+# int= -9.91, %= 0.04997654
+# int= -8.52, %= 0.1000108
+# int= -3.51, %=  0.4995957
+
 
 
 total_results <- rbind(colMeans(fullY), c(colMeans(full5), .5), colMeans(downY), c(colMeans(down5), .5),
@@ -300,16 +309,8 @@ rownames(total_results) <- c("Full Youden", "Full 0.5", "Down Youden", "Down 0.5
 total_results <- rbind(total_results, c("percent", mean(ysim)*100, "", "", ""))
 
 # check the sim percent before writing
-#write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/SimulationRetry/Sim10_20180308.csv")
+#write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/SimulationRetry/Sim50_20180309.csv")
 
-
-# I increased the coefficients slightly, and it lowered the specificity to not be 100
-# for the .5 full but the sensititivy is still 0 so I'll try to increse them more
-# I increased the coefficients even more (and had to adjust the intercept to keep the 
-# prevalence low) and I saw the spec go down even more from 100 but still keep 0 sens
-
-# with the coefficients even more increased and the prev at 8 percent we see some sens (23%?)
-# but once I change to intercept to get it to 3 percent it's zero again
 
 plot(colMeans(fullY), pch=16, xaxt = "n", ylab="", xlab="", main = "Outcome = 1.0%")
 lines(colMeans(downY), pch=16, col="blue", type="p")
