@@ -299,7 +299,7 @@ total_results <- rbind(colMeans(fullY), c(colMeans(full5), .5), colMeans(downY),
 
 # add AUC to the table
 auc <- c(roc_lass$auc, roc_lass$auc, roc_down$auc, roc_down$auc, 
-         roc_up$auc, roc_up$auc, roc_smote$auc,roc_smote$auc)
+         roc_up$auc, roc_up$auc, roc_smote$auc, roc_smote$auc)
 total_results <- cbind(total_results, auc)
 
 colnames(total_results) <- c("Specificity", "Sensitivity", "Accuracy", "Threshold", "AUC")
