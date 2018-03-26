@@ -49,10 +49,10 @@ summary(glm)
 # int= -0.965, %= 0.499408
 
 
-b.int = -3.51  ## intercept
-b.age =  0.007875*4 ## age
-b.chronic = 0.789668*4 ## chronic pain
-b.receipt = 1.232307*4 ## receipt of opioid at discharge
+b.int = -3.6  ## intercept
+b.age =  0.007875 ## age
+b.chronic = 0.789668 ## chronic pain
+b.receipt = 1.232307 ## receipt of opioid at discharge
 
 niterations <- 1000
 
@@ -309,7 +309,7 @@ rownames(total_results) <- c("Full Youden", "Full 0.5", "Down Youden", "Down 0.5
 total_results <- rbind(total_results, c("percent", mean(ysim)*100, "", "", ""))
 
 # check the sim percent before writing
-#write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/SimulationRetry/Sim50_20180309.csv")
+#write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation3/Sim10_20180326.csv")
 
 
 plot(colMeans(fullY), pch=16, xaxt = "n", ylab="", xlab="", main = "Outcome = 1.0%")
