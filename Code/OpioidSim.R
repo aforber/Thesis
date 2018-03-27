@@ -23,17 +23,32 @@ library(pROC)
 
 opd = read.csv('/Users/alyssaforber/Box Sync/AlyssaKatieResearch/Opioids/Data/ropdata5_red.csv')
 
-opd = opd[c("Op_Chronic" , "age" , "OP_Receipt" , "ChronicPDcDx" ,"visit_year")]
+# USE ALL 35 VARIALBES NOW
+#opd = opd[c("Op_Chronic" , "age" , "OP_Receipt" , "ChronicPDcDx" ,"visit_year")]
+opd = opd[c("age" , "agesq" , "genderm" , "racehisp" , "raceaa" , "Op_Chronic" ,
+            "raceoth" , "genm_racehisp" , "genm_raceaa" , "genm_raceoth" ,
+            "inscat5" , "los_ln" , "mmecat5" , "prior12" , "OP_Receipt" , "PriorOp5" ,
+            "NOP_past" , "Benzo_past" , "SUHxDx_alch" , "SUHxDx_Stml" ,
+            "SUHxDx_tabc" , "MHHxDx" , "ChronicPHxDx" , "AcutePHxDx" ,
+            "ChronicPDcDx" , "AcutePDcDx" , "Surg_any" , "CHARLSON" , 
+            "NeoplasmDcDx" , "NeoplasmHxDx" , "post_index_hospitalizations" ,         
+            "char_surg" , "oprec_surg" , "chpdc_surg" , "chphx_surg" , "visit_year")]
+
 
 # splitting 08-11 and 12-14 to make 2/3 split
 train <- subset(opd, visit_year < 2012)
 train$visit_year <- NULL
 
-glm <- glm(Op_Chronic ~ age + OP_Receipt + ChronicPDcDx, 
+# ADD MORE VARIABLES TO THIS
+glm <- glm(Op_Chronic ~ age + OP_Receipt + ChronicPDcDx + 
+             post_index_hospitalizations + ChronicPHxDx + CHARLSON + 
+             oprec_surg + SUHxDx_tabc + NeoplasmDcDx + NOP_past, 
            data = train, family = "binomial")
 summary(glm)
 
-
+#----------------------
+# OLD INFO FOR 3 VARS
+#----------------------
 # COEFFICIENTS
 
 # age 0.007875
@@ -49,17 +64,44 @@ summary(glm)
 # int= -2.18, %= 0.249695
 # int= -0.965, %= 0.499408
 
-# -3.5 was 0.08921133
-# -3.4 was 0.09771882
-# -3.38 was 0.09927089
-# -3.36 was 0.1008085
+#b.int = -3.36  ## intercept
+#b.age =  0.007875 ## age
+#b.chronicD = 0.789668 ## chronic pain
+#b.receipt = 1.232307 ## receipt of opioid at discharge
 
-b.int = -3.36  ## intercept
-b.age =  0.007875 ## age
-b.chronic = 0.789668 ## chronic pain
-b.receipt = 1.232307 ## receipt of opioid at discharge
 
-niterations <- 1000
+#----------------------
+# NEW INFO W/MORE VARS
+#----------------------
+
+# NEW COEFFICIENTS WITH 10 VARS
+# age                         -0.002113    
+# OP_Receipt                   1.514161 
+# ChronicPDcDx                 0.615101
+# post_index_hospitalizations  0.301034  
+# ChronicPHxDx                 0.496509 
+# CHARLSON                     0.038409 
+# oprec_surg                  -0.487705 
+# SUHxDx_tabc                  0.421039 
+# NeoplasmDcDx                 0.539857   
+# NOP_past                     0.993827 
+
+# INTERCEPTS
+# -4.562189 for 5%
+
+b.int = -4.562189 # for 5%
+b.age = -0.002113
+b.receipt = 1.514161
+b.chronicD = 0.615101
+b.post = 0.301034
+b.chronicH = 0.496509
+b.charlson = 0.038409
+b.surg = -0.487705
+b.SUH = 0.421039
+b.neo = 0.539857
+b.NOP = 0.993827
+
+niterations <- 10
 
 # EMPTY MATRICES
 fullY <- matrix(data=NA, nrow = niterations, ncol = 4)
@@ -73,7 +115,6 @@ smote5 <- matrix(data=NA, nrow = niterations, ncol = 3)
 
 ysim <- vector()
 
-
 start <- Sys.time()
 for (i in 1:niterations){
   
@@ -82,9 +123,15 @@ for (i in 1:niterations){
   #---------------------------
   all.opd <- as.data.frame(transform(opd, Op_Chronic_Sim=rbinom(27705, 1, 
                                                          plogis(b.int + b.age*opd$age + 
-                                                                b.chronic*opd$ChronicPDcDx + 
-                                                                #b.num*opd$PriorOp5 + 
-                                                                b.receipt*opd$OP_Receipt))))
+                                                                  b.receipt*opd$OP_Receipt +
+                                                                  b.chronicD*opd$ChronicPDcDx +
+                                                                  b.post*post_index_hospitalizations +
+                                                                  b.chronicH*ChronicPHxDx+
+                                                                  b.charlson*CHARLSON +
+                                                                  b.surg*oprec_surg +
+                                                                  b.SUH*SUHxDx_tabc +
+                                                                  b.neo*NeoplasmDcDx +
+                                                                  b.NOP*NOP_past))))
   # save the outcome percentage
   ysim[i] <- mean(all.opd$Op_Chronic_Sim)
   
