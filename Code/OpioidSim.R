@@ -44,12 +44,17 @@ summary(glm)
 # int= -5.82, %= 0.0100379
 # int= -4.7, %= 0.02981772
 # int= -4.15, %= 0.05007255
-# int= -3.6, %= 0.1003321
+# int= -3.6, %= 0.1003321 
+# int= -3.36, %= 0.1008085 **use this one
 # int= -2.18, %= 0.249695
 # int= -0.965, %= 0.499408
 
+# -3.5 was 0.08921133
+# -3.4 was 0.09771882
+# -3.38 was 0.09927089
+# -3.36 was 0.1008085
 
-b.int = -3.6  ## intercept
+b.int = -3.36  ## intercept
 b.age =  0.007875 ## age
 b.chronic = 0.789668 ## chronic pain
 b.receipt = 1.232307 ## receipt of opioid at discharge
