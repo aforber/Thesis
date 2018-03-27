@@ -22,6 +22,13 @@ sim10 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulatio
 sim50 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/SimulationRetry/Sim50_20180309.csv")
 
 
+# RE-DONE SIM WITH NO INCREASE, BUT COLLECTING AUC
+sim3 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation3/Sim3_20180325.csv")
+sim5 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation3/Sim5_20180325.csv")
+sim10 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation3/Sim10_20180326.csv")
+sim50 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation3/Sim50_20180326.csv")
+
+
 
 # putting output into correct format function
 library(stringr)
@@ -81,7 +88,7 @@ simTab[28,1] <- "50%"
 simTab[,3:6] <- simTab[,3:6]*100    # changed from 5 to 6 for added AUC
 simTab[,3:6] <- round(simTab[,3:6], digits = 1)
 simTab[,2] <- round(simTab[,2], digits = 3)
-#write.csv(simTab, '/Users/alyssaforber/Documents/Denver/Thesis/Results/SimTable20180310.csv')
+#write.csv(simTab, '/Users/alyssaforber/Documents/Denver/Thesis/Results/SimTable20180326.csv')
 
 
 
