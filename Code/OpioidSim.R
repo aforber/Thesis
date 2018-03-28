@@ -26,7 +26,6 @@ opd = read.csv('/Users/alyssaforber/Box Sync/AlyssaKatieResearch/Opioids/Data/ro
 # USE ALL 35 VARIALBES NOW
 #opd = opd[c("Op_Chronic" , "age" , "OP_Receipt" , "ChronicPDcDx" ,"visit_year")]
 opd = opd[c("age" , "agesq" , "genderm" , "racehisp" , "raceaa" , "Op_Chronic" ,
-            "raceoth" , "genm_racehisp" , "genm_raceaa" , "genm_raceoth" ,
             "inscat5" , "los_ln" , "mmecat5" , "prior12" , "OP_Receipt" , "PriorOp5" ,
             "NOP_past" , "Benzo_past" , "SUHxDx_alch" , "SUHxDx_Stml" ,
             "SUHxDx_tabc" , "MHHxDx" , "ChronicPHxDx" , "AcutePHxDx" ,
@@ -39,35 +38,13 @@ opd = opd[c("age" , "agesq" , "genderm" , "racehisp" , "raceaa" , "Op_Chronic" ,
 train <- subset(opd, visit_year < 2012)
 train$visit_year <- NULL
 
-# ADD MORE VARIABLES TO THIS
+# ADDED MORE VARIABLES TO THIS
 glm <- glm(Op_Chronic ~ age + OP_Receipt + ChronicPDcDx + 
              post_index_hospitalizations + ChronicPHxDx + CHARLSON + 
              oprec_surg + SUHxDx_tabc + NeoplasmDcDx + NOP_past, 
            data = train, family = "binomial")
 summary(glm)
 
-#----------------------
-# OLD INFO FOR 3 VARS
-#----------------------
-# COEFFICIENTS
-
-# age 0.007875
-# chronic pain 0.789668
-# receipt of opioid 1.232307
-
-# INTERCEPTS FOR PERCENTAGES
-# int= -5.82, %= 0.0100379
-# int= -4.7, %= 0.02981772
-# int= -4.15, %= 0.05007255
-# int= -3.6, %= 0.1003321 
-# int= -3.36, %= 0.1008085 **use this one
-# int= -2.18, %= 0.249695
-# int= -0.965, %= 0.499408
-
-#b.int = -3.36  ## intercept
-#b.age =  0.007875 ## age
-#b.chronicD = 0.789668 ## chronic pain
-#b.receipt = 1.232307 ## receipt of opioid at discharge
 
 
 #----------------------
@@ -89,7 +66,7 @@ summary(glm)
 # INTERCEPTS
 # -4.562189 for 5%
 
-b.int = -4.562189 # for 5%
+b.int = -3.86
 b.age = -0.002113
 b.receipt = 1.514161
 b.chronicD = 0.615101
@@ -104,14 +81,14 @@ b.NOP = 0.993827
 niterations <- 10
 
 # EMPTY MATRICES
-fullY <- matrix(data=NA, nrow = niterations, ncol = 4)
-full5 <- matrix(data=NA, nrow = niterations, ncol = 3)
-upY <- matrix(data=NA, nrow = niterations, ncol = 4)
-up5 <- matrix(data=NA, nrow = niterations, ncol = 3)
-downY <- matrix(data=NA, nrow = niterations, ncol = 4)
-down5 <- matrix(data=NA, nrow = niterations, ncol = 3)
-smoteY <- matrix(data=NA, nrow = niterations, ncol = 4)
-smote5 <- matrix(data=NA, nrow = niterations, ncol = 3)
+fullY <- matrix(data=NA, nrow = niterations, ncol = 5)
+full5 <- matrix(data=NA, nrow = niterations, ncol = 4)
+upY <- matrix(data=NA, nrow = niterations, ncol = 5)
+up5 <- matrix(data=NA, nrow = niterations, ncol = 4)
+downY <- matrix(data=NA, nrow = niterations, ncol = 5)
+down5 <- matrix(data=NA, nrow = niterations, ncol = 4)
+smoteY <- matrix(data=NA, nrow = niterations, ncol = 5)
+smote5 <- matrix(data=NA, nrow = niterations, ncol = 4)
 
 ysim <- vector()
 
@@ -178,7 +155,12 @@ for (i in 1:niterations){
   
   # model.matrix for test data for all datasets
   # full test and new test are the same, needed for all, just different format
-  newtest <- model.matrix(full_test$Op_Chronic_Sim ~ age + OP_Receipt + ChronicPDcDx, 
+  
+  #newtest <- model.matrix(full_test$Op_Chronic_Sim ~ age + OP_Receipt + ChronicPDcDx, 
+  #                        data = full_test)
+  
+  # NOW USING ALL THE VARS IN THE MODELS 
+  newtest <- model.matrix(full_test$Op_Chronic_Sim ~ ., 
                           data = full_test)
   
   #----------------
@@ -186,11 +168,18 @@ for (i in 1:niterations){
   #----------------
   
   # run model.matrix for train data
-  newtrain <- model.matrix(Op_Chronic_Sim ~ age + OP_Receipt + ChronicPDcDx, data=full_train) 
+  #newtrain <- model.matrix(Op_Chronic_Sim ~ age + OP_Receipt + ChronicPDcDx, data=full_train) 
+  # NOW USING ALL VARS
+  newtrain <- model.matrix(Op_Chronic_Sim ~ ., data=full_train) 
   
   # run cv.glmnet with matrix
   cvlasso <- cv.glmnet(newtrain, y = as.factor(full_train$Op_Chronic_Sim), family = "binomial")
 
+  
+  # GET NUMBER OF COVARIATES CHOSEN BY MODEL 
+  fullY[i,1] <- length(coef(cvlasso)@x) - 1 #subtracting the intercept
+  full5[i,1] <- length(coef(cvlasso)@x) - 1 
+  
   # predict with matrix
   predict_lass <- predict(cvlasso, newtest, type = "response", s = "lambda.min")
   
@@ -200,27 +189,35 @@ for (i in 1:niterations){
   #### calculate with youden and save
   results <- coords(roc_lass, x = "best", best.method = "youden", 
                         ret = c("specificity", "sensitivity", "accuracy", "threshold"))
-  fullY[i,1] <- results[1]
-  fullY[i,2] <- results[2]
-  fullY[i,3] <- results[3]
-  fullY[i,4] <- results[4]
-  
+  fullY[i,2] <- results[1]
+  fullY[i,3] <- results[2]
+  fullY[i,4] <- results[3]
+  fullY[i,5] <- results[4]
+   
   #### calculate with 0.5 cutoff and save
   results <- coords(roc_lass, x = 0.5, input = "threshold",
                          ret = c("specificity", "sensitivity", "accuracy"))
-  full5[i,1] <- results[1]
-  full5[i,2] <- results[2]
-  full5[i,3] <- results[3]
+  full5[i,2] <- results[1]
+  full5[i,3] <- results[2]
+  full5[i,4] <- results[3]
   
+    
   #-------------
   # DOWN SAMPLE
   #-------------
   
   # run model.matrix for train data
-  newtrain <- model.matrix(Class ~ age + OP_Receipt + ChronicPDcDx, data=down_train)
+  #newtrain <- model.matrix(Class ~ age + OP_Receipt + ChronicPDcDx, data=down_train)
+  # ALL VARS NOW
+  newtrain <- model.matrix(Class ~ ., data=down_train)
   
   # run cv.glmnet with matrix
   cvlasso <- cv.glmnet(newtrain, y = as.factor(down_train$Class), family = "binomial")
+  
+  
+  # GET NUMBER OF COVARIATES CHOSEN BY MODEL 
+  downY[i,1] <- length(coef(cvlasso)@x) - 1 #subtracting the intercept
+  down5[i,1] <- length(coef(cvlasso)@x) - 1
   
   # predict with matrix
   predict_down <- predict(cvlasso, newtest, type = "response", s = "lambda.min")
@@ -231,28 +228,36 @@ for (i in 1:niterations){
   #### calculate with youden
   results <- coords(roc_down, x = "best", best.method = "youden", 
                         ret = c("specificity", "sensitivity", "accuracy", "threshold"))
-  downY[i,1] <- results[1]
-  downY[i,2] <- results[2]
-  downY[i,3] <- results[3]
-  downY[i,4] <- results[4]
+  downY[i,2] <- results[1]
+  downY[i,3] <- results[2]
+  downY[i,4] <- results[3]
+  downY[i,5] <- results[4]
   
   #### calculate with 0.5 cutoff
   results <- coords(roc_down, x = 0.5, input = "threshold",
                          ret = c("specificity", "sensitivity", "accuracy"))
-  down5[i,1] <- results[1]
-  down5[i,2] <- results[2]
-  down5[i,3] <- results[3]
+  down5[i,2] <- results[1]
+  down5[i,3] <- results[2]
+  down5[i,4] <- results[3]
   
-  #--------------------
+   #--------------------
   # UP SAMPLE
   #--------------------
   
   # run model.matrix for train data
-  newtrain <- model.matrix(Class~ age + OP_Receipt + ChronicPDcDx, data=up_train)
+  #newtrain <- model.matrix(Class~ age + OP_Receipt + ChronicPDcDx, data=up_train)
+  # ALL VARS
+  newtrain <- model.matrix(Class~ ., data=up_train)
   
   # run cv.glmnet with matrix
   cvlasso <- cv.glmnet(newtrain, y = as.factor(up_train$Class), family = "binomial")
 
+  
+  # GET NUMBER OF COVARIATES CHOSEN BY MODEL 
+  upY[i,1] <- length(coef(cvlasso)@x) - 1 #subtracting the intercept
+  up5[i,1] <- length(coef(cvlasso)@x) - 1
+  
+  
   # predict with matrix
   predict_up <- predict(cvlasso, newtest, type = "response", s = "lambda.min")
   
@@ -262,17 +267,17 @@ for (i in 1:niterations){
   #### calculate with youden
   results <- coords(roc_up, x = "best", best.method = "youden", 
                       ret = c("specificity", "sensitivity", "accuracy", "threshold"))
-  upY[i,1] <- results[1]
-  upY[i,2] <- results[2]
-  upY[i,3] <- results[3]
-  upY[i,4] <- results[4]
+  upY[i,2] <- results[1]
+  upY[i,3] <- results[2]
+  upY[i,4] <- results[3]
+  upY[i,5] <- results[4]
   
   #### calculate with 0.5 cutoff
   results <- coords(roc_up, x = 0.5, input = "threshold",
                        ret = c("specificity", "sensitivity", "accuracy"))
-  up5[i,1] <- results[1]
-  up5[i,2] <- results[2]
-  up5[i,3] <- results[3]
+  up5[i,2] <- results[1]
+  up5[i,3] <- results[2]
+  up5[i,4] <- results[3]
   
   
   #--------------------
@@ -280,11 +285,18 @@ for (i in 1:niterations){
   #--------------------
   
   # run model.matrix for train data
-  newtrain <- model.matrix(Op_Chronic_Sim ~ age + OP_Receipt + ChronicPDcDx, data=smote_train)
+  #newtrain <- model.matrix(Op_Chronic_Sim ~ age + OP_Receipt + ChronicPDcDx, data=smote_train)
+  # ALL VARS
+  newtrain <- model.matrix(Op_Chronic_Sim ~ ., data=smote_train)
   
   # run cv.glmnet with matrix
   cvlasso <- cv.glmnet(newtrain, y = as.factor(smote_train$Op_Chronic_Sim), family = "binomial")
 
+  
+  # GET NUMBER OF COVARIATES CHOSEN BY MODEL 
+  smoteY[i,1] <- length(coef(cvlasso)@x) - 1 #subtracting the intercept
+  smote5[i,1] <- length(coef(cvlasso)@x) - 1
+  
   # predict with matrix
   predict_smote <- predict(cvlasso, newtest, type = "response", s = "lambda.min")
   
@@ -294,17 +306,24 @@ for (i in 1:niterations){
   #### calculate with youden 
   results <- coords(roc_smote, x = "best", best.method = "youden", 
                          ret = c("specificity", "sensitivity", "accuracy", "threshold"))
-  smoteY[i,1] <- results[1]
-  smoteY[i,2] <- results[2]
-  smoteY[i,3] <- results[3]
-  smoteY[i,4] <- results[4]
+  smoteY[i,2] <- results[1]
+  smoteY[i,3] <- results[2]
+  smoteY[i,4] <- results[3]
+  smoteY[i,5] <- results[4]
   
   #### calculate with 0.5 cutoff
   results <- coords(roc_smote, x = 0.5, input = "threshold",
                           ret = c("specificity", "sensitivity", "accuracy"))
-  smote5[i,1] <- results[1]
-  smote5[i,2] <- results[2]
-  smote5[i,3] <- results[3]
+  smote5[i,2] <- results[1]
+  smote5[i,3] <- results[2]
+  smote5[i,4] <- results[3]
+  
+  
+  #if(i %% 10==0) {
+  #  cat(paste0("iteration: ", i, "\n"))
+  #}
+  
+  cat(paste0("iteration: ", i, "\n"))
 
 }
 
@@ -314,34 +333,24 @@ mean(ysim)
 end <- Sys.time()
 end-start
 
-# original coefficients
-# 1% was 1.44 hours
-# 3% was 1.6 hours
-# 5% was 1.6 hours
-# 10% was 2.1 hours
-# 25% was 4.1 hours
-# 50% was 10.2 hours
-
-# 4*coefficients
-# 3% was 2.4 hours
-# 5% was 2.6 hours
-# 10% was 3.05 hours
-# 50% was 13.9 hours
-
-
-# INTERCEPTS FOR PERCENTAGES
-# int= -5.82, %= 0.0100379
-# int= -4.7, %= 0.02981772
-# int= -4.15, %= 0.05007255
-# int= -3.6, %= 0.1003321
-# int= -2.18, %= 0.249695
-# int= -0.965, %= 0.499408
-
-# INTERCEPTS FOR PERCENTAGES COEFFS * 4!
-# int= -10.68, %= 0.02997654
-# int= -9.91, %= 0.04997654
-# int= -8.52, %= 0.1000108
-# int= -3.51, %=  0.4995957
+#   5%
+# 0.05847681 FOR INT -4.562189 (this is the actual intercept for our 5%)
+# 0.05795344 for int -4.5622
+# 0.05585634 for int -4.6
+# 0.05200866 for int -4.7
+# 0.04774589 for int -4.8
+# 0.05016784 for int 14.73 ** 5%
+#   3%
+# 0.02971305 for int -5.34
+# 0.03013175 for int -5.335 ** 3%
+# 0.02984299 for int -5.336 ** or 3%
+# 0.02963725 for int -5.3355
+#  10%
+# 0.262079 for int -2.5
+# 0.136257 for int -3.5
+# 0.1078253 for int -3.8
+# 0.1065548 for int -3.81
+# 0.1023281 for int -3.86
 
 
 
@@ -354,18 +363,14 @@ auc <- c(roc_lass$auc, roc_lass$auc, roc_down$auc, roc_down$auc,
          roc_up$auc, roc_up$auc, roc_smote$auc, roc_smote$auc)
 total_results <- cbind(total_results, auc)
 
-colnames(total_results) <- c("Specificity", "Sensitivity", "Accuracy", "Threshold", "AUC")
+colnames(total_results) <- c("Covariates", "Specificity", "Sensitivity", "Accuracy", "Threshold", "AUC")
 rownames(total_results) <- c("Full Youden", "Full 0.5", "Down Youden", "Down 0.5",
                              "Up Youden", "Up 0.5", "SMOTE Youden", "SMOTE 0.5")
 
-total_results <- rbind(total_results, c("percent", mean(ysim)*100, "", "", ""))
+total_results <- rbind(total_results, c("percent", mean(ysim)*100, "", "", "", ""))
 
-# check the sim percent before writing
-#write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation3/Sim10_20180326.csv")
+# check the sim percent and date before writing
+#write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation4/Sim5_20180328_test.csv")
 
 
-plot(colMeans(fullY), pch=16, xaxt = "n", ylab="", xlab="", main = "Outcome = 1.0%")
-lines(colMeans(downY), pch=16, col="blue", type="p")
-lines(colMeans(upY), pch=16, col="red", type="p")
-lines(colMeans(smoteY), pch=16, col="green", type="p")
-axis(1, at=1:3, labels=c("Specificity", "Sensitivity", "AUC"))
+
