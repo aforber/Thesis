@@ -14,7 +14,8 @@ library(glmnet)
 library(pROC)
 library(doMC)
 
-
+library(doParallel)
+library(foreach)
 
 #foreach(i=1:3) %dopar% sqrt(i)
 
@@ -317,9 +318,9 @@ total_results <- rbind(total_results, c("percent", mean(ysim)*100, "", "", "", "
 
 
 
-install.packages("foreach")
+
 library(foreach)
-install.packages("doParallel")
+
 library(doParallel)
 cl<-makeCluster(8)
 registerDoParallel(cl)
