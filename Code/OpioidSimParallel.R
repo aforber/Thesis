@@ -4,7 +4,7 @@
 ### DATE: JANUARY 9, 2018
 ### DATE MODIFIED: JAN 10, 11, 12, MARCH
 #-----------------------------
-
+# RUN SIM PARALLEL
 
 rm(list=ls())
 
@@ -12,11 +12,11 @@ library(DMwR)
 library(caret)
 library(glmnet)
 library(pROC)
-
-install.packages("doMC")
 library(doMC)
-registerDoMC(2)
-foreach(i=1:3) %dopar% sqrt(i)
+
+
+
+#foreach(i=1:3) %dopar% sqrt(i)
 
 
 
@@ -46,32 +46,12 @@ train <- subset(opd, visit_year < 2012)
 train$visit_year <- NULL
 
 # ADDED MORE VARIABLES TO THIS
-glm <- glm(Op_Chronic ~ age + OP_Receipt + ChronicPDcDx + 
-             post_index_hospitalizations + ChronicPHxDx + CHARLSON + 
-             oprec_surg + SUHxDx_tabc + NeoplasmDcDx + NOP_past, 
-           data = train, family = "binomial")
-summary(glm)
+#glm <- glm(Op_Chronic ~ age + OP_Receipt + ChronicPDcDx + 
+#             post_index_hospitalizations + ChronicPHxDx + CHARLSON + 
+#             oprec_surg + SUHxDx_tabc + NeoplasmDcDx + NOP_past, 
+#           data = train, family = "binomial")
+#summary(glm)
 
-
-
-#----------------------
-# NEW INFO W/MORE VARS
-#----------------------
-
-# NEW COEFFICIENTS WITH 10 VARS
-# age                         -0.002113    
-# OP_Receipt                   1.514161 
-# ChronicPDcDx                 0.615101
-# post_index_hospitalizations  0.301034  
-# ChronicPHxDx                 0.496509 
-# CHARLSON                     0.038409 
-# oprec_surg                  -0.487705 
-# SUHxDx_tabc                  0.421039 
-# NeoplasmDcDx                 0.539857   
-# NOP_past                     0.993827 
-
-# INTERCEPTS
-# -4.562189 for 5%
 
 b.int = -1.3
 b.age = -0.002113
@@ -87,37 +67,36 @@ b.NOP = 0.993827
 
 niterations <- 10
 
-# EMPTY MATRICES
-fullY <- matrix(data=NA, nrow = niterations, ncol = 5)
-full5 <- matrix(data=NA, nrow = niterations, ncol = 4)
-upY <- matrix(data=NA, nrow = niterations, ncol = 5)
-up5 <- matrix(data=NA, nrow = niterations, ncol = 4)
-downY <- matrix(data=NA, nrow = niterations, ncol = 5)
-down5 <- matrix(data=NA, nrow = niterations, ncol = 4)
-smoteY <- matrix(data=NA, nrow = niterations, ncol = 5)
-smote5 <- matrix(data=NA, nrow = niterations, ncol = 4)
 
-ysim <- vector()
+#ysim <- vector()
+
+# Have to run this or it won't run in parallel
+#getDoParWorkers()
+#options(cores=2)
+getDoParWorkers()
+#registerDoMC(2)
+cl<-makeCluster(8)
+registerDoParallel(cl)
 
 start <- Sys.time()
-for (i in 1:niterations){
+myresults <- foreach(i=1:niterations) %dopar% {
   
   #---------------------------
   # CREATE SIMULATED OUTCOMES
   #---------------------------
   all.opd <- as.data.frame(transform(opd, Op_Chronic_Sim=rbinom(27705, 1, 
-                                                         plogis(b.int + b.age*opd$age + 
-                                                                  b.receipt*opd$OP_Receipt +
-                                                                  b.chronicD*opd$ChronicPDcDx +
-                                                                  b.post*post_index_hospitalizations +
-                                                                  b.chronicH*ChronicPHxDx+
-                                                                  b.charlson*CHARLSON +
-                                                                  b.surg*oprec_surg +
-                                                                  b.SUH*SUHxDx_tabc +
-                                                                  b.neo*NeoplasmDcDx +
-                                                                  b.NOP*NOP_past))))
+                                                                plogis(b.int + b.age*opd$age + 
+                                                                         b.receipt*opd$OP_Receipt +
+                                                                         b.chronicD*opd$ChronicPDcDx +
+                                                                         b.post*post_index_hospitalizations +
+                                                                         b.chronicH*ChronicPHxDx+
+                                                                         b.charlson*CHARLSON +
+                                                                         b.surg*oprec_surg +
+                                                                         b.SUH*SUHxDx_tabc +
+                                                                         b.neo*NeoplasmDcDx +
+                                                                         b.NOP*NOP_past))))
   # save the outcome percentage
-  ysim[i] <- mean(all.opd$Op_Chronic_Sim)
+  #ysim <- mean(all.opd$Op_Chronic_Sim)
   
   # split into train and test set
   full_train <- subset(all.opd, visit_year < 2012)
@@ -134,7 +113,7 @@ for (i in 1:niterations){
   #-------------
   # DOWN SAMPLE 
   #-------------
-
+  
   #get data with only predictors
   predictors <- full_train
   predictors$Op_Chronic_Sim <- NULL
@@ -142,30 +121,22 @@ for (i in 1:niterations){
   
   down_train <- downSample(x = predictors,
                            y = full_train$Op_Chronic_Sim)
-
   #-----------
   # UP SAMPLE
   #-----------
-
+  
   up_train <- upSample(x = predictors,
                        y = full_train$Op_Chronic_Sim)  
-
+  
   #--------------
   # SMOTE SAMPLE
   #--------------
-
+  
   smote_train <- SMOTE(Op_Chronic_Sim ~ ., data  = full_train) 
   
   #--------------------------
   # RUN MODELS
   #--------------------------
-  
-  # model.matrix for test data for all datasets
-  # full test and new test are the same, needed for all, just different format
-  
-  #newtest <- model.matrix(full_test$Op_Chronic_Sim ~ age + OP_Receipt + ChronicPDcDx, 
-  #                        data = full_test)
-  
   # NOW USING ALL THE VARS IN THE MODELS 
   newtest <- model.matrix(full_test$Op_Chronic_Sim ~ ., 
                           data = full_test)
@@ -173,42 +144,32 @@ for (i in 1:niterations){
   #----------------
   ## ORIGINAL DATA
   #----------------
-  
-  # run model.matrix for train data
-  #newtrain <- model.matrix(Op_Chronic_Sim ~ age + OP_Receipt + ChronicPDcDx, data=full_train) 
   # NOW USING ALL VARS
   newtrain <- model.matrix(Op_Chronic_Sim ~ ., data=full_train) 
   
   # run cv.glmnet with matrix
   cvlasso <- cv.glmnet(newtrain, y = as.factor(full_train$Op_Chronic_Sim), family = "binomial")
-
+  
   
   # GET NUMBER OF COVARIATES CHOSEN BY MODEL 
-  fullY[i,1] <- length(coef(cvlasso)@x) - 1 #subtracting the intercept
-  full5[i,1] <- length(coef(cvlasso)@x) - 1 
+  coefs <- length(coef(cvlasso)@x) - 1 #subtracting the intercept
+
   
   # predict with matrix
   predict_lass <- predict(cvlasso, newtest, type = "response", s = "lambda.min")
   
   ###### pROC PACKAGE
   roc_lass <- roc(full_test$Op_Chronic_Sim, as.numeric(predict_lass))
- 
+  
   #### calculate with youden and save
   results <- coords(roc_lass, x = "best", best.method = "youden", 
-                        ret = c("specificity", "sensitivity", "accuracy", "threshold"))
-  fullY[i,2] <- results[1]
-  fullY[i,3] <- results[2]
-  fullY[i,4] <- results[3]
-  fullY[i,5] <- results[4]
-   
-  #### calculate with 0.5 cutoff and save
-  results <- coords(roc_lass, x = 0.5, input = "threshold",
-                         ret = c("specificity", "sensitivity", "accuracy"))
-  full5[i,2] <- results[1]
-  full5[i,3] <- results[2]
-  full5[i,4] <- results[3]
+                    ret = c("specificity", "sensitivity", "accuracy", "threshold"))
   
-    
+  # SAVE THE OUTPUT 
+  Output <- cbind(as.data.frame.list(results), roc_lass$auc, coefs)
+  names(Output)[5] <- "AUC"
+  
+  
   #-------------
   # DOWN SAMPLE
   #-------------
@@ -223,8 +184,8 @@ for (i in 1:niterations){
   
   
   # GET NUMBER OF COVARIATES CHOSEN BY MODEL 
-  downY[i,1] <- length(coef(cvlasso)@x) - 1 #subtracting the intercept
-  down5[i,1] <- length(coef(cvlasso)@x) - 1
+  coefs <- length(coef(cvlasso)@x) - 1 #subtracting the intercept
+  
   
   # predict with matrix
   predict_down <- predict(cvlasso, newtest, type = "response", s = "lambda.min")
@@ -234,20 +195,13 @@ for (i in 1:niterations){
   
   #### calculate with youden
   results <- coords(roc_down, x = "best", best.method = "youden", 
-                        ret = c("specificity", "sensitivity", "accuracy", "threshold"))
-  downY[i,2] <- results[1]
-  downY[i,3] <- results[2]
-  downY[i,4] <- results[3]
-  downY[i,5] <- results[4]
+                    ret = c("specificity", "sensitivity", "accuracy", "threshold"))
   
-  #### calculate with 0.5 cutoff
-  results <- coords(roc_down, x = 0.5, input = "threshold",
-                         ret = c("specificity", "sensitivity", "accuracy"))
-  down5[i,2] <- results[1]
-  down5[i,3] <- results[2]
-  down5[i,4] <- results[3]
+  Output2 <- cbind(as.data.frame.list(results), roc_down$auc, coefs)
+  names(Output2)[5] <- "AUC"
+  Output <- rbind(Output, Output2)
   
-   #--------------------
+  #--------------------
   # UP SAMPLE
   #--------------------
   
@@ -258,11 +212,10 @@ for (i in 1:niterations){
   
   # run cv.glmnet with matrix
   cvlasso <- cv.glmnet(newtrain, y = as.factor(up_train$Class), family = "binomial")
-
+  
   
   # GET NUMBER OF COVARIATES CHOSEN BY MODEL 
-  upY[i,1] <- length(coef(cvlasso)@x) - 1 #subtracting the intercept
-  up5[i,1] <- length(coef(cvlasso)@x) - 1
+  coefs <- length(coef(cvlasso)@x) - 1 #subtracting the intercept
   
   
   # predict with matrix
@@ -270,21 +223,14 @@ for (i in 1:niterations){
   
   ###### pROC PACKAGE
   roc_up <- roc(full_test$Op_Chronic_Sim, as.numeric(predict_up))
-
+  
   #### calculate with youden
   results <- coords(roc_up, x = "best", best.method = "youden", 
-                      ret = c("specificity", "sensitivity", "accuracy", "threshold"))
-  upY[i,2] <- results[1]
-  upY[i,3] <- results[2]
-  upY[i,4] <- results[3]
-  upY[i,5] <- results[4]
+                    ret = c("specificity", "sensitivity", "accuracy", "threshold"))
   
-  #### calculate with 0.5 cutoff
-  results <- coords(roc_up, x = 0.5, input = "threshold",
-                       ret = c("specificity", "sensitivity", "accuracy"))
-  up5[i,2] <- results[1]
-  up5[i,3] <- results[2]
-  up5[i,4] <- results[3]
+  Output2 <- cbind(as.data.frame.list(results), roc_up$auc, coefs)
+  names(Output2)[5] <- "AUC"
+  Output <- rbind(Output, Output2)
   
   
   #--------------------
@@ -298,11 +244,11 @@ for (i in 1:niterations){
   
   # run cv.glmnet with matrix
   cvlasso <- cv.glmnet(newtrain, y = as.factor(smote_train$Op_Chronic_Sim), family = "binomial")
-
+  
   
   # GET NUMBER OF COVARIATES CHOSEN BY MODEL 
-  smoteY[i,1] <- length(coef(cvlasso)@x) - 1 #subtracting the intercept
-  smote5[i,1] <- length(coef(cvlasso)@x) - 1
+  coefs <- length(coef(cvlasso)@x) - 1 #subtracting the intercept
+
   
   # predict with matrix
   predict_smote <- predict(cvlasso, newtest, type = "response", s = "lambda.min")
@@ -312,31 +258,20 @@ for (i in 1:niterations){
   
   #### calculate with youden 
   results <- coords(roc_smote, x = "best", best.method = "youden", 
-                         ret = c("specificity", "sensitivity", "accuracy", "threshold"))
-  smoteY[i,2] <- results[1]
-  smoteY[i,3] <- results[2]
-  smoteY[i,4] <- results[3]
-  smoteY[i,5] <- results[4]
+                    ret = c("specificity", "sensitivity", "accuracy", "threshold"))
   
-  #### calculate with 0.5 cutoff
-  results <- coords(roc_smote, x = 0.5, input = "threshold",
-                          ret = c("specificity", "sensitivity", "accuracy"))
-  smote5[i,2] <- results[1]
-  smote5[i,3] <- results[2]
-  smote5[i,4] <- results[3]
+  Output2 <- cbind(as.data.frame.list(results), roc_smote$auc, coefs)
+  names(Output2)[5] <- "AUC"
+  Output <- rbind(Output, Output2)
+  
+  Output
   
   
-  #if(i %% 10==0) {
-  #  cat(paste0("iteration: ", i, "\n"))
-  #}
-  
-  cat(paste0("iteration: ", i, "\n"))
-
 }
 
 # LOOK AT RESULTS
 
-mean(ysim)
+#mean(ysim)
 end <- Sys.time()
 end-start
 
@@ -366,7 +301,7 @@ total_results <- rbind(colMeans(fullY), c(colMeans(full5), .5), colMeans(downY),
 
 
 # add AUC to the table
-# NEED TO MAKE SURE THIS IS AN AVERAGE NOT JUST THE LAST ROUND
+# this is actually only from the last round, not an average...
 auc <- c(roc_lass$auc, roc_lass$auc, roc_down$auc, roc_down$auc, 
          roc_up$auc, roc_up$auc, roc_smote$auc, roc_smote$auc)
 total_results <- cbind(total_results, auc)
@@ -380,3 +315,23 @@ total_results <- rbind(total_results, c("percent", mean(ysim)*100, "", "", "", "
 # check the sim percent and date before writing
 #write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation4/Sim5_20180328_test.csv")
 
+
+
+install.packages("foreach")
+library(foreach)
+install.packages("doParallel")
+library(doParallel)
+cl<-makeCluster(8)
+registerDoParallel(cl)
+strt<-Sys.time()
+
+#loop
+ls<-foreach(icount(iters)) %dopar% {
+  
+  to.ls<-rnorm(1e6)
+  to.ls<-summary(to.ls)
+  to.ls
+  
+}
+
+print(Sys.time()-strt)
