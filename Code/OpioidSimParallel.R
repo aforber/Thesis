@@ -8,26 +8,10 @@
 
 rm(list=ls())
 
-library(DMwR)
-library(caret)
-library(glmnet)
-library(pROC)
-library(doMC)
 
 library(doParallel)
 library(foreach)
 
-#foreach(i=1:3) %dopar% sqrt(i)
-
-
-
-# 1. Pick three or four most important vars to use:
-# age (age), chronic pain at discharge (ChronicPDcDx), 
-# past year number of opioid prescr/Number of opioid prescriptions filled in 
-# year following hospital discharge (OP_Post_nm) -> THIS DOESN'T EXIST IN OUR DATASET,
-# receipt of opioid at discharge (OP_Receipt)
-
-# 2. Run logistic regression with them to get coefficients
 
 opd = read.csv('/Users/alyssaforber/Box Sync/AlyssaKatieResearch/Opioids/Data/ropdata5_red.csv')
 
@@ -82,6 +66,12 @@ registerDoParallel(cl)
 start <- Sys.time()
 myresults <- foreach(i=1:niterations) %dopar% {
   
+  library(DMwR)
+  library(caret)
+  library(glmnet)
+  library(pROC)
+  library(doMC)
+
   #---------------------------
   # CREATE SIMULATED OUTCOMES
   #---------------------------
@@ -317,22 +307,3 @@ total_results <- rbind(total_results, c("percent", mean(ysim)*100, "", "", "", "
 #write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation4/Sim5_20180328_test.csv")
 
 
-
-
-library(foreach)
-
-library(doParallel)
-cl<-makeCluster(8)
-registerDoParallel(cl)
-strt<-Sys.time()
-
-#loop
-ls<-foreach(icount(iters)) %dopar% {
-  
-  to.ls<-rnorm(1e6)
-  to.ls<-summary(to.ls)
-  to.ls
-  
-}
-
-print(Sys.time()-strt)
