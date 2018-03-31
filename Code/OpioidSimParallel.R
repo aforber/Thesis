@@ -1,8 +1,8 @@
 #-----------------------------
 ### COT THESIS
 ### AUTHOR: ALYSSA FORBER
-### DATE: JANUARY 9, 2018
-### DATE MODIFIED: JAN 10, 11, 12, MARCH
+### DATE: MARCH 29
+### DATE MODIFIED: MARCH 30, 31
 #-----------------------------
 # RUN SIM PARALLEL
 
@@ -38,7 +38,7 @@ train$visit_year <- NULL
 #summary(glm)
 
 
-b.int = -1.3
+b.int = -1.249
 b.age = -0.002113
 b.receipt = 1.514161
 b.chronicD = 0.615101
@@ -62,6 +62,7 @@ getDoParWorkers()
 #registerDoMC(2)
 cl<-makeCluster(8)
 registerDoParallel(cl)
+getDoParWorkers()
 
 start <- Sys.time()
 myresults <- foreach(i=1:niterations) %dopar% {
@@ -87,7 +88,7 @@ myresults <- foreach(i=1:niterations) %dopar% {
                                                                          b.neo*NeoplasmDcDx +
                                                                          b.NOP*NOP_past))))
   # save the outcome percentage
-  #ysim <- mean(all.opd$Op_Chronic_Sim)
+  ysim <- mean(all.opd$Op_Chronic_Sim)
   
   # split into train and test set
   full_train <- subset(all.opd, visit_year < 2012)
@@ -157,8 +158,7 @@ myresults <- foreach(i=1:niterations) %dopar% {
                     ret = c("specificity", "sensitivity", "accuracy", "threshold"))
   
   # SAVE THE OUTPUT 
-  Output <- cbind(as.data.frame.list(results), roc_lass$auc, coefs)
-  names(Output)[5] <- "AUC"
+  Output <- cbind(as.data.frame.list(results), "AUC" = roc_lass$auc, coefs)
   
   
   #-------------
@@ -188,8 +188,7 @@ myresults <- foreach(i=1:niterations) %dopar% {
   results <- coords(roc_down, x = "best", best.method = "youden", 
                     ret = c("specificity", "sensitivity", "accuracy", "threshold"))
   
-  Output2 <- cbind(as.data.frame.list(results), roc_down$auc, coefs)
-  names(Output2)[5] <- "AUC"
+  Output2 <- cbind(as.data.frame.list(results), "AUC" = roc_down$auc, coefs)
   Output <- rbind(Output, Output2)
   
   #--------------------
@@ -219,8 +218,7 @@ myresults <- foreach(i=1:niterations) %dopar% {
   results <- coords(roc_up, x = "best", best.method = "youden", 
                     ret = c("specificity", "sensitivity", "accuracy", "threshold"))
   
-  Output2 <- cbind(as.data.frame.list(results), roc_up$auc, coefs)
-  names(Output2)[5] <- "AUC"
+  Output2 <- cbind(as.data.frame.list(results), "AUC" = roc_up$auc, coefs)
   Output <- rbind(Output, Output2)
   
   
@@ -251,20 +249,35 @@ myresults <- foreach(i=1:niterations) %dopar% {
   results <- coords(roc_smote, x = "best", best.method = "youden", 
                     ret = c("specificity", "sensitivity", "accuracy", "threshold"))
   
-  Output2 <- cbind(as.data.frame.list(results), roc_smote$auc, coefs)
-  names(Output2)[5] <- "AUC"
+  Output2 <- cbind(as.data.frame.list(results), "AUC" = roc_smote$auc, coefs)
   Output <- rbind(Output, Output2)
+  
+  
+  # Add prevalence to output 
+  Output <- cbind(Output, "Prev" = c(ysim, NA, NA, NA))
+
   
   Output
   
   
 }
-
-# LOOK AT RESULTS
-
-#mean(ysim)
 end <- Sys.time()
 end-start
+
+
+# CHECK AVERAGE PREVALENCE
+aveprev<-0
+for (i in seq_along(myresults)){
+  aveprev <- aveprev + myresults[[i]][1,7]
+}
+aveprev/length(myresults)
+
+
+# AVERAGE EACH STAT FOR EACH MODEL ACROSS THE LIST OF DATAFRAMES
+library(plyr)
+total_results = aaply(laply(myresults, as.matrix), c(2, 3), mean)
+rownames(total_results) <- c("Unsampled", "Down Sampled", "Up Sampled", "SMOTE")
+
 
 #   5%
 # 0.05847681 FOR INT -4.562189 (this is the actual intercept for our 5%)
@@ -272,38 +285,28 @@ end-start
 # 0.05585634 for int -4.6
 # 0.05200866 for int -4.7
 # 0.04774589 for int -4.8
-# 0.05016784 for int 14.73 ** 5%
+# 0.05016784 for int -4.73 ***** 5%
 #   3%
-# 0.02971305 for int -5.34
-# 0.03013175 for int -5.335 ** 3%
-# 0.02984299 for int -5.336 ** or 3%
-# 0.02963725 for int -5.3355
+# 0.02971305  0.02978163 for int -5.34
+# 0.03031944 for int -5.338 
+# 0.02962281 for int -5.339 
+# 0.02999459 for int -5.337 ***** 3%
+# 0.03013175 0.02950731 0.02958672 for int -5.335 
+# 0.02984299 for int -5.336 
 #  10%
 # 0.1023281 for int -3.86
 # 0.1020754 for int -3.88
-# 0.09953438 for int -3.9 ** 10%
+# 0.09953438 for int -3.9 **** 10%
 #  50%
-# 0.5488612 for int -1 TOOK 35 MINUTES TO RUN 10 ITERATIONS (MEANS 2.5 DAYS FOR 1000!)
+# 0.5488612 for int -1 
 # 0.4890742 for int -1.3 TOOK 40 MINUTES 
+# 0.5106696 for int -1.2 only takes 20 minutes now
+# 0.4979643 for int -1.25 
+# 0.5001733 for int -1.249 ***** 50%
 
 
-total_results <- rbind(colMeans(fullY), c(colMeans(full5), .5), colMeans(downY), c(colMeans(down5), .5),
-                       colMeans(upY), c(colMeans(up5), .5), colMeans(smoteY), c(colMeans(smote5), .5))
-
-
-# add AUC to the table
-# this is actually only from the last round, not an average...
-auc <- c(roc_lass$auc, roc_lass$auc, roc_down$auc, roc_down$auc, 
-         roc_up$auc, roc_up$auc, roc_smote$auc, roc_smote$auc)
-total_results <- cbind(total_results, auc)
-
-colnames(total_results) <- c("Covariates", "Specificity", "Sensitivity", "Accuracy", "Threshold", "AUC")
-rownames(total_results) <- c("Full Youden", "Full 0.5", "Down Youden", "Down 0.5",
-                             "Up Youden", "Up 0.5", "SMOTE Youden", "SMOTE 0.5")
-
-total_results <- rbind(total_results, c("percent", mean(ysim)*100, "", "", "", ""))
 
 # check the sim percent and date before writing
-#write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation4/Sim5_20180328_test.csv")
+#write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation4/Sim3_20180331_test.csv")
 
 
