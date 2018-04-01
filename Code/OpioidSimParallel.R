@@ -38,7 +38,7 @@ train$visit_year <- NULL
 #summary(glm)
 
 
-b.int = -1.249
+b.int = -5
 b.age = -0.002113
 b.receipt = 1.514161
 b.chronicD = 0.615101
@@ -153,12 +153,19 @@ myresults <- foreach(i=1:niterations) %dopar% {
   ###### pROC PACKAGE
   roc_lass <- roc(full_test$Op_Chronic_Sim, as.numeric(predict_lass))
   
-  #### calculate with youden and save
+  #### calculate with youden 
   results <- coords(roc_lass, x = "best", best.method = "youden", 
                     ret = c("specificity", "sensitivity", "accuracy", "threshold"))
   
   # SAVE THE OUTPUT 
   Output <- cbind(as.data.frame.list(results), "AUC" = roc_lass$auc, coefs)
+  
+  # calculate 0.5
+  results <- coords(roc_lass, x = 0.5, input = "threshold",
+                    ret = c("specificity", "sensitivity", "accuracy", "threshold"))
+  # Save output 
+  Output2 <- cbind(as.data.frame.list(results), "AUC" = roc_lass$auc, coefs)
+  Output <- rbind(Output, Output2)
   
   
   #-------------
@@ -276,7 +283,7 @@ aveprev/length(myresults)
 # AVERAGE EACH STAT FOR EACH MODEL ACROSS THE LIST OF DATAFRAMES
 library(plyr)
 total_results = aaply(laply(myresults, as.matrix), c(2, 3), mean)
-rownames(total_results) <- c("Unsampled", "Down Sampled", "Up Sampled", "SMOTE")
+rownames(total_results) <- c("Unsampled","Unsamped 0.5", "Down Sampled", "Up Sampled", "SMOTE")
 
 
 #   5%
