@@ -38,7 +38,7 @@ train$visit_year <- NULL
 #summary(glm)
 
 
-b.int = -5
+b.int = -5.337
 b.age = -0.002113
 b.receipt = 1.514161
 b.chronicD = 0.615101
@@ -50,7 +50,7 @@ b.SUH = 0.421039
 b.neo = 0.539857
 b.NOP = 0.993827
 
-niterations <- 10
+niterations <- 1000
 
 
 #ysim <- vector()
@@ -261,7 +261,7 @@ myresults <- foreach(i=1:niterations) %dopar% {
   
   
   # Add prevalence to output 
-  Output <- cbind(Output, "Prev" = c(ysim, NA, NA, NA))
+  Output <- cbind(Output, "Prev" = c(ysim, NA, NA, NA, NA))
 
   
   Output
@@ -314,6 +314,6 @@ rownames(total_results) <- c("Unsampled","Unsamped 0.5", "Down Sampled", "Up Sam
 
 
 # check the sim percent and date before writing
-#write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation4/Sim3_20180331_test.csv")
+#write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation4/Sim3_20180402.csv")
 
 
