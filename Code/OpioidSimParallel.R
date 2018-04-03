@@ -38,7 +38,7 @@ train$visit_year <- NULL
 #summary(glm)
 
 
-b.int = -5.337
+b.int = -4.73
 b.age = -0.002113
 b.receipt = 1.514161
 b.chronicD = 0.615101
@@ -314,6 +314,6 @@ rownames(total_results) <- c("Unsampled","Unsamped 0.5", "Down Sampled", "Up Sam
 
 
 # check the sim percent and date before writing
-#write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation4/Sim3_20180402.csv")
+#write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation4/Sim5_20180402.csv")
 
 
