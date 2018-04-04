@@ -38,7 +38,7 @@ train$visit_year <- NULL
 #summary(glm)
 
 
-b.int = -3.9
+b.int = -2.94
 b.age = -0.002113
 b.receipt = 1.514161
 b.chronicD = 0.615101
@@ -304,6 +304,19 @@ rownames(total_results) <- c("Unsampled","Unsamped 0.5", "Down Sampled", "Up Sam
 # 0.1023281 for int -3.86
 # 0.1020754 for int -3.88
 # 0.09953438 for int -3.9 **** 10%
+#  20%
+# 0.1922794 for int -3
+# 0.2188269 for int -2.8
+# 0.2041292 for int -2.9 
+# 0.1971305 for int -2.95
+# 0.2000938 for int -2.94 ***** 20%
+#  40%
+# 0.2641437 for int -2.5
+# 0.3513409 for int -2
+# 0.427255 for int -1.6
+# 0.4092583 for int -1.7
+# 0.3883812 for int -1.8
+# 0.402043 for int -1.72 **** 40%
 #  50%
 # 0.5488612 for int -1 
 # 0.4890742 for int -1.3 TOOK 40 MINUTES 
@@ -314,6 +327,6 @@ rownames(total_results) <- c("Unsampled","Unsamped 0.5", "Down Sampled", "Up Sam
 
 
 # check the sim percent and date before writing
-#write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation4/Sim10_20180403.csv")
+#write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation4/Sim20_20180404.csv")
 
 
