@@ -38,7 +38,7 @@ train$visit_year <- NULL
 #summary(glm)
 
 
-b.int = -1.249
+b.int = -1.72
 b.age = -0.002113
 b.receipt = 1.514161
 b.chronicD = 0.615101
@@ -107,24 +107,24 @@ myresults <- foreach(i=1:niterations) %dopar% {
   #-------------
   
   #get data with only predictors
-  #predictors <- full_train
-  #predictors$Op_Chronic_Sim <- NULL
-  #full_train$Op_Chronic_Sim <- as.factor(full_train$Op_Chronic_Sim)
+  predictors <- full_train
+  predictors$Op_Chronic_Sim <- NULL
+  full_train$Op_Chronic_Sim <- as.factor(full_train$Op_Chronic_Sim)
   
-  #down_train <- downSample(x = predictors,
-  #                         y = full_train$Op_Chronic_Sim)
+  down_train <- downSample(x = predictors,
+                           y = full_train$Op_Chronic_Sim)
   #-----------
   # UP SAMPLE
   #-----------
   
-  #up_train <- upSample(x = predictors,
-  #                     y = full_train$Op_Chronic_Sim)  
+  up_train <- upSample(x = predictors,
+                       y = full_train$Op_Chronic_Sim)  
   
   #--------------
   # SMOTE SAMPLE
   #--------------
   
-  #smote_train <- SMOTE(Op_Chronic_Sim ~ ., data  = full_train) 
+  smote_train <- SMOTE(Op_Chronic_Sim ~ ., data  = full_train) 
   
   #--------------------------
   # RUN MODELS
@@ -173,52 +173,52 @@ myresults <- foreach(i=1:niterations) %dopar% {
   #-------------
   
   # run model.matrix for train data
-  #newtrain <- model.matrix(Class ~ ., data=down_train)
+  newtrain <- model.matrix(Class ~ ., data=down_train)
   
   # run cv.glmnet with matrix
-  #cvlasso <- cv.glmnet(newtrain, y = as.factor(down_train$Class), family = "binomial")
+  cvlasso <- cv.glmnet(newtrain, y = as.factor(down_train$Class), family = "binomial")
   
   # GET NUMBER OF COVARIATES CHOSEN BY MODEL 
-  #coefs <- length(coef(cvlasso)@x) - 1 #subtracting the intercept
+  coefs <- length(coef(cvlasso)@x) - 1 #subtracting the intercept
   
   # predict with matrix
-  #predict_down <- predict(cvlasso, newtest, type = "response", s = "lambda.min")
+  predict_down <- predict(cvlasso, newtest, type = "response", s = "lambda.min")
   
   ###### pROC PACKAGE
-  #roc_down <- roc(full_test$Op_Chronic_Sim, as.numeric(predict_down))
+  roc_down <- roc(full_test$Op_Chronic_Sim, as.numeric(predict_down))
   
   #### calculate with youden
-  #results <- coords(roc_down, x = "best", best.method = "youden", 
-  #                  ret = c("specificity", "sensitivity", "accuracy", "threshold"))
+  results <- coords(roc_down, x = "best", best.method = "youden", 
+                    ret = c("specificity", "sensitivity", "accuracy", "threshold"))
   
-  #Output2 <- cbind(as.data.frame.list(results), "AUC" = roc_down$auc, coefs)
-  #Output <- rbind(Output, Output2)
+  Output2 <- cbind(as.data.frame.list(results), "AUC" = roc_down$auc, coefs)
+  Output <- rbind(Output, Output2)
   
   #--------------------
   # UP SAMPLE
   #--------------------
   
   # run model.matrix for train data
-  #newtrain <- model.matrix(Class~ ., data=up_train)
+  newtrain <- model.matrix(Class~ ., data=up_train)
   
   # run cv.glmnet with matrix
-  #cvlasso <- cv.glmnet(newtrain, y = as.factor(up_train$Class), family = "binomial")
+  cvlasso <- cv.glmnet(newtrain, y = as.factor(up_train$Class), family = "binomial")
   
   # GET NUMBER OF COVARIATES CHOSEN BY MODEL 
-  #coefs <- length(coef(cvlasso)@x) - 1 #subtracting the intercept
+  coefs <- length(coef(cvlasso)@x) - 1 #subtracting the intercept
   
   # predict with matrix
-  #predict_up <- predict(cvlasso, newtest, type = "response", s = "lambda.min")
+  predict_up <- predict(cvlasso, newtest, type = "response", s = "lambda.min")
   
   ###### pROC PACKAGE
-  #roc_up <- roc(full_test$Op_Chronic_Sim, as.numeric(predict_up))
+  roc_up <- roc(full_test$Op_Chronic_Sim, as.numeric(predict_up))
   
   #### calculate with youden
-  #results <- coords(roc_up, x = "best", best.method = "youden", 
-  #                  ret = c("specificity", "sensitivity", "accuracy", "threshold"))
+  results <- coords(roc_up, x = "best", best.method = "youden", 
+                    ret = c("specificity", "sensitivity", "accuracy", "threshold"))
   
-  #Output2 <- cbind(as.data.frame.list(results), "AUC" = roc_up$auc, coefs)
-  #Output <- rbind(Output, Output2)
+  Output2 <- cbind(as.data.frame.list(results), "AUC" = roc_up$auc, coefs)
+  Output <- rbind(Output, Output2)
   
   
   #--------------------
@@ -226,30 +226,30 @@ myresults <- foreach(i=1:niterations) %dopar% {
   #--------------------
   
   # run model.matrix for train data
-  #newtrain <- model.matrix(Op_Chronic_Sim ~ ., data=smote_train)
+  newtrain <- model.matrix(Op_Chronic_Sim ~ ., data=smote_train)
   
   # run cv.glmnet with matrix
-  #cvlasso <- cv.glmnet(newtrain, y = as.factor(smote_train$Op_Chronic_Sim), family = "binomial")
+  cvlasso <- cv.glmnet(newtrain, y = as.factor(smote_train$Op_Chronic_Sim), family = "binomial")
   
   # GET NUMBER OF COVARIATES CHOSEN BY MODEL 
-  #coefs <- length(coef(cvlasso)@x) - 1 #subtracting the intercept
+  coefs <- length(coef(cvlasso)@x) - 1 #subtracting the intercept
   
   # predict with matrix
-  #predict_smote <- predict(cvlasso, newtest, type = "response", s = "lambda.min")
+  predict_smote <- predict(cvlasso, newtest, type = "response", s = "lambda.min")
   
   ###### pROC PACKAGE
-  #roc_smote <- roc(full_test$Op_Chronic_Sim, as.numeric(predict_smote))
+  roc_smote <- roc(full_test$Op_Chronic_Sim, as.numeric(predict_smote))
   
   #### calculate with youden 
-  #results <- coords(roc_smote, x = "best", best.method = "youden", 
-  #                  ret = c("specificity", "sensitivity", "accuracy", "threshold"))
+  results <- coords(roc_smote, x = "best", best.method = "youden", 
+                    ret = c("specificity", "sensitivity", "accuracy", "threshold"))
   
-  #Output2 <- cbind(as.data.frame.list(results), "AUC" = roc_smote$auc, coefs)
-  #Output <- rbind(Output, Output2)
+  Output2 <- cbind(as.data.frame.list(results), "AUC" = roc_smote$auc, coefs)
+  Output <- rbind(Output, Output2)
   
   
   # Add prevalence to output 
-  Output <- cbind(Output, "Prev" = c(ysim, NA)) #, NA, NA, NA))
+  Output <- cbind(Output, "Prev" = c(ysim, NA, NA, NA, NA))
 
   
   Output
@@ -271,7 +271,7 @@ aveprev/length(myresults)
 # AVERAGE EACH STAT FOR EACH MODEL ACROSS THE LIST OF DATAFRAMES
 library(plyr)
 total_results = aaply(laply(myresults, as.matrix), c(2, 3), mean)
-rownames(total_results) <- c("Unsampled","Unsamped 0.5") #, "Down Sampled", "Up Sampled", "SMOTE")
+rownames(total_results) <- c("Unsampled","Unsamped 0.5", "Down Sampled", "Up Sampled", "SMOTE")
 
 
 #   5%
@@ -315,6 +315,6 @@ rownames(total_results) <- c("Unsampled","Unsamped 0.5") #, "Down Sampled", "Up 
 # 20% took 7.574179 hours 
 
 # check the sim percent and date before writing
-#write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation4/Sim50_20180404.csv")
+#write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation4/Sim40_20180404.csv")
 
 
