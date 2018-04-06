@@ -315,6 +315,6 @@ rownames(total_results) <- c("Unsampled","Unsamped 0.5", "Down Sampled", "Up Sam
 # 20% took 7.574179 hours 
 
 # check the sim percent and date before writing
-#write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation4/Sim40_20180404.csv")
+#write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation4/Sim40_20180405.csv")
 
 
