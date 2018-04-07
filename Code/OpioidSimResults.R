@@ -126,12 +126,12 @@ plotsim(sim10, 10)
 
 # the sensitivities are 0 for ones less than 25
 
-sensYoud <- cbind(c(1, 3, 5, 10, 25, 50), c(sim1[1,3], sim3[1,3], sim5[1,3], sim10[1,3], sim25[1,3], sim50[1,3]))
+sensYoud <- cbind(c(3, 5, 10, 20, 40, 50), c(sim1[1,3], sim3[1,3], sim5[1,3], sim10[1,3], sim25[1,3], sim50[1,3]))
 
-sens5 <- cbind(c(1, 3, 5, 10, 25, 50), c(sim1[2,3], sim3[2,3], sim5[2,3], sim10[2,3], sim25[2,3], sim50[2,3]))
+sens5 <- cbind(c(3, 5, 10, 20, 40, 50), c(sim1[1,3], sim3[2,3], sim5[2,3], sim10[2,3], sim25[2,3], sim50[2,3]))
 
 # PLOT WITH POINTS
-plot(sens5, pch=16, ylim=c(0,1), xlab="Prevalence", ylab="Sensitivity", main="Sensitivity vs Prevalence")
+plot(sens5, pch=16, ylim=c(0,1), xlab="Prevalence", ylab="", main="Sensitivity & Specificity vs Prevalence")
 lines(sensYoud, type="p", pch=16, col="red")
 lines(sensYoud, col="red", lwd=2)
 lines(sens5, lwd=2)
