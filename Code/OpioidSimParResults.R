@@ -34,23 +34,19 @@ specYoud <- cbind(c(3, 5, 10, 20, 40, 50), c(sim3[1,2], sim5[1,2], sim10[1,2],
 spec5 <- cbind(c(3, 5, 10, 20, 40, 50), c(sim3[2,2], sim5[2,2], sim10[2,2], 
                                           sim20[2,2], sim40[2,2], sim50[2,2]))
 
-plot(sens5, pch=16, ylim=c(0,1), xlab="Prevalence", ylab="", 
+plot(sens5, pch=20, ylim=c(0,1), xlab="Prevalence", ylab="", 
      main="Sensitivity & Specificity vs Prevalence", col="blue")
-lines(sensYoud, type="p", pch=16, col="blue")
-lines(sensYoud, col="blue", lwd=2)
+lines(sensYoud, type="p", pch=20, col="blue")
+lines(sensYoud, col="blue", lwd=2, lty=2)
 lines(sens5, col="blue", lwd=2)
-lines(specYoud, col="red", lwd=2)
-lines(specYoud, col="red", type="p", pch=16)
+lines(specYoud, col="red", lwd=2, lty=2)
+lines(specYoud, col="red", type="p", pch=20)
 lines(spec5, col="red", lwd=2)
-lines(spec5, col="red", type="p", pch=16)
-
-legend(x=38, y=.27, legend=c("Youden", "0.5"), bty="n", col=c("red", "black"), 
-       pch=16, ncol=1, cex=.9)
-
-
-
-
-
-
+lines(spec5, col="red", type="p", pch=20)
+#x=35, y=.3
+legend("bottomright", legend=c("Specificity", "Sensitiviy", "0.5", "Youden"), 
+       bty="n", col=c("red", "blue", "black", "black"), pch=c(20,20, 45, 45), 
+       ncol=1, lty=c(0,0,1,2), lwd=c(1,1,2,2))
+legend("bottomright", legend=c("",""), bty="n", cex=1)
 
 
