@@ -26,8 +26,6 @@ Methods
 
 Case Studies
 
-Results
-
 Simulation
 
 Conclusion
@@ -35,42 +33,46 @@ Conclusion
 
 ## Imbalanced Learning Problem
 
-- Presents a problem of imbalanced data
-- Poor sensitivity with rare outcomes
+- Predictive models learn poorly when datasets are imbalanced
+- Over learning the majority and under learning the minority
+- Results in low sensitivity and high specificity
 - Need to improve predictive performance
 
+- Many examples in medicine, diseases or adverse reactions taking place in small percent of the population
 
 
 ## Aims
 
 
-- Accurate predicting $\rightarrow$ improving sensitivity and specificity for imbalanced outcome
-- Using and comparing methods of probability cut-points and sampling
-
+- Improve predictive performance for imbalanced dataset
+- Utilizing measures of sensitivity, specificity, accuracy, and ROC analysis to evaluate performance
+- Use and compare two methods to handle imbalance
+    - Informed robability cutpoints for predicted probabilites
+    - Sampling techniques to balance datasets
+- Evaluate methods to recommend approaches in medicine
 
 
 ## Methods
 
-- Create sampled datasets
+- Split data into training and test sets
 
-- Run model on sampled data
+- Create balanced datasets through sampling on test set
 
-- Get predicted probabilities on the test data
+- Run predictive model on sampled data
+
+- Get predicted probabilities on the hold-out test data
 
 - Optimize probability cutoff for outcome
 
+
 ## Model 
 
-- Roughly 2/3 temporal split of data to get train and test set
-
-- Cross validated lasso regression
-
-
-## Lasso
+Cross-validated lasso regression
+  - Least Absolute Shrinkage and Selection Operator
 
 - Lasso:
-    - Shrinks estimates
-    - Performs variable selection when shrunk to 0
+    - Shrinks estimates by penalizing size of coefficients
+    - Performs variable selection by shrinking some to 0
     
     
 $$\hat\beta_{lasso}= argmin \sum_{j=1}^{N}(y_i-\beta_0-\sum_{j=1}^{p}x_{ij}\beta_j)^2 $$
@@ -104,9 +106,11 @@ subject to $\sum_{j=1}^p |\beta_j| \leq t$ where $t$ is the tuning parameter.
 
 ROC (with pROC package):
 
-- ROC curve plots sensitivity vs specificity for each cut-off
-- Top left corner is ideal
-- Youden Index is the furthest upper left corner or "max"
+- Receiver Operating Characteristics
+- ROC curve plots sensitivity vs specificity
+- Each point on curve corresponds to a decision cutoff
+- Youden's Index calculated the furthest upper left corner or "max" on curve 
+- Area under the curve (AUC) should be maximized
 
 
 ## ROC Curve
@@ -137,7 +141,7 @@ $$ Accuracy = \frac{TP+ TN}{TP+FP+TN+FN}$$
 \end{columns}
 
 
-## First approach
+## First Approach
 
 No Sampling, Optimize Cut-off:
 
@@ -147,7 +151,7 @@ No Sampling, Optimize Cut-off:
 - Use 0.5 standard probability cutoff to compare
 
 - Find "best" probability cutoff
-      - Youden Index
+      - Youden's Index
 
 
 ## Second Approach
@@ -159,7 +163,8 @@ Sampling:
     - Up sample
     - SMOTE
 
-- Predict and use both standard 0.5 and Youden Index as cutoff
+- Predict and use Youden's Index as cutoff
+
 
 ## Down Sampling
 
@@ -179,7 +184,28 @@ Sampling:
 
 ![SMOTE](/Users/alyssaforber/Documents/Denver/Thesis/Figures/smote.jpg){ width=60% }
  
+## Models
 
+- Model 1: No Sampling
+    - 0.5 cutoff 
+    - Youden's Index
+
+- Model 2: Down Sampling
+    - Youden's Index
+
+- Model 3: Up Sampling
+    - Youden's Index
+
+- Model 4: SMOTE
+    - Youden's Index
+
+## Case Studies
+
+We used these methods on two case studies to see how results may differ between two real world examples with rare outcomes.
+
+- Case Study 1: Predicting chronic opioid therapy in hospitalized patients (5%)
+
+- Case Study 2: Predicting surgical site infections in hospitalized patients (3.4%)
 
 ## Case Study 1
 
@@ -219,16 +245,13 @@ Sampling:
 \scalebox{0.65}{
 \begin{tabular}{l c c c c c c c c}
 \hline
-\textbf{Data} & \textbf{Threshold} & \textbf{Specificity} & \textbf{Sensitivity} & \textbf{NPV} & \textbf{PPV} & \textbf{Accuracy} & \textbf{AUC}  & \textbf{Covariates}\\
+\textbf{Model} & \textbf{Threshold} & \textbf{Sensitivity} & \textbf{Specificity} & \textbf{NPV} & \textbf{PPV} & \textbf{Accuracy} & \textbf{AUC}  & \textbf{Covariates}\\
 \hline
-\textbf{Unsampled 0.5} & 0.5 & 99 & 8	& 96 & 35 & 96 & 86 & 31  \\
-\textbf{Unsampled} & 0.043 & 73 &	85 & 99	& 12 & 73	& 86 & 31\\
-\textbf{Down sampled 0.5} & 0.5 & 81 & 75 & 99 & 15 & 81 & 86 & 34 \\
-\textbf{Down sampled} & 0.401	& 73 & 85	& 99 & 12 & 74 & 86 & 34\\
-\textbf{Up sampled 0.5} & 0.5 & 82 & 75 & 99 & 15 & 82 & 87  & 34 \\
-\textbf{Up sampled} & 0.399	& 74 & 85	& 99 & 12	& 74 & 87  & 34 \\
-\textbf{SMOTE 0.5} & 0.5 & 86 & 71 & 99 & 17 & 85 & 86 & 33 \\
-\textbf{SMOTE} & 0.472 & 84 & 74	& 99 & 17 & 84 & 86  & 33 \\
+\textbf{Unsampled 0.5} & 0.5 & 8 & 99	& 96 & 35 & 96 & 86 & 31  \\
+\textbf{Unsampled} & 0.043 &	85 & 73 & 99	& 12 & 73	& 86 & 31\\
+\textbf{Down sampled} & 0.401	& 85	& 73 & 99 & 12 & 74 & 86 & 34\\
+\textbf{Up sampled} & 0.399	& 85	& 74 & 99 & 12	& 74 & 87  & 34 \\
+\textbf{SMOTE} & 0.472 & 74	& 84 & 99 & 17 & 84 & 86  & 33 \\
 \hline
 \end{tabular}
 }
@@ -242,11 +265,23 @@ Sampling:
 
 ## Case Study 2
 
-## Case Study 2: 
+## Case Study 2
 
 ## Case STudy 2: Results
 
 ## Simulation
+
+- We created a simulation to look at how to methods performed at a greater range of prevalances
+
+- We chose 3%, 5%, 10%, 20%, 40%, and 50%
+
+- Goals:
+    - Evaluate performance differences
+    - Determine at what point it's no longer necessary to worry about imbalance
+
+## Simulation Methods
+
+We 
 
 ## Simulation Results
 
