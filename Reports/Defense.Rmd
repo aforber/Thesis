@@ -215,31 +215,14 @@ We used these methods on two case studies to see how results may differ between 
 
 ## Case Study 1
 
-- Design: Denver Health retrospective analysis electronic health record (EHR) data from 2008 to 2014.
-
-- Patients: Hospitalized patients at an urban, safety-net hospital.
-
+- Data from Denver Health electronic health records (EHR) 
 - Definition of Chronic Opioid Therapy (COT) one year following the index hospital discharge:
 
 > Receipt of $\geq$ 90-day supply of opioids with < 30-day gap in supply over a 180-day period or receipt of $\geq$ 10 opioid prescriptions over one year. 
 
-
-
-## Case Study 1: Patient Population 
-
-- 27,705 patients
-- Majority had incomes <185% of the Federal Poverty Level
-- 70% were ethnic minorities
-- 5% with COT
-
-- Excluded Patients:
-    - <15 or >85 years old
-    - Those in prison, jail, or police custody
-    - Those who died within one year following their index hospitalization
-    - Patients with <2 healthcare visits to Denver Health three years preceding their index hospitalization
-    - Undocumented persons receiving emergent hemodialysis
-    - Obstetric patients
-
+- 27,705 patients where 5% developed COT within a year
+- 35 explanatory variables 
+    - Ex: age, race, history of chronic pain, discharge diagnosis
 
         
 ## Case Study 1: Results
@@ -266,12 +249,18 @@ We used these methods on two case studies to see how results may differ between 
 
 ## ROC Plot
 
-![ROC for Original Data: Younden and 0.5 cutoffs](/Users/alyssaforber/Box Sync/AlyssaKatieResearch/Opioids/Results/LassROCplot.png){ width=60% }
+![ROC for Original Data: Youden's Index and 0.5 cutoffs](/Users/alyssaforber/Box Sync/AlyssaKatieResearch/Opioids/Results/LassROCplot.png){ width=60% }
 
 
 ## Case Study 2
 
-## Case Study 2
+- Need to identity post-operative complications without the use of manual chart reviews by nurses
+- Surgical site infections (SSI) are the most common complication
+- \>50% of SSIs occur after patient discharge
+- Data from 6,840 patients at the University of Colorado Hospital from 2013-2016
+- 136 independent variables were all binary indicators 
+    - Ex: Antibiotic prescriptions, procedure codes, ICD-9 codes
+
 
 ## Case Study 2: Results
 
@@ -324,26 +313,26 @@ We used these methods on two case studies to see how results may differ between 
 \hline
              & Threshold & Sensitivity & Specificity & Accuracy & AUC & Coefficients \\
 \hline
-\textbf{3\%}          &           &             &             &          &     &              \\
-Unsampled 0.5 & 0.50      & 2           & 100         & 97       & 79  & 6            \\
-Unsampled    & 0.03      & 70          & 75          & 74       & 79  & 6            \\
-Down Sampled & 0.49      & 70          & 74          & 74       & 78  & 9            \\
-Up Sampled   & 0.48      & 70          & 74          & 74       & 78  & 27           \\
-SMOTE        & 0.41      & 70          & 74          & 74       & 78  & 15           \\
+\textbf{3\%}          &     &       &        &        &     &              \\
+Unsampled 0.5 & 0.50     & 2     & 100         & 97       & 79  & 6            \\
+Unsampled    & 0.03      & 70    & 75          & 74       & 79  & 6            \\
+Down Sampled & 0.49      & 70     & 74          & 74       & 78  & 9            \\
+Up Sampled   & 0.48      & 70     & 74          & 74       & 78  & 27           \\
+SMOTE        & 0.41      & 70    & 74          & 74       & 78  & 15           \\
 \hline
-\textbf{5\%}          &           &             &             &          &     &              \\
-Unsampled 0.5 & 0.50      & 4           & 100         & 95       & 78  & 7            \\
-Unsampled    & 0.05      & 69          & 74          & 74       & 78  & 7            \\
-Down Sampled & 0.49      & 69          & 74          & 74       & 78  & 9            \\
-Up Sampled   & 0.49      & 69          & 74          & 74       & 78  & 23           \\
-SMOTE        & 0.41      & 69          & 74          & 74       & 78  & 16           \\
+\textbf{5\%}          &         &       &        &          &     &              \\
+Unsampled 0.5 & 0.50      & 4     & 100         & 95       & 78  & 7            \\
+Unsampled    & 0.05      & 69     & 74          & 74       & 78  & 7            \\
+Down Sampled & 0.49      & 69     & 74          & 74       & 78  & 9            \\
+Up Sampled   & 0.49      & 69     & 74          & 74       & 78  & 23           \\
+SMOTE        & 0.41      & 69     & 74          & 74       & 78  & 16           \\
 \hline
-\textbf{10\%}         &           &             &             &          &     &              \\
-Unsampled 0.5 & 0.50      & 8           & 100         & 91       & 77  & 8            \\
-Unsampled    & 0.10      & 68          & 74          & 73       & 77  & 8            \\
-Down Sampled & 0.49      & 68          & 74          & 73       & 77  & 9            \\
-Up Sampled   & 0.49      & 68          & 74          & 73       & 77  & 18           \\
-SMOTE        & 0.42      & 68          & 73          & 73       & 77  & 19           \\
+\textbf{10\%}         &         &      &        &          &     &              \\
+Unsampled 0.5 & 0.50      & 8     & 100         & 91       & 77  & 8            \\
+Unsampled    & 0.10      & 68     & 74          & 73       & 77  & 8            \\
+Down Sampled & 0.49      & 68     & 74          & 73       & 77  & 9            \\
+Up Sampled   & 0.49      & 68     & 74          & 73       & 77  & 18           \\
+SMOTE        & 0.42      & 68     & 73          & 73       & 77  & 19           \\
 \hline
 \end{tabular}
 }
@@ -361,23 +350,23 @@ SMOTE        & 0.42      & 68          & 73          & 73       & 77  & 19      
 \hline
              & Threshold & Sensitivity & Specificity & Accuracy & AUC & Coefficients \\
 \hline
-\textbf{20\%}        &           &             &             &          &     &              \\
-Unsampled 0.5 & 0.50      & 21          & 97          & 82       & 76  & 8            \\
-Unsampled    & 0.20      & 66          & 73          & 72       & 76  & 8            \\
-Down Sampled & 0.49      & 66          & 73          & 72       & 76  & 9            \\
-Up Sampled   & 0.49      & 66          & 73          & 72       & 76  & 13           \\
-SMOTE        & 0.42      & 66          & 72          & 71       & 75  & 23           \\
+\textbf{20\%}   &     &       &       &     &     &            \\
+Unsampled 0.5 & 0.50    & 21       & 97      & 82      & 76  & 8          \\
+Unsampled    & 0.20      & 66      & 73      & 72     & 76   & 8          \\
+Down Sampled & 0.49      & 66      & 73     & 72       & 76  & 9            \\
+Up Sampled   & 0.49      & 66      & 73     & 72       & 76  & 13           \\
+SMOTE        & 0.42      & 66     & 72      & 71       & 75  & 23           \\
 \hline
-\textbf{40\%}        &           &             &             &          &     &              \\
-Unsampled 0.5 & 0.50      & 49          & 84          & 70       & 74  & 9            \\
-Unsampled    & 0.39      & 66          & 71          & 69       & 74  & 9            \\
-Down Sampled & 0.49      & 66          & 71          & 69       & 74  & 9            \\
-Up Sampled   & 0.49      & 65          & 71          & 69       & 74  & 10           \\
-SMOTE        & 0.41      & 64          & 71          & 68       & 73  & 28           \\
+\textbf{40\%}        &     &      &        &          &     &              \\
+Unsampled 0.5 & 0.50      & 49    & 84          & 70       & 74  & 9            \\
+Unsampled    & 0.39      & 66     & 71          & 69       & 74  & 9            \\
+Down Sampled & 0.49      & 66     & 71          & 69       & 74  & 9            \\
+Up Sampled   & 0.49      & 65     & 71          & 69       & 74  & 10           \\
+SMOTE        & 0.41      & 64     & 71          & 68       & 73  & 28           \\
 \hline
-\textbf{50\%}         &           &             &             &          &     &              \\
-Unsampled 0.5 & 0.50      & 63          & 72          & 68       & 73  & 9            \\
-Unsampled    & 0.49      & 63          & 72          & 68       & 73  & 9            \\
+\textbf{50\%}         &     &        &        &        &     &              \\
+Unsampled 0.5 & 0.50      & 63    & 72          & 68       & 73  & 9            \\
+Unsampled    & 0.49      & 63    & 72          & 68       & 73  & 9            \\
 \hline
 \end{tabular}
 }
@@ -393,14 +382,65 @@ Unsampled    & 0.49      & 63          & 72          & 68       & 73  & 9       
 
 ## Discussion
 
+- Not much difference between Youden's + sampling vs. Youden's alone
+- Over sampling and SMOTE had highest number of coefficients
+- Threshold equals prevalence 
+- Sensitivity low even in less extreme imbalanced data for 0.5 cutoff
+- Costs are unknown
+
 ## Conclusion
+
+I don't really see any value in sampling, but I'm not sure I should say that, or if I should still give some credit to sampling? (in one or two instances it had lower coefficients or slightly higher accuracy/AUC but it seems insignificant and variable to me)
+
+- When costs are known, these approaches may be used with more intentional decision making
+
+- Further Investigation:
+  - Choosing cutoff with training set rather than test set
+
+
+
 
 ## Acknowledgments
 
-Thesis Adviser Katie Colborn, thank you 
+Thesis Adviser Katie Colborn, thank you for all your time and mentoring
 
 Committee members Elizabeth Juarez-Colunga and Susan Calcaterra, thank you for your time and expertise
 
 Funding??
 
 Thank you for attending.
+
+
+
+## Case Study 1
+
+- Design: Denver Health retrospective analysis electronic health record (EHR) data from 2008 to 2014.
+
+- Patients: Hospitalized patients at an urban, safety-net hospital.
+
+- Definition of Chronic Opioid Therapy (COT) one year following the index hospital discharge:
+
+> Receipt of $\geq$ 90-day supply of opioids with < 30-day gap in supply over a 180-day period or receipt of $\geq$ 10 opioid prescriptions over one year. 
+
+
+
+## Case Study 1: Patient Population 
+
+- 27,705 patients
+- Majority had incomes <185% of the Federal Poverty Level
+- 70% were ethnic minorities
+- 5% with COT
+
+- Excluded Patients:
+    - <15 or >85 years old
+    - Those in prison, jail, or police custody
+    - Those who died within one year following their index hospitalization
+    - Patients with <2 healthcare visits to Denver Health three years preceding their index hospitalization
+    - Undocumented persons receiving emergent hemodialysis
+    - Obstetric patients
+    
+    
+## Case Study 2
+
+Add more details on this case study here
+
