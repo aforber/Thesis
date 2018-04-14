@@ -7,7 +7,7 @@ author:  |
 date: |
   | Colorado School of Public Health
   | University of Colorado, Anschutz Medical Campus
-  | Department of Biostatistics
+  | Department of Biostatistics & Informatics
 output:
   beamer_presentation: default
   slidy_presentation: default
@@ -39,12 +39,11 @@ Conclusion
 
 ## Imbalanced Learning Problem
 
-- Predictive models learn poorly when datasets are imbalanced
-- Over learning the majority and under learning the minority
-- Results in low sensitivity and high specificity
+- When one outcome class greatly outnumbers the other, the outcome is said to be imbalanced
+- Developing a classification model for imbalanced data results in over learning the majority class and under learning the minority class, and subsequently in low sensitivity and high specificity
 - Need to improve predictive performance
 
-- Many examples in medicine, diseases or adverse reactions taking place in small percent of the population
+- Many examples in medicine: rare diseases, rare adverse reactions to medications, etc.
 
 
 ## Aims
@@ -52,23 +51,24 @@ Conclusion
 
 - Improve predictive performance for imbalanced dataset
 - Utilizing measures of sensitivity, specificity, accuracy, and ROC analysis to evaluate performance
-- Use and compare two methods to handle imbalance
+- Compare two methods to handle imbalance
     - Informed probability cutpoints for predicted probabilities
     - Sampling techniques to balance datasets
-- Evaluate methods to recommend approaches in medicine
+- Evaluate these methods in two clinical data sets and in a simulation study
 
 
 ## Methods
 
-- Split data into training and test sets
+- Split data into training and test sets using a 2/3:1/3 temporal split
 
-- Create balanced datasets through sampling on test set
+- Create balanced datasets through sampling on training set
 
-- Run predictive model on sampled data
+- Fit model to sampled data
 
 - Get predicted probabilities on the hold-out test data
 
 - Optimize probability cutoff for outcome
+    - Note: we are not doing cost-sensitive learning
 
 
 ## Model 
@@ -88,13 +88,13 @@ subject to $\sum_{j=1}^p |\beta_j| \leq t$ where $t$ is the tuning parameter.
 ## Cross Validation
 
 - Cross validation: 
-    - Find the best "tuning measure" for model selection which determines amount of shrinkage of estimates
-    - Split data into k parts and then train on each of those except one you validate against
-    - Then pick the tuning measure that minimizes error
+    - Find the best "tuning parameter" for model selection which determines amount of shrinkage of estimates
+    - Split data into k parts and then train on each of those except one, which is held out for testing
+    - Then pick the tuning parameter that minimizes error
     
 ![K fold cross validation](/Users/alyssaforber/Documents/Denver/Thesis/Figures/cross_val.jpeg){ width=60% }
 
-## Advantages and Disadvantages
+## Advantages and Disadvantages of Lasso
 
 
 - Advantages:
@@ -105,6 +105,7 @@ subject to $\sum_{j=1}^p |\beta_j| \leq t$ where $t$ is the tuning parameter.
 - Disadvantages:
     - Biased coefficients, inference not same as logistic regression
     - No standard errors or p-values out of the model
+    - When two or more independent variables are highly correlated, lasso arbitrarily chooses only one to keep
 
 
 
@@ -113,10 +114,11 @@ subject to $\sum_{j=1}^p |\beta_j| \leq t$ where $t$ is the tuning parameter.
 ROC (with pROC package):
 
 - Receiver Operating Characteristics
-- ROC curve plots sensitivity vs specificity
-- Each point on curve corresponds to a decision cutoff
-- Youden's Index calculated the furthest upper left corner or "max" on curve 
-- Area under the curve (AUC) should be maximized
+- ROC curve plots sensitivity vs 1- specificity
+- Each point on curve corresponds to a decision cutoff for classification
+- Youden's J statistic is used a measure to choose an optimal cutoff
+    - J = sensitivity + specificity - 1
+
 
 
 ## ROC Curve
@@ -224,6 +226,9 @@ We used these methods on two case studies to see how results may differ between 
 - 35 explanatory variables 
     - Ex: age, race, history of chronic pain, discharge diagnosis
 
+## Case Study 1: 
+
+Describe some of the 35 variables, especially the important ones
         
 ## Case Study 1: Results
 
@@ -254,11 +259,11 @@ We used these methods on two case studies to see how results may differ between 
 
 ## Case Study 2
 
-- Need to identity post-operative complications without the use of manual chart reviews by nurses
-- Surgical site infections (SSI) are the most common complication
+- Need to identify post-operative complications to suppliment manual chart reviews by nurses
+- Surgical site infections (SSI) are the most common postoperative complication
 - \>50% of SSIs occur after patient discharge
 - Data from 6,840 patients at the University of Colorado Hospital from 2013-2016
-- 136 independent variables were all binary indicators 
+- 136 independent variables, mostly binary indicators 
     - Ex: Antibiotic prescriptions, procedure codes, ICD-9 codes
 
 
@@ -273,7 +278,7 @@ We used these methods on two case studies to see how results may differ between 
 \hline
 \textbf{Model} & \textbf{Threshold} & \textbf{Sensitivity} & \textbf{Specificity} & \textbf{NPV} & \textbf{PPV} & \textbf{Accuracy} & \textbf{AUC}  & \textbf{Covariates}\\
 \hline
-\textbf{Unsampled 0.5} & 0.50 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+\textbf{Unsampled 0.5} & 0.50 & 23 & 99.9 & 97 & 88 & 97 & 89 & 35 \\
 \textbf{Unsampled} & 0.04 & 80 & 90 & 99 & 24 & 90 & 89 & 35 \\
 \textbf{Down sampled} & 0.48 & 82 & 87 & 99 & 20 & 87 & 89 & 20 \\
 \textbf{Up sampled} & 0.45 & 79 & 91 & 99 & 24 & 90 & 89 & 123 \\
@@ -285,21 +290,21 @@ We used these methods on two case studies to see how results may differ between 
 
 ## Simulation Study 
 
-- We conducted a simulation study to look at how to methods performed at a greater range of prevalences
+- We conducted a simulation study to look at how the methods performed at a greater range of prevalences
 
-- We chose 3%, 5%, 10%, 20%, 40%, and 50% outcomes
+- We chose 3%, 5%, 10%, 20%, 40%, and 50% prevalences
 
 - Goals:
-    - Evaluate performance differences
+    - Evaluate performance of methods described previously 
     - Determine at what point it's no longer necessary to worry about imbalance
 
 ## Simulation Methods
 
-- Selected 10 of the strongest predictors to run a logistic regression
-- Set the results as the values for the coefficients for the linear predictor
+- Using the opioid independent variables, selected 10 of the strongest predictors to fit a logistic regression
+- Generate simulated COT using coefficients from a logistic regression model fit to the observed COT
 - Simulated the new outcome with a logistic distribution $$F(x) = \frac{e^z}{1+e^z}$$
 - Controlled prevalence by adjusting the intercept 
-- Implemented sampling and lasso regression with additional 15 predictors (30 total) to get results
+- Implemented sampling and lasso regression with additional 20 predictors (30 total) to get results
 
 
 ## Simulation Results Part 1
@@ -372,6 +377,7 @@ Unsampled    & 0.49      & 63    & 72          & 68       & 73  & 9            \
 }
 \end{table}
 
+
 ## Sensitivity and Specificty by Prevalence
 
 ![Comparing Youden's Index vs 0.5 cutoff results across prevalence](/Users/alyssaforber/Documents/Denver/Thesis/Results/Plots/SensSpec_Prev_20180407.png){ width=70% }
@@ -390,12 +396,11 @@ Unsampled    & 0.49      & 63    & 72          & 68       & 73  & 9            \
 
 ## Conclusion
 
-I don't really see any value in sampling, but I'm not sure I should say that, or if I should still give some credit to sampling? (in one or two instances it had lower coefficients or slightly higher accuracy/AUC but it seems insignificant and variable to me)
 
 - When costs are known, these approaches may be used with more intentional decision making
 
-- Further Investigation:
-  - Choosing cutoff with training set rather than test set
+- Going Forward:
+    - Choosing cutoff with training set rather than test set
 
 
 
@@ -405,8 +410,6 @@ I don't really see any value in sampling, but I'm not sure I should say that, or
 Thesis Adviser Katie Colborn, thank you for all your time and mentoring
 
 Committee members Elizabeth Juarez-Colunga and Susan Calcaterra, thank you for your time and expertise
-
-Funding??
 
 Thank you for attending.
 

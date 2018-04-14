@@ -299,7 +299,7 @@ auc <- c(0.864, 0.864, 0.864, 0.865, 0.864)
 rocTable <- cbind(rocTable, auc)
 rocTable[,2:7] <- rocTable[,2:7]*100
 
-write.csv(rocTable, '/Users/alyssaforber/Box Sync/AlyssaKatieResearch/Opioids/Results/LassRocTable.csv')
+#write.csv(rocTable, '/Users/alyssaforber/Box Sync/AlyssaKatieResearch/Opioids/Results/LassRocTable.csv')
 
 
 # Table with all results, sampling, youden, and samplig youden combined
@@ -318,7 +318,7 @@ vars <- c(31, 31, 34, 34, 34, 34, 33, 33)
 rocTable <- cbind(rocTable, auc, vars)
 rocTable[,2:7] <- rocTable[,2:7]*100
 
-write.csv(rocTable, '/Users/alyssaforber/Box Sync/AlyssaKatieResearch/Opioids/Results/LassRocTable11302017.csv')
+#write.csv(rocTable, '/Users/alyssaforber/Box Sync/AlyssaKatieResearch/Opioids/Results/LassRocTable11302017.csv')
 
 
 
