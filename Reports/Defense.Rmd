@@ -248,6 +248,11 @@ We used these methods on two case studies to see how results may differ between 
 ## Case Study 1: 
 
 Describe some of the 35 variables, especially the important ones
+Do I put a mini table 1 or just some descriptions? And am I doing this for case study 2 as well or is this mostly for Susan?
+
+Some top variables: 
+
+Gender, race, insurance status, three year history of chronic pain/acute pain/depression/anxiety, discharge diagnosis of chronic pain, Past Year Receipt of Non-Opioid Analgesics (NSAIDs, neuropathic agents, topical capsaicin & lidocaine), Past Year Number of Opioid Prescriptions Filled, Receipt of Opioid at Discharge, Milligrams of Morphine Per Hospital Day
         
 ## Case Study 1: Results
 
@@ -278,7 +283,7 @@ Describe some of the 35 variables, especially the important ones
 
 ## Case Study 2
 
-- Need to identify post-operative complications to suppliment manual chart reviews by nurses
+- Need to identify post-operative complications to supplement manual chart reviews by nurses
 - Surgical site infections (SSI) are the most common postoperative complication
 - \>50% of SSIs occur after patient discharge
 - Data from 6,840 patients at the University of Colorado Hospital from 2013-2016
@@ -319,11 +324,11 @@ Describe some of the 35 variables, especially the important ones
 
 ## Simulation Methods
 
-- Using the opioid independent variables, selected 10 of the strongest predictors to fit a logistic regression model
+- Using the data from case study 1, we selected 10 of the strongest predictors to fit a logistic regression model
 - Generate simulated COT outcome using coefficients from that logistic regression
 - The new outcome was simulated with a logistic distribution $$F(x) = \frac{e^x}{1+e^x}$$
 - Controlled prevalence by adjusting the intercept 
-- Included an additional 20 predictors (30 total) to implement sampling and lasso regressionto
+- Included an additional 20 predictors (30 total) to implement sampling and lasso regression
 
 
 ## Simulation Results Part 1
