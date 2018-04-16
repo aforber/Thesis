@@ -55,6 +55,7 @@ knitr::opts_chunk$set(echo = FALSE)
     - Informed probability cutpoints for predicted probabilities
     - Sampling techniques to balance datasets
 - Evaluate these methods in two clinical data sets and in a simulation study
+- Note: we are not doing cost-sensitive learning
 
 
 ## Methods
@@ -68,7 +69,7 @@ knitr::opts_chunk$set(echo = FALSE)
 - Get predicted probabilities on the hold-out test data
 
 - Optimize probability cutoff for outcome
-    - Note: we are not doing cost-sensitive learning
+
 
 
 ## Model 
@@ -286,7 +287,7 @@ Gender, race, insurance status, three year history of chronic pain/acute pain/de
 - Need to identify post-operative complications to supplement manual chart reviews by nurses
 - Surgical site infections (SSI) are the most common postoperative complication
 - \>50% of SSIs occur after patient discharge
-- Data from 6,840 patients at the University of Colorado Hospital from 2013-2016
+- Data from 6,840 patients at the University of Colorado Hospital from 2013-2016 where 3.4% develop SSI
 - 136 independent variables, mostly binary indicators 
     - Ex: Antibiotic prescriptions, procedure codes, ICD-9 codes
 
