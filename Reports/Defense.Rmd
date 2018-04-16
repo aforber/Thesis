@@ -248,12 +248,37 @@ We used these methods on two case studies to see how results may differ between 
 
 ## Case Study 1: 
 
-Describe some of the 35 variables, especially the important ones
-Do I put a mini table 1 or just some descriptions? And am I doing this for case study 2 as well or is this mostly for Susan?
+Do I put a mini table 1 or just some descriptions? And am I doing this for case study 2 as well or is this more for Susan?
 
 Some top variables: 
 
 Gender, race, insurance status, three year history of chronic pain/acute pain/depression/anxiety, discharge diagnosis of chronic pain, Past Year Receipt of Non-Opioid Analgesics (NSAIDs, neuropathic agents, topical capsaicin & lidocaine), Past Year Number of Opioid Prescriptions Filled, Receipt of Opioid at Discharge, Milligrams of Morphine Per Hospital Day
+
+## Case Study 1
+
+\begin{table}
+\scalebox{0.7}{
+\begin{tabular}{l c c c}
+\hline
+\textbf{Variable} & \textbf{Yes COT} & \textbf{No COT} & \textbf{p-value} \\
+ & 1,457 (5\%) & 26,248 (95\%) & \\
+\hline
+Past Year Benzodiazepine Receipt & 16\% & 5\% & $<$.0001 \\
+Past Year Receipt of Non-opioid analgesics & 43\% & 16\% & $<$.0001 \\
+Number of opioid prescriptions: & & &\\
+0 & 38\% & 80\%& \\
+1 & 17\% & 11\% & \\
+2 & 14\% & 4\%& \\
+3 & 9\% & 2\% & \\
+4-9 & 23\% & 3\% & $<$.001 \\
+Receipt of opioid at discharge & 56\% & 28\% & $<$.001 \\
+$>$ 10 MME per hospital day & 80\% & 52\% & $<$.001 \\
+\hline
+\end{tabular} 
+}
+\end{table}
+
+Some of these predictors are modifiable factors by clinicians, like number of prescriptions, or milligrams of morphine equivalents 
         
 ## Case Study 1: Results
 
@@ -413,23 +438,22 @@ Unsampled    & 0.49      & 63    & 72          & 68       & 73  & 9            \
 
 ## Discussion
 
-- Not much difference between Youden's + sampling vs. Youden's alone
+- Similar between Youden's + sampling vs. Youden's alone
+- One handles issue before and one after model fitting
 - Over sampling and SMOTE had highest number of coefficients
 - Threshold equals prevalence 
 - Sensitivity low even in less extreme imbalanced data for 0.5 cutoff
 - Costs are unknown
 
-## Conclusion
+## Limitations
 
-- Always address imbalances in data, these are useful measures to evaluate performance
-- When costs are known, these approaches may be used with more intentional decision making
-- Each dataset may behave differently depending on the predictors 
-
-
-- Going Forward:
-    - Choosing cutoff with training set rather than test set
-
-
+- Within methods:
+    - Not cost sensitive learning
+    - Lasso dropping highly correlated variable
+    - Temporal split is considered external, but still could be applied to outside dataset
+- Within dataset:
+    - Patients acquiring prescriptions outside of Denver Health uncaptured
+    - Nurses incorrectly reviewing patients
 
 
 ## Acknowledgments
@@ -440,6 +464,35 @@ Committee members Elizabeth Juarez-Colunga and Susan Calcaterra, thank you for y
 
 Thank you for attending.
 
+## Key References
+
+
+1. Chawla NV, Bowyer KW, Hall LO, et al. SMOTE: Synthetic Minority Over-sampling Technique. Journal of Artificial Intelligence Research 2002; 16: 321-357.
+2.	Japkowicz NS, Shaju. The class imbalance problem: A systematic study. Intelligent Data Analysis 2002; 6: 429-449.
+3.	R Core Team. R: A Language and Environment for Statistical Computing. R Foundation for Statistical Computing 2015.
+4.  Tibshirani, Robert. “Regression Shrinkage and Selection via the Lasso.” Journal of the Royal Statistical Society. Series B (Methodological), vol. 58, no. 1, 1996, pp. 267–288. JSTOR, JSTOR, www.jstor.org/stable/2346178.
+5.	Youden WJ. Index for rating diagnostic tests. Cancer 1950; 3: 32-35.
+
+## Supplemental Slides
+
+## SMOTE
+
+1. For each minority observation, calculate the k nearest neighbors (default 5)
+
+2. Depending on amount of over sampling, pick nearest neighbor (for 200%, pick 2 of 5 at random)
+
+3. For each attribute, calculate the difference between the original sample and it's selected neighbor
+
+4. Compute a random number between 0 and 1 (the gap)
+
+5. Create synthetic sample by adding to the original sample the difference times the gap
+
+Example:
+
+- Age of sample is 40 and age of neighbor is 60
+- Difference = 60-40 = 20
+- Gap chosen at random to be 0.8
+- Synthetic age is 40 + 20*0.8 = 56
 
 
 ## Case Study 1
@@ -472,5 +525,10 @@ Thank you for attending.
     
 ## Case Study 2
 
-Add more details on this case study here
+One continuous measure- CPT-specific SSI event rate for initial operation (a measure indicating the risk of the operation, given past experiences of patients from the entire NSQIP dataset of more than 5.4 million patients)
+
+CPT stands for common procedural terminology 
+
+ICD-9 stands for international classification of diseases version 9
+
 
