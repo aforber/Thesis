@@ -246,14 +246,6 @@ We used these methods on two case studies to see how results may differ between 
 - 35 explanatory variables 
     - Ex: age, race, history of chronic pain, discharge diagnosis
 
-## Case Study 1: 
-
-Do I put a mini table 1 or just some descriptions? And am I doing this for case study 2 as well or is this more for Susan?
-
-Some top variables: 
-
-Gender, race, insurance status, three year history of chronic pain/acute pain/depression/anxiety, discharge diagnosis of chronic pain, Past Year Receipt of Non-Opioid Analgesics (NSAIDs, neuropathic agents, topical capsaicin & lidocaine), Past Year Number of Opioid Prescriptions Filled, Receipt of Opioid at Discharge, Milligrams of Morphine Per Hospital Day
-
 ## Case Study 1
 
 \begin{table}
