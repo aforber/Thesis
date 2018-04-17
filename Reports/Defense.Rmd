@@ -161,7 +161,7 @@ $$ Accuracy = \frac{TP+ TN}{TP+FP+TN+FN}$$
 No Sampling, Optimize Cut-off:
 
 - Use original unsampled data and get predictions from the lasso model
-    - Predictions return probability between 0 and 1 for each observation
+    - Predictions return probability between 0 and 1 for each observation of the test set
 
 - Use 0.5 standard probability cutoff to compare
 
@@ -233,7 +233,7 @@ We used these methods on two case studies to see how results may differ between 
 
 - Case Study 1: Predicting chronic opioid therapy in hospitalized patients (5%)
 
-- Case Study 2: Predicting surgical site infections in hospitalized patients (3.4%)
+- Case Study 2: Identifying surgical site infections in hospitalized patients (3.4%)
 
 ## Case Study 1
 
@@ -242,7 +242,7 @@ We used these methods on two case studies to see how results may differ between 
 
 > Receipt of $\geq$ 90-day supply of opioids with < 30-day gap in supply over a 180-day period or receipt of $\geq$ 10 opioid prescriptions over one year. 
 
-- 27,705 patients where 5% developed COT within a year
+- 27,705 patients where 5% progressed to COT within a year
 - 35 explanatory variables 
     - Ex: age, race, history of chronic pain, discharge diagnosis
 
@@ -320,7 +320,7 @@ Some of these predictors are modifiable factors by clinicians, like number of pr
 \hline
 \textbf{Model} & \textbf{Threshold} & \textbf{Sensitivity} & \textbf{Specificity} & \textbf{NPV} & \textbf{PPV} & \textbf{Accuracy} & \textbf{AUC}  & \textbf{Coefficients}\\
 \hline
-\textbf{Unsampled 0.5} & 0.50 & 23 & 99.9 & 97 & 88 & 97 & 89 & 35 \\
+\textbf{Unsampled 0.5} & 0.50 & 23 & 100 & 97 & 88 & 97 & 89 & 35 \\
 \textbf{Unsampled} & 0.04 & 80 & 90 & 99 & 24 & 90 & 89 & 35 \\
 \textbf{Down sampled} & 0.48 & 82 & 87 & 99 & 20 & 87 & 89 & 20 \\
 \textbf{Up sampled} & 0.45 & 79 & 91 & 99 & 24 & 90 & 89 & 123 \\
@@ -461,7 +461,7 @@ Thank you for attending.
 
 1. Chawla NV, Bowyer KW, Hall LO, et al. SMOTE: Synthetic Minority Over-sampling Technique. Journal of Artificial Intelligence Research 2002; 16: 321-357.
 2.	Japkowicz NS, Shaju. The class imbalance problem: A systematic study. Intelligent Data Analysis 2002; 6: 429-449.
-3.	R Core Team. R: A Language and Environment for Statistical Computing. R Foundation for Statistical Computing 2015.
+3.	Kuhn, Max, and Kjell Johnson. Applied Predictive Modeling. Springer, 2016.
 4.  Tibshirani, Robert. “Regression Shrinkage and Selection via the Lasso.” Journal of the Royal Statistical Society. Series B (Methodological), vol. 58, no. 1, 1996, pp. 267–288. JSTOR, JSTOR, www.jstor.org/stable/2346178.
 5.	Youden WJ. Index for rating diagnostic tests. Cancer 1950; 3: 32-35.
 
