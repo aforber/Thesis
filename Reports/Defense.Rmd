@@ -185,7 +185,7 @@ Sampling:
 
 - Under-sample majority to equal minority
 
-![Down sample](/Users/alyssaforber/Documents/Denver/Thesis/Figures/undersampling.png){ width=55% }
+![Down sample](/Users/alyssaforber/Documents/Denver/Thesis/Figures/UnderSampling.jpg){ width=65% }
 
 \scalebox{.7}{Picture Source: “Learning from Imbalanced Classes.” Silicon Valley \linebreak Data Science, 25 Sept. 2017,}
 \scalebox{.7}{svds.com/learning-imbalanced-classes/.} 
@@ -194,7 +194,7 @@ Sampling:
 
 - Over-sample minority to equal majority
 
-![Up sample](/Users/alyssaforber/Documents/Denver/Thesis/Figures/oversampling.png){ width=55% }
+![Up sample](/Users/alyssaforber/Documents/Denver/Thesis/Figures/OverSampling.jpg){ width=60% }
  
 \scalebox{.7}{Picture Source: “Learning from Imbalanced Classes.” Silicon Valley \linebreak Data Science, 25 Sept. 2017,}
 \scalebox{.7}{svds.com/learning-imbalanced-classes/.}   
@@ -306,7 +306,7 @@ Some of these predictors are modifiable factors by clinicians, like number of pr
 - \>50% of SSIs occur after patient discharge
 - Data from 6,840 patients at the University of Colorado Hospital from 2013-2016 where 3.4% develop SSI
 - 136 independent variables, mostly binary indicators 
-    - Ex: Antibiotic prescriptions, procedure codes, ICD-9 codes
+    - Ex: Antibiotic prescriptions, procedure codes, ICD-9 codes, risk of operation
 
 
 ## Case Study 2: Results
@@ -347,6 +347,7 @@ Some of these predictors are modifiable factors by clinicians, like number of pr
 - The new outcome was simulated with a logistic distribution $$F(x) = \frac{e^x}{1+e^x}$$
 - Controlled prevalence by adjusting the intercept 
 - Included an additional 20 predictors (30 total) to implement sampling and lasso regression
+- Average results for methods run 1000 times
 
 
 ## Simulation Results Part 1
@@ -523,4 +524,10 @@ CPT stands for common procedural terminology
 
 ICD-9 stands for international classification of diseases version 9
 
+## Logistic Distribution
 
+Cumulative Distribution Function:
+$$F(x) = \frac{e^x}{1+e^x}$$
+
+Probability Density Function:
+$$f(x| \mu ,\sigma)= \frac{e^{\frac{-(x-\mu)}{\sigma}}} {\sigma(1-e^{\frac{-(x-\mu)}{\sigma}})^2}$$
