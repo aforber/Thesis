@@ -444,6 +444,7 @@ Unsampled    & 0.49      & 63    & 72          & 68       & 73  & 9            \
     - Not cost sensitive learning
     - Lasso dropping highly correlated variable
     - Temporal split is considered external, but still could be applied to outside dataset
+    - Choosing cutoff in test set may be biased
 - Within dataset:
     - Patients acquiring prescriptions outside of Denver Health uncaptured
     - Nurses incorrectly reviewing patients
