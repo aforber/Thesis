@@ -18,7 +18,7 @@ opd = read.csv('/Users/alyssaforber/Box Sync/AlyssaKatieResearch/Opioids/Data/ro
 
 print(table(opd$Op_Chronic))
 
-opd = opd[c("age" , "agesq" , "genderm" , "racehisp" , "raceaa" , "Op_Chronic" ,
+opd2 = opd[c("age" , "agesq" , "genderm" , "racehisp" , "raceaa" , "Op_Chronic" ,
             "raceoth" , "genm_racehisp" , "genm_raceaa" , "genm_raceoth" ,
             "inscat5" , "los_ln" , "mmecat5" , "prior12" , "OP_Receipt" , "PriorOp5" ,
             "NOP_past" , "Benzo_past" , "SUHxDx_alch" , "SUHxDx_Stml" ,

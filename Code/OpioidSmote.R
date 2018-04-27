@@ -10,7 +10,9 @@
 # 2. let it create new number and then round to 0 or 1
 
 rm(list=ls())
+
 library(pROC)
+library(glmnet)
 
 
 opd = read.csv('/Users/alyssaforber/Box Sync/AlyssaKatieResearch/Opioids/Data/ropdata5_red.csv')
@@ -90,47 +92,45 @@ set.seed(747)
 
 full_train$Op_Chronic <- as.factor(full_train$Op_Chronic)
 
-# make sure char_surg is treated as factor?
+# make sure char_surg is treated as factor for either method (it's a numerical factor, ints 1-17)
 full_train$char_surg <- as.factor(full_train$char_surg)
 
+# GOING TO TRY TWO SMOTE METHODS
+
+# 1.---------
+# make all indicators factors so smote does not touch them
+full_train_smote1 <- full_train
+
+cols <- c("genderm", "racehisp", "raceaa", "raceoth", "genm_racehisp", 
+          "genm_raceaa", "chphx_surg", "genm_raceoth", "prior12", "OP_Receipt",
+          "NOP_past", "Benzo_past", "SUHxDx_alch", "SUHxDx_Stml", "SUHxDx_tabc",
+          "MHHxDx", "ChronicPHxDx", "AcutePHxDx", "ChronicPDcDx", "AcutePDcDx",
+          "Surg_any", "NeoplasmDcDx", "NeoplasmHxDx", "oprec_surg", "chpdc_surg")
+full_train_smote1[cols] <- lapply(full_train_smote1[cols], factor)
+
 # defaults are 200 up and 200 down
-smote_train <- SMOTE(Op_Chronic ~ ., data  = full_train)                         
-table(smote_train$Op_Chronic)
+smote_train1 <- SMOTE(Op_Chronic ~ ., data  = full_train_smote1)                         
+table(smote_train1$Op_Chronic)
+
+# 2.---------
+# let smote use indicators but make sure they are rounded at the end
+full_train_smote2 <- full_train
+
+smote_train2 <- SMOTE(Op_Chronic ~ ., data  = full_train_smote2)                         
+table(smote_train2$Op_Chronic)
+
+smote_train2[,cols] <- round(smote_train2[,cols]) 
 
 # put char_surg back as numerical for the analysis
 full_train$char_surg <- as.numeric(full_train$char_surg)
-smote_train$char_surg <- as.numeric(smote_train$char_surg)
-
-# SOME FACTORS NOW ARE BETWEEN 0 AND 1
-# ROUND to 0 or 1
-# INDICATORS:
-# genderm, racehisp, raceaa, raceoth, genm_racehisp, genm_raceaa, chphx_surg
-# genm_raceoth, prior12, OP_Receipt, NOP_past, Benzo_past, SUHxDx_alch,
-# SUHxDx_Stml, SUHxDx_tabc, MHHxDx, ChronicPHxDx, AcutePHxDx, ChronicPDcDx,
-# AcutePDcDx, Surg_any, NeoplasmDcDx, NeoplasmHxDx, oprec_surg, chpdc_surg,
-trythis <- smote_train
-trythis[,c("genderm", "racehisp", "raceaa", "raceoth", "genm_racehisp", 
-           "genm_raceaa", "chphx_surg", "genm_raceoth", "prior12", "OP_Receipt",
-           "NOP_past", "Benzo_past", "SUHxDx_alch", "SUHxDx_Stml", "SUHxDx_tabc",
-           "MHHxDx", "ChronicPHxDx", "AcutePHxDx", "ChronicPDcDx", "AcutePDcDx",
-           "Surg_any", "NeoplasmDcDx", "NeoplasmHxDx", "oprec_surg", 
-           "chpdc_surg")] <- round(trythis[,c("genderm", "racehisp", "raceaa", "raceoth", "genm_racehisp", 
-                                              "genm_raceaa", "chphx_surg", "genm_raceoth", "prior12", "OP_Receipt",
-                                              "NOP_past", "Benzo_past", "SUHxDx_alch", "SUHxDx_Stml", "SUHxDx_tabc",
-                                              "MHHxDx", "ChronicPHxDx", "AcutePHxDx", "ChronicPDcDx", "AcutePDcDx",
-                                              "Surg_any", "NeoplasmDcDx", "NeoplasmHxDx", "oprec_surg", "chpdc_surg")]) 
-
-# is char_surg a factor?? it seems to be integers between 0 and 17
+smote_train1$char_surg <- as.numeric(smote_train1$char_surg)
+smote_train2$char_surg <- as.numeric(smote_train2$char_surg)
 
 
 #-------------------------------------------------
 # RUN LASSO ON ALL SAMPLES
 # ORIGINAL, DOWN, UP, SMOTE
 #-------------------------------------------------
-
-
-#install.packages("glmnet")
-library(glmnet)
 
 
 #--------------------
@@ -173,7 +173,6 @@ coords_lass5 <- coords(roc_lass, x = 0.5, input = "threshold",
                        ret = c("threshold", "specificity", "sensitivity", 
                                "npv", "ppv", "accuracy"))
 
-
 #--------------------
 ## DOWN SAMPLE
 #--------------------
@@ -186,11 +185,7 @@ cvlasso <- cv.glmnet(newtrain, y = as.factor(down_train$Class), family = "binomi
 min <- cvlasso$lambda.min
 coefs_down <- coef(cvlasso, s= "lambda.min")
 
-# model.matrix for test data
-# Right now, using the full test data
-# Once we impliment bagging, then we will
-# have a subset with just the vars used
-# in the chosen model
+
 newtest <- model.matrix(full_test$Op_Chronic ~ . , data = full_test)
 
 # predict with matrix
@@ -214,11 +209,6 @@ coords_down <- coords(roc_down, x = "best", best.method = "youden",
                       ret = c("threshold", "specificity", "sensitivity", 
                               "npv", "ppv", "accuracy"))
 
-#### calculate with 0.5 cutoff
-coords_down5 <- coords(roc_down, x = 0.5, input = "threshold",
-                       ret = c("threshold", "specificity", "sensitivity", 
-                               "npv", "ppv", "accuracy"))
-
 
 #--------------------
 ## UP SAMPLE
@@ -232,11 +222,7 @@ cvlasso <- cv.glmnet(newtrain, y = as.factor(up_train$Class), family = "binomial
 min <- cvlasso$lambda.min
 coefs_up <- coef(cvlasso, s= "lambda.min")
 
-# model.matrix for test data
-# Right now, using the full test data
-# Once we impliment bagging, then we will
-# have a subset with just the vars used
-# in the chosen model
+
 newtest <- model.matrix(full_test$Op_Chronic ~ . , data = full_test)
 
 # predict with matrix
@@ -259,35 +245,24 @@ coords_up <- coords(roc_up, x = "best", best.method = "youden",
                     ret = c("threshold", "specificity", "sensitivity", 
                             "npv", "ppv", "accuracy"))
 
-#### calculate with 0.5 cutoff
-coords_up5 <- coords(roc_up, x = 0.5, input = "threshold",
-                     ret = c("threshold", "specificity", "sensitivity", 
-                             "npv", "ppv", "accuracy"))
-
 
 #--------------------
-## SMOTE SAMPLE
+## SMOTE SAMPLE 1
 #--------------------
 
 # run model.matrix for train data
-newtrain <- model.matrix(Op_Chronic~.,data=smote_train) 
+newtrain <- model.matrix(Op_Chronic~.,data=smote_train1) 
 
 # run cv.glmnet with matrix
-cvlasso <- cv.glmnet(newtrain, y = as.factor(smote_train$Op_Chronic), family = "binomial")
+cvlasso <- cv.glmnet(newtrain, y = as.factor(smote_train1$Op_Chronic), family = "binomial")
 min <- cvlasso$lambda.min
-coefs_smote <- coef(cvlasso, s= "lambda.min")
+coefs_smote1 <- coef(cvlasso, s= "lambda.min")
 
 
-# model.matrix for test data
-# Right now, using the full test data
-# Once we impliment bagging, then we will
-# have a subset with just the vars used
-# in the chosen model
 newtest <- model.matrix(full_test$Op_Chronic ~ . , data = full_test)
 
 # predict with matrix
 predict_smote <- predict(cvlasso, newtest, type = "response", s = "lambda.min")
-
 
 
 hist(predict_smote)
@@ -296,19 +271,50 @@ colnames(confmat_smote) <- c("Op_Chronic", "Pred")
 
 
 ###### pROC PACKAGE
-roc_smote <- roc(confmat_smote$Op_Chronic, confmat_smote$Pred)
+roc_smote1 <- roc(confmat_smote$Op_Chronic, confmat_smote$Pred)
 # Area under the curve: 
 
 
 #### calculate with youden (cutoff is 0.47)
-coords_smote <- coords(roc_smote, x = "best", best.method = "youden", 
+coords_smote1 <- coords(roc_smote1, x = "best", best.method = "youden", 
                        ret = c("threshold", "specificity", "sensitivity", 
                                "npv", "ppv", "accuracy"))
 
-#### calculate with 0.5 cutoff
-coords_smote5 <- coords(roc_smote, x = 0.5, input = "threshold",
-                        ret = c("threshold", "specificity", "sensitivity", 
-                                "npv", "ppv", "accuracy"))
+
+#--------------------
+## SMOTE SAMPLE 2
+#--------------------
+
+# run model.matrix for train data
+newtrain <- model.matrix(Op_Chronic~.,data=smote_train2) 
+
+# run cv.glmnet with matrix
+cvlasso <- cv.glmnet(newtrain, y = as.factor(smote_train2$Op_Chronic), family = "binomial")
+min <- cvlasso$lambda.min
+coefs_smote2 <- coef(cvlasso, s= "lambda.min")
+
+
+newtest <- model.matrix(full_test$Op_Chronic ~ . , data = full_test)
+
+# predict with matrix
+predict_smote <- predict(cvlasso, newtest, type = "response", s = "lambda.min")
+
+
+hist(predict_smote)
+confmat_smote <- as.data.frame(cbind(full_test$Op_Chronic, predict_smote))
+colnames(confmat_smote) <- c("Op_Chronic", "Pred")
+
+
+###### pROC PACKAGE
+roc_smote2 <- roc(confmat_smote$Op_Chronic, confmat_smote$Pred)
+# Area under the curve: 
+
+
+#### calculate with youden (cutoff is 0.47)
+coords_smote2 <- coords(roc_smote2, x = "best", best.method = "youden", 
+                       ret = c("threshold", "specificity", "sensitivity", 
+                               "npv", "ppv", "accuracy"))
+
 
 
 #-----------------------------------
@@ -316,34 +322,24 @@ coords_smote5 <- coords(roc_smote, x = 0.5, input = "threshold",
 #-----------------------------------
 
 # Table for youden index and sampling combined
-rocTable <- round(rbind(coords_lass5, coords_lass, coords_down, coords_up, coords_smote), digits=3)
-# add AUC to the table
-roc_lass$auc
-roc_down$auc
-roc_up$auc
-roc_smote$auc
-auc <- c(0.864, 0.864, 0.864, 0.865, 0.864)
-rocTable <- cbind(rocTable, auc)
-rocTable[,2:7] <- rocTable[,2:7]*100
+rocTable <- round(rbind(coords_lass5, coords_lass, coords_down, coords_up, 
+                        coords_smote1, coords_smote2), digits=2)
 
-#write.csv(rocTable, '/Users/alyssaforber/Box Sync/AlyssaKatieResearch/Opioids/Results/LassRocTable.csv')
-
-
-# Table with all results, sampling, youden, and samplig youden combined
-rocTable <- round(rbind(coords_lass5, coords_lass, coords_down5, coords_down, 
-                        coords_up5, coords_up, coords_smote5, coords_smote), digits=3)
 # Add AUC
-auc <- c(0.864, 0.864, 0.864, 0.864, 0.865, 0.865, 0.864, 0.864)
+auc <- c(roc_lass$auc, roc_lass$auc, roc_down$auc, roc_up$auc, roc_smote1$auc, roc_smote2$auc)
+
 # Add # variables 
 # (counting genm_raceoth, genm_racehisp, genm_raceaa as separate and 
 # racehisp, raceaa, raceoth as separates)
-# down= 34
-# up= 34
-# smote= 33
-# original= 31
-vars <- c(31, 31, 34, 34, 34, 34, 33, 33)
+
+vars <- c(32, 32, 33, 34, 33, 34)
 rocTable <- cbind(rocTable, auc, vars)
+rocTable[,7] <- round(rocTable[,7], digits=2)
 rocTable[,2:7] <- rocTable[,2:7]*100
+
+rownames(rocTable) <- c("Full training 0.5", "Full training", "Down sampled", "Up Sampled",
+                        "SMOTE ignore", "SMOTE round")
+rocTable
 
 #write.csv(rocTable, '/Users/alyssaforber/Box Sync/AlyssaKatieResearch/Opioids/Results/LassRocTable11302017.csv')
 
