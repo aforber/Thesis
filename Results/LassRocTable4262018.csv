@@ -1,0 +1,7 @@
+"","threshold","specificity","sensitivity","npv","ppv","accuracy","auc","vars"
+"Full training 0.5",0.5,99,8,96,34,96,86,32
+"Full training",0.04,73,85,99,12,73,86,32
+"Down sampled",0.46,78,80,99,13,78,86,33
+"Up Sampled",0.4,74,85,99,12,74,86,34
+"SMOTE ignore",0.3,77,82,99,13,77,86,33
+"SMOTE round",0.37,77,82,99,13,77,86,34

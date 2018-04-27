@@ -341,7 +341,7 @@ rownames(rocTable) <- c("Full training 0.5", "Full training", "Down sampled", "U
                         "SMOTE ignore", "SMOTE round")
 rocTable
 
-#write.csv(rocTable, '/Users/alyssaforber/Box Sync/AlyssaKatieResearch/Opioids/Results/LassRocTable11302017.csv')
+#write.csv(rocTable, '/Users/alyssaforber/Documents/Denver/Thesis/Results/LassRocTable4262018.csv')
 
 
 
