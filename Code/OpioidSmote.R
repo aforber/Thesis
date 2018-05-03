@@ -93,7 +93,8 @@ set.seed(747)
 full_train$Op_Chronic <- as.factor(full_train$Op_Chronic)
 
 # make sure char_surg is treated as factor for either method (it's a numerical factor, ints 1-17)
-full_train$char_surg <- as.factor(full_train$char_surg)
+#full_train$char_surg <- as.factor(full_train$char_surg)
+# actually since the model has treated it numeric it is fine to leave unrounded 
 
 # GOING TO TRY TWO SMOTE METHODS
 
@@ -122,9 +123,10 @@ table(smote_train2$Op_Chronic)
 smote_train2[,cols] <- round(smote_train2[,cols]) 
 
 # put char_surg back as numerical for the analysis
-full_train$char_surg <- as.numeric(full_train$char_surg)
-smote_train1$char_surg <- as.numeric(smote_train1$char_surg)
-smote_train2$char_surg <- as.numeric(smote_train2$char_surg)
+#full_train$char_surg <- as.numeric(full_train$char_surg)
+#smote_train1$char_surg <- as.numeric(smote_train1$char_surg)
+#smote_train2$char_surg <- as.numeric(smote_train2$char_surg)
+# Not worried about this because it can just go in smote and stay numerical the whole time
 
 
 #-------------------------------------------------

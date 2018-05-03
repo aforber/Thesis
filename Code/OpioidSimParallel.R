@@ -38,7 +38,7 @@ train$visit_year <- NULL
 #summary(glm)
 
 
-b.int = -1.72
+b.int = -5.337
 b.age = -0.002113
 b.receipt = 1.514161
 b.chronicD = 0.615101
@@ -125,6 +125,14 @@ myresults <- foreach(i=1:niterations) %dopar% {
   #--------------
   
   smote_train <- SMOTE(Op_Chronic_Sim ~ ., data  = full_train) 
+  
+  # round indicators after SMOTE
+  cols <- c("genderm", "racehisp", "raceaa", "SUHxDx_tabc",
+            "chphx_surg", "prior12", "OP_Receipt", "chpdc_surg",
+            "NOP_past", "Benzo_past", "SUHxDx_alch", "SUHxDx_Stml",
+            "ChronicPHxDx", "AcutePHxDx", "ChronicPDcDx", "AcutePDcDx",
+            "Surg_any", "NeoplasmDcDx", "NeoplasmHxDx", "oprec_surg")
+  smote_train[,cols] <- round(smote_train[,cols]) 
   
   #--------------------------
   # RUN MODELS
@@ -270,8 +278,16 @@ aveprev/length(myresults)
 
 # AVERAGE EACH STAT FOR EACH MODEL ACROSS THE LIST OF DATAFRAMES
 library(plyr)
+library(stats)
 total_results = aaply(laply(myresults, as.matrix), c(2, 3), mean)
 rownames(total_results) <- c("Unsampled","Unsamped 0.5", "Down Sampled", "Up Sampled", "SMOTE")
+
+# GET MEDIAN
+total_median = aaply(laply(myresults, as.matrix), c(2, 3), median)
+
+# GET QUANTILES
+total_quantile = aaply(laply(myresults, as.matrix), c(2, 3), quantile, probs=c(.25,.75), na.rm=T)
+
 
 
 #   5%
@@ -315,6 +331,8 @@ rownames(total_results) <- c("Unsampled","Unsamped 0.5", "Down Sampled", "Up Sam
 # 20% took 7.574179 hours 
 
 # check the sim percent and date before writing
-#write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation4/Sim40_20180405.csv")
+write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation5/Sim3_Mean_20180502.csv")
+write.csv(total_median, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation5/Sim3_Median_20180502.csv")
+write.csv(total_quantile, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation5/Sim3_Quantile_20180502.csv")
 
 
