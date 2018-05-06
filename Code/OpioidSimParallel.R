@@ -38,7 +38,7 @@ train$visit_year <- NULL
 #summary(glm)
 
 
-b.int = -2.94
+b.int = -1.72
 b.age = -0.002113
 b.receipt = 1.514161
 b.chronicD = 0.615101
@@ -331,8 +331,8 @@ total_quantile = aaply(laply(myresults, as.matrix), c(2, 3), quantile, probs=c(.
 # 20% took 7.574179 hours 
 
 # check the sim percent and date before writing
-#write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation5/Sim20_Mean_20180503.csv")
-#write.csv(total_median, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation5/Sim20_Median_20180503.csv")
-#write.csv(total_quantile, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation5/Sim20_Quantile_20180503.csv")
+write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation5/Sim40_Mean_20180506.csv")
+write.csv(total_median, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation5/Sim40_Median_20180506.csv")
+write.csv(total_quantile, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation5/Sim40_Quantile_20180506.csv")
 
 
