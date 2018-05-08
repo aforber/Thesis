@@ -7,13 +7,30 @@
 # Putting together results for simulation after changed
 # to include more variables and then run in parallel
 
+rm(list=ls())
+
 # LOAD DATA
-sim3 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation4/Sim3_20180402.csv")
-sim5 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation4/Sim5_20180402.csv")
-sim10 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation4/Sim10_20180403.csv")
-sim20 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation4/Sim20_20180404.csv")
-sim40 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation4/Sim40_20180405.csv")
-sim50 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation4/Sim50_20180404.csv")
+sim3 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation5/Sim3_Mean_20180502.csv")
+sim5 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation5/Sim5_Mean_20180502.csv")
+sim10 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation5/Sim10_Mean_20180503.csv")
+sim20 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation5/Sim20_Mean_20180503.csv")
+sim40 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation5/Sim40_Mean_20180506.csv")
+sim50 <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation5/Sim50_Mean_20180507.csv")
+
+sim3_med <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation5/Sim3_Median_20180502.csv")
+sim5_med <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation5/Sim5_Median_20180502.csv")
+sim10_med <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation5/Sim10_Median_20180503.csv")
+sim20_med <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation5/Sim20_Median_20180503.csv")
+sim40_med <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation5/Sim40_Median_20180506.csv")
+sim50_med <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation5/Sim50_Median_20180507.csv")
+
+sim3_quan <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation5/Sim3_Quantile_20180502.csv")
+sim5_quan  <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation5/Sim5_Quantile_20180502.csv")
+sim10_quan  <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation5/Sim10_Quantile_20180503.csv")
+sim20_quan  <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation5/Sim20_Quantile_20180503.csv")
+sim40_quan  <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation5/Sim40_Quantile_20180506.csv")
+sim50_quan  <- read.csv("/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation5/Sim50_Quantile_20180507.csv")
+
 
 # Make plot of threshold vs prevalence
 
@@ -48,5 +65,34 @@ legend("bottomright", legend=c("Specificity", "Sensitiviy", "0.5", "Youden"),
        bty="n", col=c("red", "blue", "black", "black"), pch=c(20,20, 45, 45), 
        ncol=1, lty=c(0,0,1,2), lwd=c(1,1,2,2))
 legend("bottomright", legend=c("",""), bty="n", cex=1)
+
+
+#### clean tables
+library(data.table)
+myformat <- function(sim){
+  sim <- sim[,1:7]
+  sim[,c(2:4,6)] <- round(sim[,c(2:4,6)]*100)
+  sim[,5] <- round(sim[,5], digits=2)
+  sim[,7] <- round(sim[,7])
+  sim <- setcolorder(sim, c(1,5,3,2,4,6,7))
+  sim <- rbind(sim[2,], sim[1,], sim[3:5,])
+  sim
+}
+
+sim3 <- myformat(sim3)
+sim5 <- myformat(sim5)
+sim10 <- myformat(sim10)
+sim20 <- myformat(sim20)
+sim40 <- myformat(sim40)
+sim50 <- myformat(sim50)
+
+sim3_med <- myformat(sim3_med)
+sim5_med <- myformat(sim5_med)
+sim10_med <- myformat(sim10_med)
+sim20_med <- myformat(sim20_med)
+sim40_med <- myformat(sim40_med)
+sim50_med <- myformat(sim50_med)
+
+# quantile formatting
 
 

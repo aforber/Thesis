@@ -163,14 +163,14 @@ myresults <- foreach(i=1:niterations) %dopar% {
   
   #### calculate with youden 
   results <- coords(roc_lass, x = "best", best.method = "youden", 
-                    ret = c("specificity", "sensitivity", "accuracy", "threshold"))
+                    ret = c("threshold","sensitivity", "specificity", "ppv", "npv", "accuracy"))
   
   # SAVE THE OUTPUT 
   Output <- cbind(as.data.frame.list(results), "AUC" = roc_lass$auc, coefs)
   
   # calculate 0.5
   results <- coords(roc_lass, x = 0.5, input = "threshold",
-                    ret = c("specificity", "sensitivity", "accuracy", "threshold"))
+                    ret = c("threshold","sensitivity", "specificity", "ppv", "npv", "accuracy"))
   # Save output 
   Output2 <- cbind(as.data.frame.list(results), "AUC" = roc_lass$auc, coefs)
   Output <- rbind(Output, Output2)
@@ -197,7 +197,7 @@ myresults <- foreach(i=1:niterations) %dopar% {
   
   #### calculate with youden
   #results <- coords(roc_down, x = "best", best.method = "youden", 
-  #                  ret = c("specificity", "sensitivity", "accuracy", "threshold"))
+  #                  ret = c("threshold","sensitivity", "specificity", "ppv", "npv", "accuracy"))
   
   #Output2 <- cbind(as.data.frame.list(results), "AUC" = roc_down$auc, coefs)
   #Output <- rbind(Output, Output2)
@@ -223,7 +223,7 @@ myresults <- foreach(i=1:niterations) %dopar% {
   
   #### calculate with youden
   #results <- coords(roc_up, x = "best", best.method = "youden", 
-  #                  ret = c("specificity", "sensitivity", "accuracy", "threshold"))
+  #                  ret = c("threshold","sensitivity", "specificity", "ppv", "npv", "accuracy"))
   
   #Output2 <- cbind(as.data.frame.list(results), "AUC" = roc_up$auc, coefs)
   #Output <- rbind(Output, Output2)
@@ -250,7 +250,7 @@ myresults <- foreach(i=1:niterations) %dopar% {
   
   #### calculate with youden 
   #results <- coords(roc_smote, x = "best", best.method = "youden", 
-  #                  ret = c("specificity", "sensitivity", "accuracy", "threshold"))
+  #                  ret = c("threshold","sensitivity", "specificity", "ppv", "npv", "accuracy"))
   
   #Output2 <- cbind(as.data.frame.list(results), "AUC" = roc_smote$auc, coefs)
   #Output <- rbind(Output, Output2)
@@ -331,8 +331,8 @@ total_quantile = aaply(laply(myresults, as.matrix), c(2, 3), quantile, probs=c(.
 # 20% took 7.574179 hours 
 
 # check the sim percent and date before writing
-#write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation5/Sim50_Mean_20180507.csv")
-#write.csv(total_median, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation5/Sim50_Median_20180507.csv")
-#write.csv(total_quantile, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation5/Sim50_Quantile_20180507.csv")
+#write.csv(total_results, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation6/Sim50_Mean_20180508.csv")
+#write.csv(total_median, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation6/Sim50_Median_20180508.csv")
+#write.csv(total_quantile, "/Users/alyssaforber/Documents/Denver/Thesis/Results/Simulation6/Sim50_Quantile_20180508.csv")
 
 
