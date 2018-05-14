@@ -75,6 +75,7 @@ myformat <- function(sim){
   sim[,5] <- round(sim[,5], digits=2)
   sim[,7] <- round(sim[,7])
   sim <- setcolorder(sim, c(1,5,3,2,4,6,7))
+  # flip to put 0.5 first
   sim <- rbind(sim[2,], sim[1,], sim[3:5,])
   sim
 }
@@ -94,5 +95,18 @@ sim40_med <- myformat(sim40_med)
 sim50_med <- myformat(sim50_med)
 
 # quantile formatting
+quantformat <- function(sim){
+  sim <- cbind(sim[,2:7], sim[,9:14])
+  sim <- rbind(sim[2,], sim[1,], sim[3:5,])
+  sim[,c(1:5,7:11)] <- round(sim[,c(1:5,7:11)]*100)
+}
+
+sim3_quan <- quantformat(sim3_quan)
+sim5_quan <- quantformat(sim5_quan)
+sim10_quan <- quantformat(sim10_quan)
+sim20_quan <- quantformat(sim20_quan)
+sim40_quan <- quantformat(sim40_quan)
+sim50_quan <- quantformat(sim50_quan)
+
 
 
