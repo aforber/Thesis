@@ -53,13 +53,7 @@ b.NOP = 0.993827
 niterations <- 1000
 
 
-#ysim <- vector()
-
-# Have to run this or it won't run in parallel
-#getDoParWorkers()
-#options(cores=2)
 getDoParWorkers()
-#registerDoMC(2)
 cl<-makeCluster(8)
 registerDoParallel(cl)
 getDoParWorkers()
@@ -111,28 +105,28 @@ myresults <- foreach(i=1:niterations) %dopar% {
   predictors$Op_Chronic_Sim <- NULL
   full_train$Op_Chronic_Sim <- as.factor(full_train$Op_Chronic_Sim)
   
-  #down_train <- downSample(x = predictors,
-  #                         y = full_train$Op_Chronic_Sim)
+  down_train <- downSample(x = predictors,
+                           y = full_train$Op_Chronic_Sim)
   #-----------
   # UP SAMPLE
   #-----------
   
-  #up_train <- upSample(x = predictors,
-  #                     y = full_train$Op_Chronic_Sim)  
+  up_train <- upSample(x = predictors,
+                       y = full_train$Op_Chronic_Sim)  
   
   #--------------
   # SMOTE SAMPLE
   #--------------
   
-  #smote_train <- SMOTE(Op_Chronic_Sim ~ ., data  = full_train) 
+  smote_train <- SMOTE(Op_Chronic_Sim ~ ., data  = full_train) 
   
   # round indicators after SMOTE
-  #cols <- c("genderm", "racehisp", "raceaa", "SUHxDx_tabc",
-  #          "chphx_surg", "prior12", "OP_Receipt", "chpdc_surg",
-  #          "NOP_past", "Benzo_past", "SUHxDx_alch", "SUHxDx_Stml",
-  #          "ChronicPHxDx", "AcutePHxDx", "ChronicPDcDx", "AcutePDcDx",
-  #          "Surg_any", "NeoplasmDcDx", "NeoplasmHxDx", "oprec_surg")
-  #smote_train[,cols] <- round(smote_train[,cols]) 
+  cols <- c("genderm", "racehisp", "raceaa", "SUHxDx_tabc",
+            "chphx_surg", "prior12", "OP_Receipt", "chpdc_surg",
+            "NOP_past", "Benzo_past", "SUHxDx_alch", "SUHxDx_Stml",
+            "ChronicPHxDx", "AcutePHxDx", "ChronicPDcDx", "AcutePDcDx",
+            "Surg_any", "NeoplasmDcDx", "NeoplasmHxDx", "oprec_surg")
+  smote_train[,cols] <- round(smote_train[,cols]) 
   
   #--------------------------
   # RUN MODELS
@@ -184,49 +178,49 @@ myresults <- foreach(i=1:niterations) %dopar% {
   #newtrain <- model.matrix(Class ~ ., data=down_train)
   
   # run cv.glmnet with matrix
-  #cvlasso <- cv.glmnet(newtrain, y = as.factor(down_train$Class), family = "binomial")
+  cvlasso <- cv.glmnet(newtrain, y = as.factor(down_train$Class), family = "binomial")
   
   # GET NUMBER OF COVARIATES CHOSEN BY MODEL 
-  #coefs <- length(coef(cvlasso)@x) - 1 #subtracting the intercept
+  coefs <- length(coef(cvlasso)@x) - 1 #subtracting the intercept
   
   # predict with matrix
-  #predict_down <- predict(cvlasso, newtest, type = "response", s = "lambda.min")
+  predict_down <- predict(cvlasso, newtest, type = "response", s = "lambda.min")
   
   ###### pROC PACKAGE
-  #roc_down <- roc(full_test$Op_Chronic_Sim, as.numeric(predict_down))
+  roc_down <- roc(full_test$Op_Chronic_Sim, as.numeric(predict_down))
   
   #### calculate with youden
-  #results <- coords(roc_down, x = "best", best.method = "youden", 
-  #                  ret = c("threshold","sensitivity", "specificity", "ppv", "npv", "accuracy"))
+  results <- coords(roc_down, x = "best", best.method = "youden", 
+                    ret = c("threshold","sensitivity", "specificity", "ppv", "npv", "accuracy"))
   
-  #Output2 <- cbind(as.data.frame.list(results), "AUC" = roc_down$auc, coefs)
-  #Output <- rbind(Output, Output2)
+  Output2 <- cbind(as.data.frame.list(results), "AUC" = roc_down$auc, coefs)
+  Output <- rbind(Output, Output2)
   
   #--------------------
   # UP SAMPLE
   #--------------------
   
   # run model.matrix for train data
-  #newtrain <- model.matrix(Class~ ., data=up_train)
+  newtrain <- model.matrix(Class~ ., data=up_train)
   
   # run cv.glmnet with matrix
-  #cvlasso <- cv.glmnet(newtrain, y = as.factor(up_train$Class), family = "binomial")
+  cvlasso <- cv.glmnet(newtrain, y = as.factor(up_train$Class), family = "binomial")
   
   # GET NUMBER OF COVARIATES CHOSEN BY MODEL 
-  #coefs <- length(coef(cvlasso)@x) - 1 #subtracting the intercept
+  coefs <- length(coef(cvlasso)@x) - 1 #subtracting the intercept
   
   # predict with matrix
-  #predict_up <- predict(cvlasso, newtest, type = "response", s = "lambda.min")
+  predict_up <- predict(cvlasso, newtest, type = "response", s = "lambda.min")
   
   ###### pROC PACKAGE
-  #roc_up <- roc(full_test$Op_Chronic_Sim, as.numeric(predict_up))
+  roc_up <- roc(full_test$Op_Chronic_Sim, as.numeric(predict_up))
   
   #### calculate with youden
-  #results <- coords(roc_up, x = "best", best.method = "youden", 
-  #                  ret = c("threshold","sensitivity", "specificity", "ppv", "npv", "accuracy"))
+  results <- coords(roc_up, x = "best", best.method = "youden", 
+                    ret = c("threshold","sensitivity", "specificity", "ppv", "npv", "accuracy"))
   
-  #Output2 <- cbind(as.data.frame.list(results), "AUC" = roc_up$auc, coefs)
-  #Output <- rbind(Output, Output2)
+  Output2 <- cbind(as.data.frame.list(results), "AUC" = roc_up$auc, coefs)
+  Output <- rbind(Output, Output2)
   
   
   #--------------------
@@ -234,26 +228,26 @@ myresults <- foreach(i=1:niterations) %dopar% {
   #--------------------
   
   # run model.matrix for train data
-  #newtrain <- model.matrix(Op_Chronic_Sim ~ ., data=smote_train)
+  newtrain <- model.matrix(Op_Chronic_Sim ~ ., data=smote_train)
   
   # run cv.glmnet with matrix
-  #cvlasso <- cv.glmnet(newtrain, y = as.factor(smote_train$Op_Chronic_Sim), family = "binomial")
+  cvlasso <- cv.glmnet(newtrain, y = as.factor(smote_train$Op_Chronic_Sim), family = "binomial")
   
   # GET NUMBER OF COVARIATES CHOSEN BY MODEL 
-  #coefs <- length(coef(cvlasso)@x) - 1 #subtracting the intercept
+  coefs <- length(coef(cvlasso)@x) - 1 #subtracting the intercept
   
   # predict with matrix
-  #predict_smote <- predict(cvlasso, newtest, type = "response", s = "lambda.min")
+  predict_smote <- predict(cvlasso, newtest, type = "response", s = "lambda.min")
   
   ###### pROC PACKAGE
-  #roc_smote <- roc(full_test$Op_Chronic_Sim, as.numeric(predict_smote))
+  roc_smote <- roc(full_test$Op_Chronic_Sim, as.numeric(predict_smote))
   
   #### calculate with youden 
-  #results <- coords(roc_smote, x = "best", best.method = "youden", 
-  #                  ret = c("threshold","sensitivity", "specificity", "ppv", "npv", "accuracy"))
+  results <- coords(roc_smote, x = "best", best.method = "youden", 
+                    ret = c("threshold","sensitivity", "specificity", "ppv", "npv", "accuracy"))
   
-  #Output2 <- cbind(as.data.frame.list(results), "AUC" = roc_smote$auc, coefs)
-  #Output <- rbind(Output, Output2)
+  Output2 <- cbind(as.data.frame.list(results), "AUC" = roc_smote$auc, coefs)
+  Output <- rbind(Output, Output2)
   
   
   # Add prevalence to output 
