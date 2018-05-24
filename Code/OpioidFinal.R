@@ -149,7 +149,7 @@ coords_lass5 <- coords(roc_lass, x = 0.5, input = "threshold",
                                "npv", "ppv", "accuracy"))
 
 #### calculate with prevalence
-coords_lass3 <- coords(roc_lass, x = 0.03, input = "threshold",
+coords_lass5 <- coords(roc_lass, x = 0.05, input = "threshold",
                        ret = c("threshold", "specificity", "sensitivity", 
                                "npv", "ppv", "accuracy"))
 
@@ -333,7 +333,7 @@ coords_smote_train <- coords(roc_smote_train, x = train_thresh, input = "thresho
 #-----------------------------------
 
 # Table for youden index and sampling combined
-rocTable <- round(rbind(coords_lass5, coords_lass, coords_lass_train, coords_lass3,
+rocTable <- round(rbind(coords_lass5, coords_lass, coords_lass_train, coords_lass5,
                         coords_down, coords_down_train, coords_down5, 
                         coords_up, coords_up_train, coords_up5,
                         coords_smote, coords_smote_train, coords_smote5), digits=2)
@@ -352,7 +352,7 @@ rocTable[,2:7] <- rocTable[,2:7]*100
 rocTable <- cbind(rocTable[,1], rocTable[,3], rocTable[,2], rocTable[,c(4:8)])
 colnames(rocTable) <- c("Threshold", "Sensitivity", "Specificity", "NPV", "PPV", 
                         "Accuracy", "AUC", "Number of Covariates Selected")
-rownames(rocTable) <- c("Full Training 0.5", "Full Training", "Full Training*", "Full Training 0.03",
+rownames(rocTable) <- c("Full Training 0.5", "Full Training", "Full Training*", "Full Training 0.05",
                         "Under-Sampled", "Under-Sampled*", "Under-Sampled 0.5",
                         "Over-Sampled", "Over-Sampled*", "Over-Sampled 0.5",
                         "SMOTE", "SMOTE*", "SMOTE 0.5")
