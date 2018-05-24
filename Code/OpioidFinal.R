@@ -148,6 +148,10 @@ coords_lass5 <- coords(roc_lass, x = 0.5, input = "threshold",
                        ret = c("threshold", "specificity", "sensitivity", 
                                "npv", "ppv", "accuracy"))
 
+#### calculate with prevalence
+coords_lass3 <- coords(roc_lass, x = 0.03, input = "threshold",
+                       ret = c("threshold", "specificity", "sensitivity", 
+                               "npv", "ppv", "accuracy"))
 
 ### FIND THRESHOLD WITH TRAINING DATA AND USE
 predict_lass <- predict(cvlasso, newtrain, type = "response", s = "lambda.min")
@@ -195,6 +199,11 @@ roc_down <- roc(confmat_down$Op_Chronic, confmat_down$Pred)
 
 #### calculate with youden 
 coords_down <- coords(roc_down, x = "best", best.method = "youden", 
+                      ret = c("threshold", "specificity", "sensitivity", 
+                              "npv", "ppv", "accuracy"))
+
+#### calculate with prevalence
+coords_down5 <- coords(roc_down, x = 0.5, input = "threshold", 
                       ret = c("threshold", "specificity", "sensitivity", 
                               "npv", "ppv", "accuracy"))
 
@@ -247,6 +256,11 @@ coords_up <- coords(roc_up, x = "best", best.method = "youden",
                     ret = c("threshold", "specificity", "sensitivity", 
                             "npv", "ppv", "accuracy"))
 
+#### calculate with prevalence 
+coords_up5 <- coords(roc_up, x = 0.5, input = "threshold", 
+                    ret = c("threshold", "specificity", "sensitivity", 
+                            "npv", "ppv", "accuracy"))
+
 
 ### FIND THRESHOLD WITH TRAINING DATA AND USE
 predict_up <- predict(cvlasso, newtrain, type = "response", s = "lambda.min")
@@ -294,6 +308,11 @@ coords_smote <- coords(roc_smote, x = "best", best.method = "youden",
                         ret = c("threshold", "specificity", "sensitivity", 
                                 "npv", "ppv", "accuracy"))
 
+#### calculate with prevalence
+coords_smote5 <- coords(roc_smote, x = 0.5, input = "threshold", 
+                       ret = c("threshold", "specificity", "sensitivity", 
+                               "npv", "ppv", "accuracy"))
+
 
 ### FIND THRESHOLD WITH TRAINING DATA AND USE
 predict_smote <- predict(cvlasso, newtrain, type = "response", s = "lambda.min")
@@ -314,25 +333,29 @@ coords_smote_train <- coords(roc_smote_train, x = train_thresh, input = "thresho
 #-----------------------------------
 
 # Table for youden index and sampling combined
-rocTable <- round(rbind(coords_lass5, coords_lass, coords_lass_train, 
-                        coords_down, coords_down_train, coords_up, coords_up_train, 
-                        coords_smote, coords_smote_train), digits=2)
+rocTable <- round(rbind(coords_lass5, coords_lass, coords_lass_train, coords_lass3,
+                        coords_down, coords_down_train, coords_down5, 
+                        coords_up, coords_up_train, coords_up5,
+                        coords_smote, coords_smote_train, coords_smote5), digits=2)
 
 # Add AUC
-auc <- c(roc_lass$auc, roc_lass$auc, roc_lass_train$auc, roc_down$auc, roc_down_train$auc,
-         roc_up$auc, roc_up_train$auc, roc_smote$auc, roc_smote_train$auc)
+auc <- c(roc_lass$auc, roc_lass$auc, roc_lass_train$auc, roc_lass$auc, 
+         roc_down$auc, roc_down_train$auc, roc_down$auc,
+         roc_up$auc, roc_up_train$auc, roc_up$auc,
+         roc_smote$auc, roc_smote_train$auc, roc_smote$auc)
 
 # Add # variables from coeffs
-vars <- c(34, 34, 34, 30, 30, 34, 34, 34, 34)
+vars <- c(34, 34, 34, 34, 30, 30, 30, 34, 34, 34, 34, 34, 34)
 rocTable <- cbind(rocTable, auc, vars)
 rocTable[,7] <- round(rocTable[,7], digits=2)
 rocTable[,2:7] <- rocTable[,2:7]*100
 rocTable <- cbind(rocTable[,1], rocTable[,3], rocTable[,2], rocTable[,c(4:8)])
 colnames(rocTable) <- c("Threshold", "Sensitivity", "Specificity", "NPV", "PPV", 
                         "Accuracy", "AUC", "Number of Covariates Selected")
-rownames(rocTable) <- c("Full Training 0.5", "Full Training", "Full training*",
-                        "Under-Sampled", "Under-Sampled*", "Over-Sampled", "Over-Sampled*",
-                        "SMOTE", "SMOTE*")
+rownames(rocTable) <- c("Full Training 0.5", "Full Training", "Full Training*", "Full Training 0.03",
+                        "Under-Sampled", "Under-Sampled*", "Under-Sampled 0.5",
+                        "Over-Sampled", "Over-Sampled*", "Over-Sampled 0.5",
+                        "SMOTE", "SMOTE*", "SMOTE 0.5")
 
-write.csv(rocTable, '/Users/alyssaforber/Documents/Denver/Thesis/Results/LassRocTable2018523.csv')
+write.csv(rocTable, '/Users/alyssaforber/Documents/Denver/Thesis/Results/LassRocTable2018524.csv')
 
