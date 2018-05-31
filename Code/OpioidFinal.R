@@ -159,6 +159,7 @@ confmat_lass <- as.data.frame(cbind(full_train$Op_Chronic, predict_lass))
 colnames(confmat_lass) <- c("Op_Chronic", "Pred")
 roc_lass_train <- roc(confmat_lass$Op_Chronic, confmat_lass$Pred)
 coords_lass_train <- coords(roc_lass_train, x = "best", best.method = "youden")
+# save the threshold chosen in the training
 train_thresh <- coords_lass_train[1]
 
 # use this threshold in test data
@@ -214,6 +215,7 @@ confmat_down <- as.data.frame(cbind(down_train$Class, predict_down))
 colnames(confmat_down) <- c("Op_Chronic", "Pred")
 roc_down_train <- roc(confmat_down$Op_Chronic, confmat_down$Pred)
 coords_down_train <- coords(roc_down_train, x = "best", best.method = "youden")
+# save the threshold chosen in the training
 train_thresh <- coords_down_train[1]
 
 # use this threshold in test data
@@ -268,6 +270,7 @@ confmat_up <- as.data.frame(cbind(up_train$Class, predict_up))
 colnames(confmat_up) <- c("Op_Chronic", "Pred")
 roc_up_train <- roc(confmat_up$Op_Chronic, confmat_up$Pred)
 coords_up_train <- coords(roc_up_train, x = "best", best.method = "youden")
+# save the threshold chosen in the training
 train_thresh <- coords_up_train[1]
 
 # use this threshold in test data
@@ -320,6 +323,7 @@ confmat_smote <- as.data.frame(cbind(smote_train$Op_Chronic, predict_smote))
 colnames(confmat_smote) <- c("Op_Chronic", "Pred")
 roc_smote_train <- roc(confmat_smote$Op_Chronic, confmat_smote$Pred)
 coords_smote_train <- coords(roc_smote_train, x = "best", best.method = "youden")
+# save the threshold chosen in the training
 train_thresh <- coords_smote_train[1]
 
 # use this threshold in test data
