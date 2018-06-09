@@ -189,9 +189,26 @@ predict_down <- predict(cvlasso, newtest, type = "response", s = "lambda.min")
 
 hist(predict_down, main = "Histogram of Down Sampled Predicted Probabilites",
      xlab = "Predicted Probability")
+boxplot(confmat_down$Pred~confmat_down$Op_Chronic)
 confmat_down <- as.data.frame(cbind(full_test$Op_Chronic, predict_down))
 colnames(confmat_down) <- c("Op_Chronic", "Pred")
 
+# save people who are between .4 and .5 and then look at people 
+# between .44 and .45 etc and then look at those people
+
+# create plot of ppv and npv and prevalence
+
+# print out confusion matrices it will show you who moves where
+
+# be able to say x% have a predicted probability in this range
+# which affects classification
+
+round <- round(predict_down, digits=2)
+Mode <- function(x){
+  ux <- unique(x)
+  ux[which.max(tabulate(match(x,ux)))]
+}
+Mode(round)
 
 ###### pROC PACKAGE
 roc_down <- roc(confmat_down$Op_Chronic, confmat_down$Pred)
