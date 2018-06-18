@@ -185,30 +185,12 @@ newtest <- model.matrix(full_test$Op_Chronic ~ . , data = full_test)
 # predict with matrix
 predict_down <- predict(cvlasso, newtest, type = "response", s = "lambda.min")
 
-
-
 hist(predict_down, main = "Histogram of Down Sampled Predicted Probabilites",
      xlab = "Predicted Probability")
-boxplot(confmat_down$Pred~confmat_down$Op_Chronic)
 confmat_down <- as.data.frame(cbind(full_test$Op_Chronic, predict_down))
 colnames(confmat_down) <- c("Op_Chronic", "Pred")
+boxplot(confmat_down$Pred~confmat_down$Op_Chronic)
 
-# save people who are between .4 and .5 and then look at people 
-# between .44 and .45 etc and then look at those people
-
-# create plot of ppv and npv and prevalence
-
-# print out confusion matrices it will show you who moves where
-
-# be able to say x% have a predicted probability in this range
-# which affects classification
-
-round <- round(predict_down, digits=2)
-Mode <- function(x){
-  ux <- unique(x)
-  ux[which.max(tabulate(match(x,ux)))]
-}
-Mode(round)
 
 ###### pROC PACKAGE
 roc_down <- roc(confmat_down$Op_Chronic, confmat_down$Pred)
@@ -225,6 +207,11 @@ coords_down5 <- coords(roc_down, x = 0.5, input = "threshold",
                       ret = c("threshold", "specificity", "sensitivity", 
                               "npv", "ppv", "accuracy"))
 
+Conf_down40 <- table(confmat_down$Pred > coords_down["threshold"], confmat_down$Op_Chronic)
+Conf_down50 <- table(confmat_down$Pred > coords_down5["threshold"], confmat_down$Op_Chronic)
+# I know this is the threshold from running code right below
+Conf_down44 <- table(confmat_down$Pred > .4413167, confmat_down$Op_Chronic)
+
 
 ### FIND THRESHOLD WITH TRAINING DATA AND USE
 predict_down <- predict(cvlasso, newtrain, type = "response", s = "lambda.min")
@@ -235,8 +222,10 @@ coords_down_train <- coords(roc_down_train, x = "best", best.method = "youden")
 # save the threshold chosen in the training
 train_thresh <- coords_down_train[1]
 
+
+
 # use this threshold in test data
-coords_down_train <- coords(roc_down_train, x = train_thresh, input = "threshold",
+coords_down_train <- coords(roc_down, x = train_thresh, input = "threshold",
                             ret = c("threshold", "specificity", "sensitivity", 
                                     "npv", "ppv", "accuracy"))
 
@@ -291,7 +280,7 @@ coords_up_train <- coords(roc_up_train, x = "best", best.method = "youden")
 train_thresh <- coords_up_train[1]
 
 # use this threshold in test data
-coords_up_train <- coords(roc_up_train, x = train_thresh, input = "threshold",
+coords_up_train <- coords(roc_up, x = train_thresh, input = "threshold",
                             ret = c("threshold", "specificity", "sensitivity", 
                                     "npv", "ppv", "accuracy"))
 
@@ -344,7 +333,7 @@ coords_smote_train <- coords(roc_smote_train, x = "best", best.method = "youden"
 train_thresh <- coords_smote_train[1]
 
 # use this threshold in test data
-coords_smote_train <- coords(roc_smote_train, x = train_thresh, input = "threshold",
+coords_smote_train <- coords(roc_smote, x = train_thresh, input = "threshold",
                           ret = c("threshold", "specificity", "sensitivity", 
                                   "npv", "ppv", "accuracy"))
 
@@ -377,6 +366,9 @@ rownames(rocTable) <- c("Full Training 0.5", "Full Training", "Full Training*", 
                         "Under-Sampled", "Under-Sampled*", "Under-Sampled 0.5",
                         "Over-Sampled", "Over-Sampled*", "Over-Sampled 0.5",
                         "SMOTE", "SMOTE*", "SMOTE 0.5")
+rocTable
 
-write.csv(rocTable, '/Users/alyssaforber/Documents/Denver/Thesis/Results/LassRocTable2018524.csv')
+write.csv(rocTable, '/Users/alyssaforber/Documents/Denver/Thesis/Results/LassRocTable20180618.csv')
+
+
 
