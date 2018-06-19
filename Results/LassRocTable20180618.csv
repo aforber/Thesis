@@ -1,11 +1,11 @@
 "","Threshold","Sensitivity","Specificity","NPV","PPV","Accuracy","AUC","Number of Covariates Selected"
-"Full Training 0.5",0.05,81,77,99,13,77,86,34
+"Full Training 0.5",0.5,8,99,96,35,96,86,34
 "Full Training",0.04,85,73,99,12,73,86,34
 "Full Training*",0.06,79,79,98,19,79,86,34
 "Full Training 0.05",0.05,81,77,99,13,77,86,34
-"Under-Sampled",0.4,85,73,99,12,73,86,30
-"Under-Sampled*",0.44,81,77,99,13,77,86,30
-"Under-Sampled 0.5",0.5,75,81,99,14,81,86,30
+"Under-Sampled",0.41,83,74,99,12,75,86,30
+"Under-Sampled*",0.44,79,77,99,13,77,86,30
+"Under-Sampled 0.5",0.5,75,81,99,15,81,86,30
 "Over-Sampled",0.4,85,74,99,12,74,86,34
 "Over-Sampled*",0.46,78,79,99,13,79,87,34
 "Over-Sampled 0.5",0.5,75,82,99,15,81,86,34

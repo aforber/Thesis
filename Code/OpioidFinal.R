@@ -149,7 +149,7 @@ coords_lass5 <- coords(roc_lass, x = 0.5, input = "threshold",
                                "npv", "ppv", "accuracy"))
 
 #### calculate with prevalence
-coords_lass5 <- coords(roc_lass, x = 0.05, input = "threshold",
+coords_lass05 <- coords(roc_lass, x = 0.05, input = "threshold",
                        ret = c("threshold", "specificity", "sensitivity", 
                                "npv", "ppv", "accuracy"))
 
@@ -343,7 +343,7 @@ coords_smote_train <- coords(roc_smote, x = train_thresh, input = "threshold",
 #-----------------------------------
 
 # Table for youden index and sampling combined
-rocTable <- round(rbind(coords_lass5, coords_lass, coords_lass_train, coords_lass5,
+rocTable <- round(rbind(coords_lass5, coords_lass, coords_lass_train, coords_lass05,
                         coords_down, coords_down_train, coords_down5, 
                         coords_up, coords_up_train, coords_up5,
                         coords_smote, coords_smote_train, coords_smote5), digits=2)
